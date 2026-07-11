@@ -1,0 +1,347 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  compact?: boolean;
+}
+
+const { projects, compact = false } = Astro.props;
+const mapId = `project-map-${Math.random().toString(36).slice(2, 10)}`;
+const dataId = `${mapId}-data`;
+const features = projects.flatMap((project) =>
+  project.data.locations.map((location) => ({
+    type: 'Feature' as const,
+    geometry: {
+      type: 'Point' as const,
+      coordinates: [location.longitude, location.latitude],
+    },
+    properties: {
+      projectId: project.id,
+      projectTitle: project.data.title,
+      locationLabel: `${location.city}, ${location.country}`,
+      yearLabel: project.data.yearLabel,
+      program: project.data.program,
+      href: `/projects/${project.id}/`,
+    },
+  })),
+);
+
+const geojson = { type: 'FeatureCollection' as const, features };
+---
+
+<div class:list={['project-map-wrap', { 'project-map-wrap--compact': compact }]}>
+  <div id={mapId} class="project-map" data-project-map data-json-id={dataId} aria-label="Interactive map of project locations"></div>
+  <button class="project-map__reset" type="button" data-map-reset aria-label="Reset map to Europe">Europe</button>
+  <script is:inline id={dataId} type="application/json" set:html={JSON.stringify(geojson)}></script>
+  <div class="project-map__empty" data-map-empty hidden={features.length > 0}>
+    <span class="eyebrow">Map ready</span>
+    <strong>Locations are the next layer.</strong>
+    <p>The project entries are connected to the map; precise city-level locations will appear here as soon as they are added.</p>
+  </div>
+</div>
+
+<script>
+  import maplibregl from 'maplibre-gl';
+  import 'maplibre-gl/dist/maplibre-gl.css';
+
+  type ProjectFeature = GeoJSON.Feature<GeoJSON.Point, {
+    projectId: string;
+    projectTitle: string;
+    locationLabel: string;
+    yearLabel: string;
+    program: string;
+    href: string;
+  }>;
+
+  type ProjectCollection = GeoJSON.FeatureCollection<GeoJSON.Point, ProjectFeature['properties']>;
+
+  document.querySelectorAll<HTMLElement>('[data-project-map]:not([data-map-ready])').forEach((element) => {
+    element.dataset.mapReady = 'true';
+    const jsonId = element.dataset.jsonId;
+    const jsonElement = jsonId ? document.getElementById(jsonId) : null;
+    if (!jsonElement) return;
+
+    const allData = JSON.parse(jsonElement.textContent ?? '{"type":"FeatureCollection","features":[]}') as ProjectCollection;
+    let visibleIds = new Set(allData.features.map((feature) => feature.properties.projectId));
+    const initialCenter: [number, number] = [12, 49];
+    const initialZoom = 3;
+
+    const map = new maplibregl.Map({
+      container: element,
+      style: 'https://tiles.openfreemap.org/styles/positron',
+      center: initialCenter,
+      zoom: initialZoom,
+      minZoom: 2,
+      maxZoom: 16,
+    });
+
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+    let activePopup: maplibregl.Popup | null = null;
+    const resetButton = element.closest<HTMLElement>('.project-map-wrap')?.querySelector<HTMLButtonElement>('[data-map-reset]');
+    resetButton?.addEventListener('click', () => {
+      activePopup?.remove();
+      activePopup = null;
+      map.easeTo({ center: initialCenter, zoom: initialZoom });
+    });
+
+    const showClusterProjects = (leaves: GeoJSON.Feature[], coordinates: [number, number]) => {
+      const uniqueProjects = new Map<string, ProjectFeature['properties']>();
+      leaves.forEach((leaf) => {
+        const properties = leaf.properties as ProjectFeature['properties'] | null;
+        if (properties?.projectId) uniqueProjects.set(properties.projectId, properties);
+      });
+
+      const popup = document.createElement('div');
+      popup.className = 'map-cluster-card';
+      const projects = [...uniqueProjects.values()];
+
+      const label = document.createElement('span');
+      label.textContent = projects[0]?.locationLabel ?? 'Project location';
+      const heading = document.createElement('strong');
+      heading.textContent = `${projects.length} projects here`;
+      const list = document.createElement('div');
+      list.className = 'map-cluster-card__list';
+
+      projects.forEach((project) => {
+        const link = document.createElement('a');
+        link.href = project.href;
+        const title = document.createElement('b');
+        title.textContent = project.projectTitle;
+        const meta = document.createElement('small');
+        meta.textContent = `${project.program} · ${project.yearLabel}`;
+        link.append(title, meta);
+        list.append(link);
+      });
+
+      popup.append(label, heading, list);
+      activePopup?.remove();
+      activePopup = new maplibregl.Popup({ offset: 18, closeButton: true, maxWidth: '300px' })
+        .setLngLat(coordinates)
+        .setDOMContent(popup)
+        .addTo(map);
+    };
+
+    const filteredData = (): ProjectCollection => ({
+      type: 'FeatureCollection',
+      features: allData.features.filter((feature) => visibleIds.has(feature.properties.projectId)),
+    });
+
+    map.on('load', () => {
+      map.addSource('projects', {
+        type: 'geojson',
+        data: filteredData(),
+        cluster: true,
+        clusterMaxZoom: 13,
+        clusterRadius: 56,
+      });
+
+      map.addLayer({
+        id: 'project-clusters',
+        type: 'circle',
+        source: 'projects',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': '#4068c8',
+          'circle-radius': ['step', ['get', 'point_count'], 20, 8, 25, 20, 31],
+          'circle-stroke-width': 4,
+          'circle-stroke-color': 'rgba(255,255,255,.82)',
+        },
+      });
+
+      map.addLayer({
+        id: 'project-cluster-count',
+        type: 'symbol',
+        source: 'projects',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': ['get', 'point_count_abbreviated'],
+          'text-size': 12,
+        },
+        paint: { 'text-color': '#ffffff' },
+      });
+
+      map.addLayer({
+        id: 'project-points',
+        type: 'circle',
+        source: 'projects',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': '#123b67',
+          'circle-radius': 8,
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#ffffff',
+        },
+      });
+
+      map.on('click', 'project-clusters', async (event) => {
+        const feature = map.queryRenderedFeatures(event.point, { layers: ['project-clusters'] })[0];
+        if (!feature || feature.geometry.type !== 'Point') return;
+        const source = map.getSource('projects') as maplibregl.GeoJSONSource;
+        const clusterId = Number(feature.properties?.cluster_id);
+        const pointCount = Number(feature.properties?.point_count);
+        const leaves = await source.getClusterLeaves(clusterId, pointCount, 0);
+        const coordinateKeys = new Set(
+          leaves
+            .filter((leaf) => leaf.geometry.type === 'Point')
+            .map((leaf) => (leaf.geometry as GeoJSON.Point).coordinates.map((value) => Number(value).toFixed(5)).join(',')),
+        );
+        const coordinates = feature.geometry.coordinates as [number, number];
+
+        if (coordinateKeys.size === 1) {
+          showClusterProjects(leaves, coordinates);
+          return;
+        }
+
+        const expansionZoom = await source.getClusterExpansionZoom(clusterId);
+        const zoom = Math.min(expansionZoom, map.getZoom() + 2, 8.5);
+        map.easeTo({ center: coordinates, zoom });
+      });
+
+      map.on('click', 'project-points', (event) => {
+        const feature = event.features?.[0];
+        if (!feature || feature.geometry.type !== 'Point') return;
+        const properties = feature.properties as ProjectFeature['properties'];
+        const popup = document.createElement('div');
+        popup.className = 'map-card';
+
+        const meta = document.createElement('span');
+        meta.textContent = `${properties.program} · ${properties.yearLabel}`;
+        const title = document.createElement('strong');
+        title.textContent = properties.projectTitle;
+        const location = document.createElement('span');
+        location.textContent = properties.locationLabel;
+        const link = document.createElement('a');
+        link.href = properties.href;
+        link.textContent = 'View project';
+        popup.append(meta, title, location, link);
+
+        activePopup?.remove();
+        activePopup = new maplibregl.Popup({ offset: 14, closeButton: true })
+          .setLngLat(feature.geometry.coordinates as [number, number])
+          .setDOMContent(popup)
+          .addTo(map);
+      });
+
+      for (const layer of ['project-clusters', 'project-points']) {
+        map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
+        map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
+      }
+    });
+
+    document.addEventListener('projects:filter', ((event: CustomEvent<{ ids: string[] }>) => {
+      visibleIds = new Set(event.detail.ids);
+      const source = map.getSource('projects') as maplibregl.GeoJSONSource | undefined;
+      source?.setData(filteredData());
+    }) as EventListener);
+
+    document.addEventListener('projects:view', () => {
+      window.requestAnimationFrame(() => map.resize());
+    });
+  });
+</script>
+
+<style>
+  .project-map-wrap {
+    position: relative;
+    min-height: 41rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+  }
+
+  .project-map-wrap--compact { min-height: 32rem; }
+  .project-map { position: absolute; inset: 0; }
+
+  .project-map__reset {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+    padding: .58rem .78rem;
+    border: 1px solid rgba(37,37,37,.15);
+    border-radius: .6rem;
+    color: var(--ink);
+    background: rgba(255,255,255,.94);
+    box-shadow: 0 5px 18px rgba(22,35,52,.09);
+    font-size: .7rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+
+  .project-map__empty {
+    position: absolute;
+    left: clamp(1rem, 4vw, 2rem);
+    bottom: clamp(1rem, 4vw, 2rem);
+    z-index: 2;
+    width: min(25rem, calc(100% - 2rem));
+    padding: 1.35rem;
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,.92);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(14px);
+  }
+
+  .project-map__empty strong {
+    display: block;
+    margin-top: 0.55rem;
+    color: var(--ink);
+    font-size: 1.15rem;
+    letter-spacing: -0.025em;
+  }
+
+  .project-map__empty p {
+    margin: 0.55rem 0 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  :global(.maplibregl-popup-content) {
+    padding: 0 !important;
+    overflow: hidden;
+    border-radius: 0.9rem !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+
+  :global(.map-card) {
+    min-width: 14rem;
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem;
+    font-family: var(--font-sans);
+  }
+
+  :global(.map-card > span) { color: var(--muted); font-size: 0.7rem; }
+  :global(.map-card strong) { color: var(--ink); font-size: 1rem; }
+  :global(.map-card a) { margin-top: 0.35rem; color: var(--accent); font-size: 0.76rem; font-weight: 650; }
+
+  :global(.map-cluster-card) {
+    min-width: 15rem;
+    display: grid;
+    gap: .35rem;
+    padding: 1rem;
+    font-family: var(--font-sans);
+  }
+  :global(.map-cluster-card > span) { color: var(--muted); font-size: .68rem; }
+  :global(.map-cluster-card > strong) { color: var(--ink); font-size: 1rem; }
+  :global(.map-cluster-card__list) { display: grid; gap: .45rem; margin-top: .45rem; }
+  :global(.map-cluster-card__list a) {
+    display: grid;
+    gap: .12rem;
+    padding: .65rem .7rem;
+    border-radius: .6rem;
+    color: var(--ink);
+    background: var(--surface);
+  }
+  :global(.map-cluster-card__list a:hover) { background: var(--blue-soft); }
+  :global(.map-cluster-card__list b) { font-size: .76rem; }
+  :global(.map-cluster-card__list small) { color: var(--muted); font-size: .62rem; }
+
+  @media (max-width: 700px) {
+    .project-map-wrap { min-height: 31rem; }
+  }
+</style>

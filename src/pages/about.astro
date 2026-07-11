@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About — Francesco Castiglione" description="About Francesco Castiglione and his work across European projects, mobility, youth participation, and international collaboration.">
+  <header class="page-intro about-intro">
+    <div class="shell">
+      <span class="eyebrow">About Francesco</span>
+      <div class="page-intro__grid">
+        <h1 class="page-title">A career shaped by movement, people, and useful ideas.</h1>
+        <p class="page-intro__copy">I work across European projects where coordination, communication, and practical delivery have to move together.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section--tight about-story">
+    <div class="shell about-story__grid">
+      <figure>
+        <img src="/assets/francesco-castiglione.jpg" alt="Francesco Castiglione at the European Parliament" />
+        <figcaption>Francesco Castiglione</figcaption>
+      </figure>
+      <div class="prose about-story__copy">
+        <p class="lede">My work has taken me from aviation training to European youth initiatives, international mobility, facilitation, and the management of research and innovation projects.</p>
+        <p>I support European projects through proposal development, partner communication, grant processes, monitoring, reporting, and day-to-day coordination. Alongside this work, I co-founded One Hour for Europe Italia and have contributed to mobility and youth-participation initiatives across several European countries.</p>
+        <p>I am most interested in work where an ambitious idea has to become something organised, collaborative, and useful. That means paying attention to the large objective and to the details that allow people to reach it together.</p>
+        <p>This website is designed as evidence rather than a list of claims. Each project record connects the place, role, program, outcomes, skills, certificates, and reflections that belong to it.</p>
+        <div class="about-story__actions">
+          <a class="button" href="/projects/">Explore the projects</a>
+          <a class="text-link" href="/cv/">View the full CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface principles">
+    <div class="shell">
+      <div class="section-heading">
+        <span class="eyebrow">Working principles</span>
+        <h2 class="section-title">Clear thinking. Reliable delivery. Human collaboration.</h2>
+        <p>The qualities I try to bring to each project, regardless of its size or program.</p>
+      </div>
+      <div class="principles__grid">
+        <article><span>01</span><h3>Stay useful</h3><p>Focus on what helps the project move, not on producing complexity for its own sake.</p></article>
+        <article><span>02</span><h3>Make it clear</h3><p>Turn requirements, information, and next steps into something the whole team can act on.</p></article>
+        <article><span>03</span><h3>Respect the people</h3><p>Good international work depends on listening, cultural awareness, and dependable communication.</p></article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-story { border-top: 1px solid var(--line); }
+  .about-story__grid { display: grid; grid-template-columns: minmax(18rem, .8fr) 1.2fr; gap: clamp(3rem, 9vw, 8rem); align-items: start; }
+  .about-story figure { margin: 0; }
+  .about-story figure img { width: 100%; aspect-ratio: .92; object-fit: cover; object-position: 50% 30%; border-radius: var(--radius-xl); }
+  .about-story figcaption { margin-top: .8rem; color: var(--muted); font-size: .7rem; }
+  .about-story__copy > p:first-child { margin-top: 0; color: var(--ink); }
+  .about-story__actions { display: flex; align-items: center; gap: 1.5rem; margin-top: 2.5rem; }
+  .principles__grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+  .principles article { min-height: 18rem; padding: 1.4rem 2rem 1.4rem 0; border-right: 1px solid var(--line); }
+  .principles article + article { padding-left: 2rem; }
+  .principles article:last-child { border-right: 0; }
+  .principles article > span { color: var(--accent); font-size: .7rem; }
+  .principles h3 { margin: 7rem 0 .7rem; font-size: 1.25rem; letter-spacing: -.03em; }
+  .principles p { margin: 0; color: var(--muted); font-size: .82rem; }
+  @media (max-width: 760px) { .about-story__grid, .principles__grid { grid-template-columns: 1fr; } .about-story figure { width: min(26rem, 90%); } .principles article { border-right: 0; border-bottom: 1px solid var(--line); padding-left: 0 !important; } }
+</style>

@@ -1,0 +1,60 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { data } = project;
+const locationLabel = data.locations.length
+  ? [...new Set(data.locations.map((location) => `${location.city}, ${location.country}`))].join(' · ')
+  : 'Locations to be added';
+---
+
+<BaseLayout title={`${data.title} — Francesco Castiglione`} description={data.summary} image={data.image}>
+  <article class="project-detail">
+    <header class="project-detail__hero">
+      <div class="shell">
+        <a class="project-detail__back" href="/projects/">← All projects</a>
+        <div class="project-detail__meta"><span>{data.yearLabel}</span><span>{data.program}</span><span>{data.activityType}</span></div>
+        <h1>{data.title}</h1>
+        <p>{data.summary}</p>
+      </div>
+    </header>
+
+    <div class="shell project-detail__body">
+      <aside>
+        <dl>
+          <div><dt>Role</dt><dd>{data.role}</dd></div>
+          <div><dt>Location</dt><dd>{locationLabel}</dd></div>
+          <div><dt>Program</dt><dd>{data.program}</dd></div>
+          <div><dt>Activity</dt><dd>{data.activityType}</dd></div>
+        </dl>
+        {data.skills.length > 0 && <div class="pill-list">{data.skills.map((skill) => <span class="pill">{skill}</span>)}</div>}
+        {data.externalUrl && <a class="button button--outline" href={data.externalUrl} target="_blank" rel="noreferrer">Project website ↗</a>}
+      </aside>
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-detail__hero { padding: clamp(4rem, 9vw, 8rem) 0; color: var(--white); background: var(--ink); }
+  .project-detail__back { display: inline-block; margin-bottom: clamp(4rem, 9vw, 8rem); color: rgba(255,255,255,.58); font-size: .75rem; }
+  .project-detail__meta { display: flex; flex-wrap: wrap; gap: 1.4rem; color: rgba(255,255,255,.55); font-size: .68rem; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }
+  .project-detail h1 { max-width: 60rem; margin: 1.3rem 0 1.8rem; font-size: clamp(3.7rem, 10vw, 8.5rem); font-weight: 580; line-height: .88; letter-spacing: -.075em; }
+  .project-detail__hero p { max-width: 40rem; margin: 0; color: rgba(255,255,255,.65); font-size: 1.05rem; }
+  .project-detail__body { display: grid; grid-template-columns: minmax(15rem, 22rem) 1fr; gap: clamp(3rem, 9vw, 8rem); padding-block: clamp(4rem, 9vw, 8rem); }
+  .project-detail aside { position: sticky; top: 7rem; align-self: start; }
+  .project-detail dl { margin: 0 0 2rem; border-top: 1px solid var(--line); }
+  .project-detail dl div { display: grid; grid-template-columns: 5rem 1fr; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--line); font-size: .75rem; }
+  .project-detail dt { color: var(--muted); }
+  .project-detail dd { margin: 0; }
+  .project-detail .pill-list { margin-bottom: 2rem; }
+  @media (max-width: 760px) { .project-detail__body { grid-template-columns: 1fr; } .project-detail aside { position: static; } }
+</style>

@@ -1,0 +1,78 @@
+---
+import Logo from './Logo.astro';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="shell site-footer__top">
+    <div>
+      <a href="/" aria-label="Francesco Castiglione, home"><Logo /></a>
+      <p>Projects, partnerships, and connections across Europe.</p>
+    </div>
+    <div class="site-footer__contact">
+      <span class="eyebrow">Start a conversation</span>
+      <a href="/contact/">Contact options ↗</a>
+    </div>
+  </div>
+  <div class="shell site-footer__bottom">
+    <span>© {year} Francesco Castiglione</span>
+    <div>
+      <a href="https://www.linkedin.com/in/francescocastiglione5/" target="_blank" rel="noreferrer">LinkedIn</a>
+      <a href="/contact/">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 5rem 0 2rem;
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .site-footer__top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: end;
+    padding-bottom: 4rem;
+  }
+
+  .site-footer__top p {
+    max-width: 29rem;
+    margin: 1.2rem 0 0;
+    color: var(--muted);
+  }
+
+  .site-footer__contact {
+    display: grid;
+    gap: 0.65rem;
+    justify-items: end;
+  }
+
+  .site-footer__contact a {
+    color: var(--ink);
+    font-size: clamp(1.15rem, 2vw, 1.65rem);
+    font-weight: 620;
+    letter-spacing: -0.035em;
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .site-footer__bottom div { display: flex; gap: 1.4rem; }
+  .site-footer__bottom a:hover { color: var(--ink); }
+
+  @media (max-width: 700px) {
+    .site-footer__top { grid-template-columns: 1fr; }
+    .site-footer__contact { justify-items: start; }
+    .site-footer__bottom { flex-direction: column; gap: 1rem; }
+  }
+</style>

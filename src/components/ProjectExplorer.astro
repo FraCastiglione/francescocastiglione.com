@@ -1,0 +1,278 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectCard from './ProjectCard.astro';
+import ProjectMap from './ProjectMap.astro';
+
+interface Props { projects: CollectionEntry<'projects'>[]; }
+const { projects } = Astro.props;
+
+const clean = (values: string[]) => [...new Set(values.filter((value) => value && !value.toLowerCase().includes('confirm') && !value.toLowerCase().includes('forthcoming')))];
+const programs = clean(projects.map((project) => project.data.program));
+const roles = clean(projects.map((project) => project.data.role));
+const countries = clean(projects.flatMap((project) => project.data.locations.map((location) => location.country)));
+const years = clean(projects.map((project) => project.data.yearLabel));
+---
+
+<section class="project-explorer" data-project-explorer>
+  <div class="project-explorer__tools">
+    <label class="project-search">
+      <span class="sr-only">Search projects</span>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4 4"/></svg>
+      <input type="search" placeholder="Search projects" data-project-search />
+    </label>
+
+    <div class="project-filters" aria-label="Filter projects">
+      <label><span class="sr-only">Program</span><select data-filter="program"><option value="">All programs</option>{programs.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>
+      <label><span class="sr-only">Role</span><select data-filter="role"><option value="">All roles</option>{roles.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>
+      {countries.length > 0 && <label><span class="sr-only">Country</span><select data-filter="country"><option value="">All countries</option>{countries.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>}
+      {years.length > 0 && <label><span class="sr-only">Year</span><select data-filter="year"><option value="">All years</option>{years.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>}
+    </div>
+
+    <div class="view-switcher" aria-label="Project view">
+      <button type="button" data-project-view="cards" aria-pressed="true" title="Card view">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="7"/><rect x="11" y="2" width="7" height="7"/><rect x="2" y="11" width="7" height="7"/><rect x="11" y="11" width="7" height="7"/></svg>
+        <span>Cards</span>
+      </button>
+      <button type="button" data-project-view="list" aria-pressed="false" title="List view">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 4h16M2 10h16M2 16h16"/></svg>
+        <span>List</span>
+      </button>
+      <button type="button" data-project-view="map" aria-pressed="false" title="Map view">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m2 4 5-2 6 2 5-2v14l-5 2-6-2-5 2Z"/><path d="M7 2v14M13 4v14"/></svg>
+        <span>Map</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="project-explorer__count" aria-live="polite"><span data-project-count>{projects.length}</span> projects</div>
+
+  <div data-view-panel="cards" class="project-grid">
+    {projects.map((project, index) => (
+      <div
+        data-project-item
+        data-project-id={project.id}
+        data-title={project.data.title.toLowerCase()}
+        data-summary={project.data.summary.toLowerCase()}
+        data-program={project.data.program.toLowerCase()}
+        data-role={project.data.role.toLowerCase()}
+        data-country={project.data.locations.map((location) => location.country.toLowerCase()).join('|')}
+        data-year={project.data.yearLabel.toLowerCase()}
+        data-skills={project.data.skills.join('|').toLowerCase()}
+      >
+        <ProjectCard project={project} index={index} />
+      </div>
+    ))}
+  </div>
+
+  <div data-view-panel="list" class="project-list" hidden>
+    {projects.map((project) => {
+      const locations = project.data.locations.length
+        ? [...new Set(project.data.locations.map((location) => location.country))].join(', ')
+        : 'Locations pending';
+      return (
+        <article
+          class="project-list__row"
+          data-project-item
+          data-project-id={project.id}
+          data-title={project.data.title.toLowerCase()}
+          data-summary={project.data.summary.toLowerCase()}
+          data-program={project.data.program.toLowerCase()}
+          data-role={project.data.role.toLowerCase()}
+          data-country={project.data.locations.map((location) => location.country.toLowerCase()).join('|')}
+          data-year={project.data.yearLabel.toLowerCase()}
+          data-skills={project.data.skills.join('|').toLowerCase()}
+        >
+          <span class="project-list__year">{project.data.yearLabel}</span>
+          <div><h3><a href={`/projects/${project.id}/`}>{project.data.title}</a></h3><span>{project.data.program}</span></div>
+          <span>{project.data.role}</span>
+          <span>{locations}</span>
+          <a class="project-list__arrow" href={`/projects/${project.id}/`} aria-label={`View ${project.data.title}`}>↗</a>
+        </article>
+      );
+    })}
+  </div>
+
+  <div data-view-panel="map" hidden>
+    <ProjectMap projects={projects} />
+  </div>
+
+  <div class="empty-state" data-project-empty hidden>
+    <strong>No matching projects.</strong>
+    <p>Try changing the search term or removing a filter.</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-project-explorer]').forEach((explorer) => {
+    const search = explorer.querySelector<HTMLInputElement>('[data-project-search]');
+    const selects = [...explorer.querySelectorAll<HTMLSelectElement>('[data-filter]')];
+    const items = [...explorer.querySelectorAll<HTMLElement>('[data-project-item]')];
+    const count = explorer.querySelector<HTMLElement>('[data-project-count]');
+    const empty = explorer.querySelector<HTMLElement>('[data-project-empty]');
+
+    const applyFilters = () => {
+      const query = search?.value.trim().toLowerCase() ?? '';
+      const filters = Object.fromEntries(selects.map((select) => [select.dataset.filter ?? '', select.value]));
+      const visibleIds = new Set<string>();
+
+      items.forEach((item) => {
+        const haystack = [item.dataset.title, item.dataset.summary, item.dataset.program, item.dataset.role, item.dataset.country, item.dataset.year, item.dataset.skills].join(' ');
+        const matchesQuery = !query || haystack.includes(query);
+        const matchesFilters = Object.entries(filters).every(([key, value]) => !value || (item.dataset[key] ?? '').includes(value));
+        const visible = matchesQuery && matchesFilters;
+        item.hidden = !visible;
+        if (visible && item.dataset.projectId) visibleIds.add(item.dataset.projectId);
+      });
+
+      if (count) count.textContent = String(visibleIds.size);
+      if (empty) empty.hidden = visibleIds.size > 0;
+      document.dispatchEvent(new CustomEvent('projects:filter', { detail: { ids: [...visibleIds] } }));
+    };
+
+    search?.addEventListener('input', applyFilters);
+    selects.forEach((select) => select.addEventListener('change', applyFilters));
+
+    explorer.querySelectorAll<HTMLButtonElement>('[data-project-view]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const view = button.dataset.projectView;
+        explorer.querySelectorAll<HTMLButtonElement>('[data-project-view]').forEach((control) => control.setAttribute('aria-pressed', String(control === button)));
+        explorer.querySelectorAll<HTMLElement>('[data-view-panel]').forEach((panel) => { panel.hidden = panel.dataset.viewPanel !== view; });
+        document.dispatchEvent(new CustomEvent('projects:view', { detail: { view } }));
+      });
+    });
+
+    applyFilters();
+  });
+</script>
+
+<style>
+  .project-explorer__tools {
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) auto auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+  }
+
+  .project-search {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0 0.55rem;
+  }
+
+  .project-search svg {
+    width: 1.1rem;
+    flex: none;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.5;
+  }
+
+  .project-search input {
+    width: 100%;
+    padding: 0.55rem 0;
+    border: 0;
+    outline: 0;
+    color: var(--ink);
+    background: transparent;
+    font: inherit;
+    font-size: 0.84rem;
+  }
+
+  .project-filters { display: flex; gap: 0.45rem; }
+  .project-filters select {
+    max-width: 10.5rem;
+    padding: 0.68rem 2rem 0.68rem 0.78rem;
+    border: 1px solid var(--line);
+    border-radius: 0.68rem;
+    color: var(--ink);
+    background: var(--surface);
+    font: inherit;
+    font-size: 0.73rem;
+  }
+
+  .view-switcher {
+    display: flex;
+    padding-left: 0.7rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .view-switcher button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.62rem 0.7rem;
+    border: 0;
+    border-radius: 0.55rem;
+    color: var(--muted);
+    background: transparent;
+    font: inherit;
+    font-size: 0.72rem;
+    cursor: pointer;
+  }
+
+  .view-switcher button[aria-pressed='true'] { color: var(--ink); background: var(--surface-strong); }
+  .view-switcher svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.35; }
+
+  .project-explorer__count {
+    margin: 1.1rem 0;
+    color: var(--muted);
+    font-size: 0.76rem;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .project-list { border-top: 1px solid var(--line); }
+  .project-list__row {
+    display: grid;
+    grid-template-columns: 9rem minmax(13rem, 1.5fr) 1fr 1fr 2rem;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .project-list__row h3 { margin: 0 0 0.2rem; color: var(--ink); font-size: 1rem; }
+  .project-list__row h3 a:hover { color: var(--accent); }
+  .project-list__row div span { font-size: 0.7rem; }
+  .project-list__year { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .project-list__arrow { color: var(--ink); font-size: 1rem; }
+
+  .empty-state {
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+
+  .empty-state strong { font-size: 1.15rem; }
+  .empty-state p { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.85rem; }
+
+  @media (max-width: 1050px) {
+    .project-explorer__tools { grid-template-columns: 1fr auto; }
+    .project-filters { grid-column: 1 / -1; grid-row: 2; overflow-x: auto; }
+  }
+
+  @media (max-width: 760px) {
+    .project-grid { grid-template-columns: 1fr; }
+    .view-switcher button span { display: none; }
+    .project-list__row { grid-template-columns: 6.5rem 1fr 2rem; }
+    .project-list__row > span:nth-of-type(n+2) { display: none; }
+    .project-list__row > div { grid-column: 2; }
+    .project-list__arrow { grid-column: 3; }
+  }
+
+  @media (max-width: 520px) {
+    .project-explorer__tools { grid-template-columns: 1fr auto; }
+    .project-filters select { max-width: 8.5rem; }
+  }
+</style>

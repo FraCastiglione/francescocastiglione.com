@@ -1,0 +1,68 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '@fontsource-variable/manrope';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = 'Francesco Castiglione — Projects across Europe',
+  description = 'A record of the projects Francesco Castiglione has contributed to, the places they have taken him, and what he has learned along the way.',
+  image = '/assets/francesco-castiglione.jpg',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/brand/f-mark.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      document.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        const toggle = target.closest<HTMLElement>('[data-card-toggle]');
+        if (!toggle) return;
+
+        const card = toggle.closest<HTMLElement>('[data-project-card]');
+        if (!card) return;
+
+        const isFlipped = card.classList.toggle('is-flipped');
+        card.querySelectorAll<HTMLElement>('[data-card-toggle]').forEach((button) => {
+          button.setAttribute('aria-expanded', String(isFlipped));
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('news', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props { post: CollectionEntry<'news'>; }
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} — Francesco Castiglione`} description={post.data.summary} image={post.data.image}>
+  <article class="article-page">
+    <header class="article-page__header">
+      <div class="shell article-page__header-inner">
+        <a href="/news/">← News & notes</a>
+        <span class="eyebrow">{post.data.category} · {post.data.publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+        <h1>{post.data.title}</h1>
+        <p>{post.data.summary}</p>
+      </div>
+    </header>
+    <div class="shell article-page__content"><div class="prose"><Content /></div></div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-page__header { padding: clamp(4rem, 9vw, 8rem) 0; border-bottom: 1px solid var(--line); }
+  .article-page__header-inner { max-width: 58rem; }
+  .article-page__header a { display: inline-block; margin-bottom: clamp(4rem, 9vw, 7rem); color: var(--muted); font-size: .75rem; }
+  .article-page h1 { margin: 1.2rem 0 1.5rem; font-size: clamp(3.2rem, 8vw, 6.5rem); font-weight: 580; line-height: .92; letter-spacing: -.07em; }
+  .article-page__header p { max-width: 42rem; margin: 0; color: var(--muted); font-size: 1.1rem; }
+  .article-page__content { display: grid; justify-content: center; padding-block: clamp(4rem, 9vw, 8rem); }
+</style>

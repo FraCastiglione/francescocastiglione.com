@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found — Francesco Castiglione">
+  <section class="not-found">
+    <div class="shell">
+      <span class="eyebrow">404</span>
+      <h1 class="page-title">This page hasn’t joined the project yet.</h1>
+      <p>The address may have changed, or the page may still be in preparation.</p>
+      <a class="button" href="/">Return home</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found { min-height: 70vh; display: grid; place-items: center; padding: 5rem 0; }
+  .not-found p { max-width: 34rem; margin: 1.5rem 0 2rem; color: var(--muted); }
+</style>

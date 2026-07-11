@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectExplorer from '../../components/ProjectExplorer.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => {
+  const aDate = a.data.sortDate?.valueOf() ?? 0;
+  const bDate = b.data.sortDate?.valueOf() ?? 0;
+  return bDate - aDate || a.data.title.localeCompare(b.data.title);
+});
+---
+
+<BaseLayout title="Projects — Francesco Castiglione" description="Explore Francesco Castiglione's European projects by card, list, or interactive map.">
+  <header class="page-intro">
+    <div class="shell">
+      <span class="eyebrow">Project archive</span>
+      <div class="page-intro__grid">
+        <h1 class="page-title">The projects tell the story.</h1>
+        <p class="page-intro__copy">Browse the work visually, scan it as a list, or follow it across Europe. Every view is generated from the same connected project record.</p>
+      </div>
+    </div>
+  </header>
+  <section class="projects-index">
+    <div class="shell"><ProjectExplorer projects={projects} /></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects-index { padding: 0 0 clamp(6rem, 12vw, 10rem); }
+</style>

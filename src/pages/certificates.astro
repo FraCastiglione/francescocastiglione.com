@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const certificates = await getCollection('certificates');
+---
+
+<BaseLayout title="Certificates — Francesco Castiglione" description="Certificates and credentials connected to Francesco Castiglione's projects and professional development.">
+  <header class="page-intro">
+    <div class="shell">
+      <span class="eyebrow">Certificates & credentials</span>
+      <div class="page-intro__grid">
+        <h1 class="page-title">The documentation behind the experience.</h1>
+        <p class="page-intro__copy">Certificates will be viewable and downloadable after each document has been checked for private identifiers. Every credential can connect back to the projects and skills it supports.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="certificates-index">
+    <div class="shell certificates-grid">
+      {certificates.map((certificate, index) => (
+        <article class="certificate-card">
+          <div class="certificate-card__preview">
+            <span>Certificate {String(index + 1).padStart(2, '0')}</span>
+            <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="28"/><path d="m29 42 7 7 16-19"/></svg>
+          </div>
+          <div class="certificate-card__copy">
+            <span class="eyebrow">{certificate.data.issuer} · {certificate.data.issued}</span>
+            <h2>{certificate.data.title}</h2>
+            <p>{certificate.data.summary}</p>
+            <div class="pill-list">{certificate.data.skills.map((skill) => <span class="pill">{skill}</span>)}</div>
+            <div class="certificate-card__actions">
+              {certificate.data.pdfPath ? <a class="text-link" href={certificate.data.pdfPath}>View PDF</a> : <span>Document review pending</span>}
+              {certificate.data.credentialUrl && <a class="text-link" href={certificate.data.credentialUrl} target="_blank" rel="noreferrer">Credential ↗</a>}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .certificates-index { padding: 0 0 clamp(6rem, 12vw, 10rem); }
+  .certificates-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .certificate-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
+  .certificate-card__preview { min-height: 20rem; display: flex; flex-direction: column; justify-content: space-between; padding: 1.3rem; background: var(--surface); }
+  .certificate-card__preview > span { color: var(--muted); font-size: .7rem; }
+  .certificate-card__preview svg { width: 5rem; align-self: center; fill: none; stroke: var(--accent); stroke-width: 1.5; }
+  .certificate-card__copy { padding: 1.5rem; }
+  .certificate-card h2 { margin: .7rem 0; font-size: 1.55rem; line-height: 1.08; letter-spacing: -.04em; }
+  .certificate-card p { margin: 0 0 1.2rem; color: var(--muted); font-size: .82rem; }
+  .certificate-card__actions { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .7rem; }
+  @media (max-width: 700px) { .certificates-grid { grid-template-columns: 1fr; } }
+</style>

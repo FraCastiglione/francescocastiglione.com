@@ -1,0 +1,61 @@
+---
+interface Props {
+  compact?: boolean;
+  hero?: boolean;
+  light?: boolean;
+}
+
+const { compact = false, hero = false, light = false } = Astro.props;
+---
+
+<span class:list={['wordmark', { 'wordmark--compact': compact, 'wordmark--hero': hero, 'wordmark--light': light }]}>
+  <span>Francesco</span> <strong>Castiglione</strong>
+</span>
+
+<style>
+  .wordmark {
+    position: relative;
+    display: inline-block;
+    padding-bottom: .2rem;
+    color: var(--ink);
+    font-size: .98rem;
+    font-weight: 450;
+    line-height: 1;
+    letter-spacing: -.035em;
+    white-space: nowrap;
+  }
+
+  .wordmark::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 2.2rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  .wordmark strong { font-weight: 720; }
+  .wordmark--light { color: var(--white); }
+  .wordmark--compact > span { display: none; }
+
+  .wordmark--hero {
+    padding-bottom: .38rem;
+    font-size: clamp(1.95rem, 6.3vw, 5.15rem);
+    letter-spacing: -.06em;
+  }
+
+  .wordmark--hero::after {
+    width: clamp(3rem, 6vw, 5rem);
+    height: 3px;
+  }
+
+  @media (max-width: 650px) {
+    .wordmark--hero { font-size: clamp(1.9rem, 8vw, 2.3rem); }
+  }
+
+  @media (max-width: 480px) {
+    .wordmark:not(.wordmark--hero) { font-size: .84rem; }
+  }
+</style>

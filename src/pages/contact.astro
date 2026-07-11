@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact — Francesco Castiglione" description="Contact Francesco Castiglione about projects, roles, and collaborations.">
+  <section class="contact-page">
+    <div class="shell contact-page__grid">
+      <div>
+        <span class="eyebrow">Contact</span>
+        <h1 class="page-title">Let’s talk about the work that could come next.</h1>
+      </div>
+      <div class="contact-page__details">
+        <p>If you’re considering a role, project, partnership, event, or collaboration where my experience could be useful, LinkedIn is the direct contact route for now. A private website contact option will be added before launch.</p>
+        <div class="contact-page__links">
+          <a class="button" href="https://www.linkedin.com/in/francescocastiglione5/" target="_blank" rel="noreferrer">Message me on LinkedIn ↗</a>
+          <a class="text-link" href="/cv/">View CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-page { min-height: 70vh; display: grid; align-items: center; padding: clamp(5rem, 11vw, 10rem) 0; }
+  .contact-page__grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: clamp(4rem, 10vw, 9rem); align-items: end; }
+  .contact-page__details > p { margin: 0 0 2rem; color: var(--muted); font-size: 1rem; }
+  .contact-page__links { display: flex; align-items: center; gap: 1.5rem; margin-top: 2rem; }
+  @media (max-width: 760px) { .contact-page__grid { grid-template-columns: 1fr; } }
+</style>
