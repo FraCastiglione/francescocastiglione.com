@@ -9,6 +9,20 @@ const locationSchema = z.object({
   longitude: z.number().min(-180).max(180),
 });
 
+const certificateLocationSchema = z.object({
+  city: z.string(),
+  country: z.string(),
+});
+
+const certificatePdfPathSchema = z.string().regex(/^\/documents\/certificates\/[a-z0-9-]+\.pdf$/);
+const certificatePreviewPathSchema = z.string().regex(/^\/assets\/certificates\/[a-z0-9-]+\.jpg$/);
+
+const certificateDocumentSchema = z.object({
+  label: z.string(),
+  path: certificatePdfPathSchema,
+  pages: z.number().int().positive().optional(),
+});
+
 const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.md' }),
   schema: z.object({
@@ -19,6 +33,7 @@ const projects = defineCollection({
     role: z.string(),
     program: z.string(),
     activityType: z.string(),
+    deliveryMode: z.enum(['in-person', 'online', 'hybrid']).default('in-person'),
     status: z.enum(['complete', 'in-progress', 'details-pending']),
     locations: z.array(locationSchema).default([]),
     skills: z.array(z.string()).default([]),
@@ -37,11 +52,23 @@ const certificates = defineCollection({
     title: z.string(),
     issuer: z.string(),
     issued: z.string(),
+    sortDate: z.coerce.date().optional(),
     summary: z.string(),
+    category: z.string().default('Professional credential'),
+    program: z.string().default('Professional development'),
+    activityType: z.string().default('Course'),
+    locations: z.array(certificateLocationSchema).default([]),
+    deliveryMode: z.string().optional(),
     skills: z.array(z.string()).default([]),
     relatedProjects: z.array(z.string()).default([]),
-    pdfPath: z.string().optional(),
+    pdfPath: certificatePdfPathSchema.optional(),
+    documents: z.array(certificateDocumentSchema).default([]),
     credentialUrl: z.url().optional(),
+    previewImage: certificatePreviewPathSchema.optional(),
+    previewAlt: z.string().optional(),
+    documentStatus: z.enum(['private-review', 'public']).default('private-review'),
+    pageCount: z.number().int().positive().optional(),
+    documentCount: z.number().int().positive().default(1),
     featured: z.boolean().default(false),
   }),
 });
@@ -52,6 +79,7 @@ const news = defineCollection({
     title: z.string(),
     summary: z.string(),
     publishedAt: z.coerce.date(),
+    dateLabel: z.string().optional(),
     category: z.enum(['project', 'article', 'event', 'update']),
     relatedProjects: z.array(z.string()).default([]),
     image: z.string().optional(),

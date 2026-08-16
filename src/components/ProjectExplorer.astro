@@ -66,9 +66,10 @@ const years = clean(projects.map((project) => project.data.yearLabel));
 
   <div data-view-panel="list" class="project-list" hidden>
     {projects.map((project) => {
-      const locations = project.data.locations.length
-        ? [...new Set(project.data.locations.map((location) => location.country))].join(', ')
-        : 'Locations pending';
+      const physicalLocations = [...new Set(project.data.locations.map((location) => location.country))].join(', ');
+      const locations = physicalLocations
+        ? `${physicalLocations}${project.data.deliveryMode === 'hybrid' ? ' + online' : ''}`
+        : project.data.deliveryMode === 'online' ? 'Online' : 'Locations pending';
       return (
         <article
           class="project-list__row"
@@ -184,7 +185,7 @@ const years = clean(projects.map((project) => project.data.yearLabel));
     font-size: 0.84rem;
   }
 
-  .project-filters { display: flex; gap: 0.45rem; }
+  .project-filters { min-width: 0; max-width: 100%; display: flex; gap: 0.45rem; }
   .project-filters select {
     max-width: 10.5rem;
     padding: 0.68rem 2rem 0.68rem 0.78rem;
@@ -265,6 +266,9 @@ const years = clean(projects.map((project) => project.data.yearLabel));
   @media (max-width: 760px) {
     .project-grid { grid-template-columns: 1fr; }
     .view-switcher button span { display: none; }
+    .project-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); display: grid; overflow: visible; }
+    .project-filters label,
+    .project-filters select { min-width: 0; width: 100%; max-width: none; }
     .project-list__row { grid-template-columns: 6.5rem 1fr 2rem; }
     .project-list__row > span:nth-of-type(n+2) { display: none; }
     .project-list__row > div { grid-column: 2; }
@@ -273,6 +277,6 @@ const years = clean(projects.map((project) => project.data.yearLabel));
 
   @media (max-width: 520px) {
     .project-explorer__tools { grid-template-columns: 1fr auto; }
-    .project-filters select { max-width: 8.5rem; }
+    .project-filters select { max-width: none; }
   }
 </style>

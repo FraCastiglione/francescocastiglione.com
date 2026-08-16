@@ -21,7 +21,7 @@ const posts = (await getCollection('news', ({ data }) => !data.draft)).sort((a, 
         <article>
           <div class="news-list__meta">
             <span>{post.data.category}</span>
-            <time datetime={post.data.publishedAt.toISOString()}>{post.data.publishedAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</time>
+            <time datetime={post.data.publishedAt.toISOString()}>{post.data.dateLabel ?? post.data.publishedAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</time>
           </div>
           <h2><a href={`/news/${post.id}/`}>{post.data.title}</a></h2>
           <p>{post.data.summary}</p>
