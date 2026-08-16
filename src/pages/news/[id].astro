@@ -17,7 +17,7 @@ const { Content } = await render(post);
     <header class="article-page__header">
       <div class="shell article-page__header-inner">
         <a href="/news/">← News & notes</a>
-        <span class="eyebrow">{post.data.category} · {post.data.publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+        <span class="eyebrow">{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
         <h1>{post.data.title}</h1>
         <p>{post.data.summary}</p>
       </div>

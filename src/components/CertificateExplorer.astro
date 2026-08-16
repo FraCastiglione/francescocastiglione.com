@@ -1,0 +1,225 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import CertificateCard from './CertificateCard.astro';
+
+interface ProjectReference {
+  id: string;
+  title: string;
+}
+
+interface Props {
+  certificates: CollectionEntry<'certificates'>[];
+  projects: ProjectReference[];
+}
+
+const { certificates, projects } = Astro.props;
+const projectLookup = new Map(projects.map((project) => [project.id, project]));
+const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b));
+const categoryOptions = unique(certificates.map((certificate) => certificate.data.category));
+const programOptions = unique(certificates.map((certificate) => certificate.data.program));
+const countryOptions = unique(certificates.flatMap((certificate) => certificate.data.locations.map((location) => location.country)));
+const getYear = (certificate: CollectionEntry<'certificates'>) => {
+  if (certificate.data.sortDate) return String(certificate.data.sortDate.getUTCFullYear());
+  const years = certificate.data.issued.match(/\b(?:19|20)\d{2}\b/g);
+  return years?.[years.length - 1] ?? '';
+};
+const yearOptions = unique(certificates.map(getYear)).sort((a, b) => Number(b) - Number(a));
+const totalDocuments = certificates.reduce((sum, certificate) => sum + certificate.data.documentCount, 0);
+---
+
+<section class="certificate-explorer" data-certificate-explorer>
+  <div class="certificate-explorer__tools">
+    <label class="certificate-search">
+      <span class="sr-only">Search certificates</span>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m13 13 4 4"></path></svg>
+      <input type="search" placeholder="Search certificates" data-certificate-search />
+    </label>
+
+    <div class="certificate-filters" aria-label="Filter certificates">
+      <label>
+        <span class="sr-only">Category</span>
+        <select data-certificate-filter="category">
+          <option value="">All categories</option>
+          {categoryOptions.map((value) => <option value={value.toLowerCase()}>{value}</option>)}
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">Program</span>
+        <select data-certificate-filter="program">
+          <option value="">All programs</option>
+          {programOptions.map((value) => <option value={value.toLowerCase()}>{value}</option>)}
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">Country</span>
+        <select data-certificate-filter="country">
+          <option value="">All countries</option>
+          {countryOptions.map((value) => <option value={value.toLowerCase()}>{value}</option>)}
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">Year</span>
+        <select data-certificate-filter="year">
+          <option value="">All years</option>
+          {yearOptions.map((value) => <option value={value}>{value}</option>)}
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="certificate-explorer__summary" aria-live="polite">
+    <span><strong data-certificate-count>{certificates.length}</strong> <span data-certificate-count-label>{certificates.length === 1 ? 'credential' : 'credentials'}</span></span>
+    <span class="certificate-explorer__divider" aria-hidden="true"></span>
+    <span><strong data-document-count>{totalDocuments}</strong> <span data-document-count-label>{totalDocuments === 1 ? 'document' : 'documents'}</span></span>
+    <button type="button" data-certificate-reset hidden>Clear filters</button>
+  </div>
+
+  <div class="certificate-grid">
+    {certificates.map((certificate, index) => {
+      const relatedProjects = certificate.data.relatedProjects
+        .map((id) => projectLookup.get(id))
+        .filter((project): project is ProjectReference => Boolean(project));
+      const countries = certificate.data.locations.map((location) => location.country.toLowerCase());
+      const searchText = [
+        certificate.data.title,
+        certificate.data.issuer,
+        certificate.data.summary,
+        certificate.data.category,
+        certificate.data.program,
+        certificate.data.activityType,
+        certificate.data.deliveryMode ?? '',
+        certificate.data.issued,
+        ...certificate.data.skills,
+        ...certificate.data.locations.flatMap((location) => [location.city, location.country]),
+        ...relatedProjects.map((project) => project.title),
+      ].join(' ').toLowerCase();
+
+      return (
+        <div
+          data-certificate-item
+          data-search-text={searchText}
+          data-category={certificate.data.category.toLowerCase()}
+          data-program={certificate.data.program.toLowerCase()}
+          data-country={countries.join('|')}
+          data-year={getYear(certificate)}
+          data-document-count={certificate.data.documentCount}
+        >
+          <CertificateCard certificate={certificate} index={index} relatedProjects={relatedProjects} />
+        </div>
+      );
+    })}
+  </div>
+
+  <div class="certificate-empty" data-certificate-empty hidden>
+    <strong>No matching credentials.</strong>
+    <p>Try another search term or clear one of the filters.</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-certificate-explorer]').forEach((explorer) => {
+    const search = explorer.querySelector<HTMLInputElement>('[data-certificate-search]');
+    const selects = [...explorer.querySelectorAll<HTMLSelectElement>('[data-certificate-filter]')];
+    const items = [...explorer.querySelectorAll<HTMLElement>('[data-certificate-item]')];
+    const certificateCount = explorer.querySelector<HTMLElement>('[data-certificate-count]');
+    const certificateCountLabel = explorer.querySelector<HTMLElement>('[data-certificate-count-label]');
+    const documentCount = explorer.querySelector<HTMLElement>('[data-document-count]');
+    const documentCountLabel = explorer.querySelector<HTMLElement>('[data-document-count-label]');
+    const reset = explorer.querySelector<HTMLButtonElement>('[data-certificate-reset]');
+    const empty = explorer.querySelector<HTMLElement>('[data-certificate-empty]');
+
+    const applyFilters = () => {
+      const query = search?.value.trim().toLowerCase() ?? '';
+      const filters = Object.fromEntries(selects.map((select) => [select.dataset.certificateFilter ?? '', select.value]));
+      let visibleCertificates = 0;
+      let visibleDocuments = 0;
+
+      items.forEach((item) => {
+        const matchesQuery = !query || (item.dataset.searchText ?? '').includes(query);
+        const matchesFilters = Object.entries(filters).every(([key, value]) => {
+          if (!value) return true;
+          return (item.dataset[key] ?? '').split('|').includes(value);
+        });
+        const visible = matchesQuery && matchesFilters;
+        item.hidden = !visible;
+        if (visible) {
+          visibleCertificates += 1;
+          visibleDocuments += Number(item.dataset.documentCount ?? 1);
+        }
+      });
+
+      if (certificateCount) certificateCount.textContent = String(visibleCertificates);
+      if (certificateCountLabel) certificateCountLabel.textContent = visibleCertificates === 1 ? 'credential' : 'credentials';
+      if (documentCount) documentCount.textContent = String(visibleDocuments);
+      if (documentCountLabel) documentCountLabel.textContent = visibleDocuments === 1 ? 'document' : 'documents';
+      if (empty) empty.hidden = visibleCertificates > 0;
+      if (reset) reset.hidden = !query && selects.every((select) => !select.value);
+    };
+
+    search?.addEventListener('input', applyFilters);
+    selects.forEach((select) => select.addEventListener('change', applyFilters));
+    reset?.addEventListener('click', () => {
+      if (search) search.value = '';
+      selects.forEach((select) => { select.value = ''; });
+      search?.focus();
+      applyFilters();
+    });
+
+    applyFilters();
+  });
+</script>
+
+<style>
+  .certificate-explorer__tools {
+    display: grid;
+    grid-template-columns: minmax(13rem, 1fr) auto;
+    gap: .75rem;
+    align-items: center;
+    padding: .75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+  }
+
+  .certificate-search { min-width: 0; display: flex; align-items: center; gap: .65rem; padding: 0 .55rem; }
+  .certificate-search svg { width: 1.1rem; flex: none; fill: none; stroke: var(--muted); stroke-width: 1.5; }
+  .certificate-search input { width: 100%; padding: .55rem 0; border: 0; outline: 0; color: var(--ink); background: transparent; font: inherit; font-size: .84rem; }
+
+  .certificate-filters { min-width: 0; max-width: 100%; display: flex; gap: .45rem; }
+  .certificate-filters select {
+    max-width: 10.5rem;
+    padding: .68rem 2rem .68rem .78rem;
+    border: 1px solid var(--line);
+    border-radius: .68rem;
+    color: var(--ink);
+    background: var(--surface);
+    font: inherit;
+    font-size: .7rem;
+  }
+
+  .certificate-explorer__summary { display: flex; align-items: center; gap: .55rem; min-height: 3.5rem; color: var(--muted); font-size: .73rem; }
+  .certificate-explorer__summary strong { color: var(--ink); font-weight: 650; }
+  .certificate-explorer__divider { width: 3px; height: 3px; border-radius: 50%; background: var(--soft); }
+  .certificate-explorer__summary button { margin-left: auto; padding: .35rem 0; border: 0; border-bottom: 1px solid currentColor; color: var(--accent-dark); background: transparent; font: inherit; font-size: .68rem; cursor: pointer; }
+
+  .certificate-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .certificate-grid > div { min-width: 0; }
+  .certificate-grid :global(.certificate-card) { height: 100%; }
+
+  .certificate-empty { padding: 5rem 1rem; text-align: center; }
+  .certificate-empty strong { font-size: 1.15rem; }
+  .certificate-empty p { margin: .5rem 0 0; color: var(--muted); font-size: .82rem; }
+
+  @media (max-width: 1080px) {
+    .certificate-explorer__tools { grid-template-columns: 1fr; }
+    .certificate-filters { overflow-x: auto; padding-bottom: .1rem; }
+    .certificate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 700px) {
+    .certificate-grid { grid-template-columns: 1fr; }
+    .certificate-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); display: grid; overflow: visible; }
+    .certificate-filters label,
+    .certificate-filters select { min-width: 0; width: 100%; max-width: none; }
+  }
+</style>

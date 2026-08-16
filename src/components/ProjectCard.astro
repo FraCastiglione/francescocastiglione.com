@@ -8,9 +8,10 @@ interface Props {
 
 const { project, index = 0 } = Astro.props;
 const { data } = project;
-const locationLabel = data.locations.length
-  ? [...new Set(data.locations.map((location) => `${location.city}, ${location.country}`))].join(' · ')
-  : 'Locations to be added';
+const physicalLocationLabel = [...new Set(data.locations.map((location) => `${location.city}, ${location.country}`))].join(' · ');
+const locationLabel = physicalLocationLabel
+  ? `${physicalLocationLabel}${data.deliveryMode === 'hybrid' ? ' · Online' : ''}`
+  : data.deliveryMode === 'online' ? 'Online' : 'Locations to be added';
 const visibleTags = data.skills.length ? data.skills.slice(0, 3) : [data.program, data.role];
 const projectHref = `/projects/${project.id}/`;
 const tone = (index % 4) + 1;

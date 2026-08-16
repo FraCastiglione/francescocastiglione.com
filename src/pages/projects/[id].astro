@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CertificateCard from '../../components/CertificateCard.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -11,9 +12,17 @@ interface Props { project: CollectionEntry<'projects'>; }
 const { project } = Astro.props;
 const { Content } = await render(project);
 const { data } = project;
-const locationLabel = data.locations.length
-  ? [...new Set(data.locations.map((location) => `${location.city}, ${location.country}`))].join(' · ')
-  : 'Locations to be added';
+const relatedCertificates = (await getCollection('certificates'))
+  .filter((certificate) => certificate.data.relatedProjects.includes(project.id))
+  .sort((a, b) => {
+    const aDate = a.data.sortDate?.valueOf() ?? Number.NEGATIVE_INFINITY;
+    const bDate = b.data.sortDate?.valueOf() ?? Number.NEGATIVE_INFINITY;
+    return bDate - aDate || a.data.title.localeCompare(b.data.title);
+  });
+const physicalLocationLabel = [...new Set(data.locations.map((location) => `${location.city}, ${location.country}`))].join(' · ');
+const locationLabel = physicalLocationLabel
+  ? `${physicalLocationLabel}${data.deliveryMode === 'hybrid' ? ' · Online' : ''}`
+  : data.deliveryMode === 'online' ? 'Online' : 'Locations to be added';
 ---
 
 <BaseLayout title={`${data.title} — Francesco Castiglione`} description={data.summary} image={data.image}>
@@ -40,6 +49,23 @@ const locationLabel = data.locations.length
       </aside>
       <div class="prose"><Content /></div>
     </div>
+
+    {relatedCertificates.length > 0 && (
+      <section class="project-credentials">
+        <div class="shell">
+          <div class="section-heading project-credentials__heading">
+            <span class="eyebrow">Related credentials</span>
+            <h2 class="section-title">Documentation connected to this project.</h2>
+            <p>Certificates and credentials provide a direct record of the learning, participation, and responsibilities connected to this work.</p>
+          </div>
+          <div class="project-credentials__grid">
+            {relatedCertificates.map((certificate, index) => (
+              <CertificateCard certificate={certificate} index={index} compact />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
   </article>
 </BaseLayout>
 
@@ -56,5 +82,12 @@ const locationLabel = data.locations.length
   .project-detail dt { color: var(--muted); }
   .project-detail dd { margin: 0; }
   .project-detail .pill-list { margin-bottom: 2rem; }
-  @media (max-width: 760px) { .project-detail__body { grid-template-columns: 1fr; } .project-detail aside { position: static; } }
+  .project-credentials { padding: clamp(4rem, 8vw, 7rem) 0 clamp(5rem, 10vw, 9rem); background: var(--surface); }
+  .project-credentials__heading { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .project-credentials__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  @media (max-width: 760px) {
+    .project-detail__body { grid-template-columns: 1fr; }
+    .project-detail aside { position: static; }
+    .project-credentials__grid { grid-template-columns: 1fr; }
+  }
 </style>
