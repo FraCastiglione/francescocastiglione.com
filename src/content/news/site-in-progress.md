@@ -1,10 +1,14 @@
 ---
-title: "A new home for the work"
-summary: "This website is being built as a connected record of projects, places, certificates, and professional updates."
+title: "Why I built this website"
+summary: "A connected record of projects, places, certificates, and professional updates — designed to make the work easier to explore."
 publishedAt: 2026-07-10
 category: "update"
 relatedProjects: []
 draft: false
 ---
 
-This is the first note in a growing professional archive. The aim is straightforward: make the work easy to explore, show how projects connect across Europe, and keep the record useful as new collaborations take shape.
+I built this website to bring together the different parts of my professional experience in one place: projects, places, certificates, roles, and the connections between them.
+
+Rather than presenting the work as a static list, the aim is to make it easier to explore what I have contributed to, where that work has taken place, and how individual experiences connect over time.
+
+The website will continue to evolve as new projects, collaborations, and professional updates are added, while keeping the underlying record clear, useful, and easy to navigate.
