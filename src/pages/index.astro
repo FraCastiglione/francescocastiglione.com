@@ -16,7 +16,13 @@ const latestNews = news[0];
     <div class="shell personal-hero__grid">
       <div class="personal-hero__portrait">
         <img src="/assets/francesco-castiglione.jpg" alt="Francesco Castiglione at the European Parliament" />
-        <span>Born in Catania · Based between Trieste and Ljubljana · Working across Europe</span>
+        <div class="personal-hero__location" aria-label="Born in Catania. Based between Trieste and Ljubljana. Working across Europe.">
+          <span>Born in <strong>Catania</strong></span>
+          <span class="personal-hero__separator" aria-hidden="true">·</span>
+          <span>Based between <strong>Trieste and Ljubljana</strong></span>
+          <span class="personal-hero__separator" aria-hidden="true">·</span>
+          <span>Working <strong>across Europe</strong></span>
+        </div>
       </div>
       <div class="personal-hero__copy">
         <span class="eyebrow">About me</span>
@@ -125,12 +131,19 @@ const latestNews = news[0];
     object-position: 50% 30%;
     border-radius: var(--radius-xl);
   }
-  .personal-hero__portrait span {
-    display: block;
-    margin-top: 1rem;
+  .personal-hero__location {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .25rem .55rem;
+    margin-top: 1.15rem;
     color: var(--muted);
-    font-size: .7rem;
+    font-size: clamp(.74rem, .9vw, .82rem);
+    line-height: 1.5;
+    letter-spacing: .005em;
   }
+  .personal-hero__location strong { color: var(--ink); font-weight: 620; }
+  .personal-hero__separator { color: var(--accent); font-weight: 700; }
   .personal-hero__name { margin: 1rem 0 1.5rem; font: inherit; }
   .personal-hero__statement {
     max-width: 38rem;
@@ -206,6 +219,7 @@ const latestNews = news[0];
     .personal-hero { padding-top: 1.5rem; }
     .personal-hero__grid { gap: 2.8rem; }
     .personal-hero__portrait { width: calc(100% - .8rem); }
+    .personal-hero__location { gap: .2rem .45rem; }
     .projects-preview__grid, .capabilities__grid { grid-template-columns: 1fr; }
     .capabilities article { border-right: 0; border-top: 1px solid rgba(51,73,104,.16); padding-left: 0 !important; }
     .capabilities h3 { margin-top: 4rem; }
