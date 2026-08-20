@@ -7,7 +7,8 @@ sortDate: "2025-03-27"
 dateLabel: "27–28 March 2025"
 location: "Brussels, Belgium"
 relatedProjects: []
-relatedNews: []
+relatedNews:
+  - "eu-youth-stakeholders-group-march-2025"
 relatedAffiliations:
   - "eu-youth-stakeholders-group"
 featuresFrancesco: true

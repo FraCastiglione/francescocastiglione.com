@@ -7,7 +7,8 @@ sortDate: "2025-03-28"
 dateLabel: "26–28 March 2025"
 location: "Brussels, Belgium"
 relatedProjects: []
-relatedNews: []
+relatedNews:
+  - "eu-youth-stakeholders-group-march-2025"
 relatedAffiliations: ["eu-youth-stakeholders-group", "one-hour-for-europe"]
 featuresFrancesco: true
 featured: true

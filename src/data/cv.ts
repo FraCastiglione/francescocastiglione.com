@@ -40,12 +40,14 @@ export const experience = [
       'Contributes to a European network connecting youth organisations and stakeholders with EU youth-policy discussions, consultations, the Commission youth check, and the implementation of the EU Youth Strategy.',
     highlights: [
       'Participated in the first meeting of the Group in Brussels on 27–28 March 2025.',
+      'Returned for the second EU Youth Stakeholders Group meeting in June 2026.',
       'Acts as a registered interest representative, supporting youth interests and access to European mobility programmes.',
     ],
     links: [
       { label: 'European Youth Portal', href: 'https://youth.europa.eu/strategy/euyouthstakeholdersgroup_en' },
       { label: 'Affiliation', href: '/about/#affiliations' },
-      { label: 'Meeting photo', href: '/gallery/' },
+      { label: 'First meeting', href: '/news/eu-youth-stakeholders-group-march-2025/' },
+      { label: 'Second meeting', href: '/news/eu-youth-stakeholders-group-june-2026/' },
     ],
   },
   {

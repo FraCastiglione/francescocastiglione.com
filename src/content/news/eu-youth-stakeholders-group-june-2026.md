@@ -1,19 +1,19 @@
 ---
-title: "Inside the EU Youth Stakeholders Group: the June 2025 meeting"
-summary: "Representing One Hour for Europe in a European forum where youth organisations and EU institutions meet, exchange perspectives, and shape the conversation around youth policy."
-publishedAt: "2025-06-30"
-dateLabel: "June 2025"
+title: "Returning to the EU Youth Stakeholders Group in June 2026"
+summary: "Continuing my representation of One Hour for Europe in a European forum where youth organisations and EU institutions exchange perspectives on youth policy."
+publishedAt: "2026-06-30"
+dateLabel: "June 2026"
 category: "article"
 relatedProjects: []
 relatedAffiliations:
   - "eu-youth-stakeholders-group"
-image: "/assets/gallery/eu-youth-stakeholders-group-june-2025.jpg"
+image: "/assets/gallery/eu-youth-stakeholders-group-june-2026.jpg"
 imageAlt: "Members of the EU Youth Stakeholders Group gathered for a group photograph"
-imageCaption: "The EU Youth Stakeholders Group at its June 2025 meeting."
+imageCaption: "The EU Youth Stakeholders Group at its second meeting in June 2026."
 draft: false
 ---
 
-Being part of the EU Youth Stakeholders Group gives me the opportunity to bring the experience of a youth-led organisation into a space where European youth policy is discussed directly with institutions and other stakeholders. In June 2025, I joined the Group's meeting as a representative of One Hour for Europe.
+Being part of the EU Youth Stakeholders Group gives me the opportunity to bring the experience of a youth-led organisation into a space where European youth policy is discussed directly with institutions and other stakeholders. In June 2026, I returned for the Group's second meeting as a representative of One Hour for Europe.
 
 ## A meeting point between policy and practice
 
@@ -27,7 +27,7 @@ The meeting included an exchange with Glenn Micallef, European Commissioner for 
 
 That kind of conversation matters because youth participation is most useful when it is connected to real decision-making. It also creates a responsibility for representatives: to arrive prepared, to listen carefully, and to bring the discussion back to the organisations and communities they represent.
 
-![Francesco Castiglione participating in the June 2025 EU Youth Stakeholders Group meeting](/assets/gallery/eu-youth-stakeholders-group-june-2025-participation.jpg)
+![Francesco Castiglione participating in the June 2026 EU Youth Stakeholders Group meeting](/assets/gallery/eu-youth-stakeholders-group-june-2026-participation.jpg)
 
 *Taking part in the meeting as a representative of One Hour for Europe.*
 
