@@ -4,8 +4,8 @@ issuer: "Associazione Culturale Europolitiche / Les Jeunes Européens Strasbourg
 issued: "9–14 March 2025"
 sortDate: "2025-03-14"
 summary: "Europass Mobility record for a Strasbourg study visit connecting media literacy, European institutions, democracy, human rights, and active citizenship."
-category: "Europass Mobility"
-program: "Erasmus+ Adult Education"
+category: "Mobility certificate"
+program: "Erasmus+"
 activityType: "Adult education study visit"
 locations:
   - city: "Strasbourg"

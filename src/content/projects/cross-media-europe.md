@@ -21,6 +21,8 @@ skills:
 organisations:
   - "Associazione Culturale Europolitiche"
   - "Les Jeunes Européens Strasbourg"
+image: "/assets/gallery/projects/cross-media-europe.jpg"
+imageAlt: "Cross Media Europe participants inside the European Parliament in Strasbourg"
 featured: false
 ---
 

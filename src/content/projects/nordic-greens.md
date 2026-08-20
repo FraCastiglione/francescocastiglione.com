@@ -20,6 +20,9 @@ skills:
 organisations:
   - "Youth Centre Vasatokka"
 featured: false
+image: "/assets/gallery/projects/nordic-greens-inari.jpg"
+imageAlt: "Nordic Greens volunteer group gathered beside the water in Inari, Finland"
+imagePosition: "50% 72%"
 ---
 
 ## The project

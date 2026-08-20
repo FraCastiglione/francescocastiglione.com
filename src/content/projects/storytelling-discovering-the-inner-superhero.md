@@ -22,6 +22,8 @@ skills:
   - Educational-method design
 organisations:
   - "Associazione InCo — Interculturalità & Comunicazione APS"
+image: "/assets/gallery/projects/storytelling-inner-superhero.jpg"
+imageAlt: "Piazza Duomo and the civic tower in Trento during Storytelling — Discovering the Inner Superhero"
 featured: false
 ---
 

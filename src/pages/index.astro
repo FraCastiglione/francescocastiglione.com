@@ -3,12 +3,16 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ProjectMap from '../components/ProjectMap.astro';
-import Wordmark from '../components/Wordmark.astro';
+import Logo from '../components/Logo.astro';
 
-const projects = (await getCollection('projects')).sort((a, b) => Number(b.data.featured) - Number(a.data.featured));
-const featuredProjects = projects.filter((project) => project.data.featured).slice(0, 2);
-const news = (await getCollection('news', ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const latestNews = news[0];
+const projects = (await getCollection('projects')).sort((a, b) =>
+  (b.data.sortDate?.valueOf() ?? 0) - (a.data.sortDate?.valueOf() ?? 0),
+);
+const latestProjects = projects.slice(0, 2);
+const news = (await getCollection('news', ({ data }) => !data.draft)).sort((a, b) =>
+  b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
+);
+const latestNews = news.slice(0, 3);
 ---
 
 <BaseLayout>
@@ -16,19 +20,18 @@ const latestNews = news[0];
     <div class="shell personal-hero__grid">
       <div class="personal-hero__portrait">
         <img src="/assets/francesco-castiglione.jpg" alt="Francesco Castiglione at the European Parliament" />
-        <div class="personal-hero__location" aria-label="Born in Catania. Based between Trieste and Ljubljana. Working across Europe.">
-          <span>Born in <strong>Catania</strong></span>
-          <span class="personal-hero__separator" aria-hidden="true">·</span>
-          <span>Based between <strong>Trieste and Ljubljana</strong></span>
-          <span class="personal-hero__separator" aria-hidden="true">·</span>
-          <span>Working <strong>across Europe</strong></span>
-        </div>
       </div>
       <div class="personal-hero__copy">
-        <span class="eyebrow">About me</span>
-        <h1 class="personal-hero__name"><Wordmark hero /></h1>
-        <p class="personal-hero__statement">Projects, places, and people — connected by experience.</p>
-        <p class="lede">My experience moves between European project development, grant processes, international mobility, youth participation, facilitation, and coordination. The common thread is helping people organise around an idea and move it forward.</p>
+        <h1 class="personal-hero__name"><Logo hero /></h1>
+        <div class="personal-hero__description">
+          <p>I am proud to work as an assistant to a highly experienced Project Manager on ambitious EU-funded projects, alongside talented colleagues and prominent partners from academia and industry across Europe. Through this work, I am developing the experience, knowledge, and skills to grow into a capable Project Manager specialised in EU projects.</p>
+          <p>Alongside my professional work, I study Business Administration and Management at the University of Trieste and am currently an Erasmus+ student at the University of Ljubljana – School of Economics and Business (SEB).</p>
+        </div>
+        <div class="personal-hero__facts" aria-label="Personal details and professional availability">
+          <span><small>Born</small><strong>Catania, Italy</strong></span>
+          <span><small>Based</small><strong>Trieste, Italy · Ljubljana, Slovenia</strong></span>
+          <span><small>Operating</small><strong>Across the EEA &amp; Beyond</strong></span>
+        </div>
         <div class="personal-hero__actions">
           <a class="button" href="/about/">More about me</a>
           <a class="text-link" href="/cv/">View CV</a>
@@ -39,19 +42,12 @@ const latestNews = news[0];
 
   <section class="section section--surface map-preview">
     <div class="shell">
-      <div class="map-preview__intro">
-        <span class="eyebrow">Projects by place</span>
-        <h2>Building projects, partnerships, and connections. <span>Bringing ideas to life across Europe.</span></h2>
-        <div class="map-preview__context">
-          <div>
-            <h3>A geographical record of collaboration.</h3>
-            <p>This is a record of the projects I’ve contributed to, the places they’ve taken me, and what I’ve learned along the way.</p>
-          </div>
-          <div class="map-preview__actions">
-            <a class="button" href="/projects/">Explore projects</a>
-            <a class="button button--outline" href="/contact/">Start a conversation</a>
-          </div>
+      <div class="home-heading home-heading--map">
+        <div>
+          <h2>Projects across Europe.</h2>
+          <p>A map of projects I have managed, helped write, contributed to, or joined as a participant.</p>
         </div>
+        <a class="button button--outline button--small" href="/projects/">Explore all projects</a>
       </div>
       <ProjectMap projects={projects} compact />
     </div>
@@ -59,171 +55,161 @@ const latestNews = news[0];
 
   <section class="section projects-preview">
     <div class="shell">
-      <div class="section-heading">
-        <span class="eyebrow">Selected projects</span>
-        <h2 class="section-title">A closer look at the projects.</h2>
-        <p>Explore each project by place, program, role, activity, and the skills developed along the way.</p>
+      <div class="home-heading">
+        <div>
+          <h2>Latest Projects</h2>
+          <p>The newest additions to my project record, from management and proposal work to participation.</p>
+        </div>
+        <a class="button button--outline button--small" href="/projects/">View all projects</a>
       </div>
       <div class="projects-preview__grid">
-        {featuredProjects.map((project, index) => <ProjectCard project={project} index={index} />)}
+        {latestProjects.map((project, index) => <ProjectCard project={project} index={index} />)}
       </div>
-      <a class="text-link projects-preview__link" href="/projects/">View the complete project archive <span>↗</span></a>
     </div>
   </section>
 
   <section class="section section--soft-blue capabilities">
     <div class="shell">
-      <div class="section-heading">
-        <span class="eyebrow">How I contribute</span>
-        <h2 class="section-title">From first idea to accountable delivery.</h2>
-        <p>Work that connects planning, people, documentation, communication, and follow-through.</p>
+      <div class="home-heading capabilities__heading">
+        <div>
+          <span class="eyebrow">How I can help</span>
+          <h2>Practical support for European projects.</h2>
+          <p>I can support organisations and teams from an early opportunity through delivery, documentation, and reporting.</p>
+        </div>
       </div>
       <div class="capabilities__grid">
-        <article><span>01</span><h3>Project development</h3><p>Research, opportunity scouting, proposal support, planning, and application processes.</p></article>
-        <article><span>02</span><h3>Partnerships</h3><p>Clear communication across international teams, institutions, organisations, and stakeholders.</p></article>
-        <article><span>03</span><h3>Monitoring & reporting</h3><p>Structured administrative support, grant-management systems, monitoring, and reporting workflows.</p></article>
-        <article><span>04</span><h3>Mobility & facilitation</h3><p>International logistics, participant support, non-formal education, and group leadership.</p></article>
+        <article><span>01</span><h3>Project development</h3><p>Opportunity research, partner input, proposal writing, work plans, and application support.</p></article>
+        <article><span>02</span><h3>Coordination & partnerships</h3><p>Timelines, follow-up, partner communication, meeting preparation, and shared documentation.</p></article>
+        <article><span>03</span><h3>Monitoring & reporting</h3><p>Grant-management systems, progress tracking, evidence, deliverables, and reporting support.</p></article>
+        <article><span>04</span><h3>Mobility & participants</h3><p>International logistics, group preparation, participant support, and activity facilitation.</p></article>
       </div>
     </div>
   </section>
 
-  {latestNews && (
-    <section class="section--tight latest-note">
-      <div class="shell latest-note__inner">
-        <span class="eyebrow">Latest update · {latestNews.data.publishedAt.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</span>
-        <h2>{latestNews.data.title}</h2>
-        <p>{latestNews.data.summary}</p>
-        <a class="text-link" href={`/news/${latestNews.id}/`}>Read the note</a>
+  {latestNews.length > 0 && (
+    <section class="section latest-news">
+      <div class="shell">
+        <div class="home-heading">
+          <div>
+            <span class="eyebrow">Latest news</span>
+            <h2>Articles, events, and updates.</h2>
+            <p>Recent writing and notes from projects, studies, professional work, and events.</p>
+          </div>
+          <a class="button button--outline button--small" href="/news/">View all news</a>
+        </div>
+        <div class="latest-news__grid">
+          {latestNews.map((post) => (
+            <article class="news-preview">
+              <a class="news-preview__media" href={`/news/${post.id}/`} aria-label={`Read ${post.data.title}`}>
+                {post.data.image ? (
+                  <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" />
+                ) : (
+                  <span aria-hidden="true">{post.data.category}</span>
+                )}
+              </a>
+              <div class="news-preview__body">
+                <p class="news-preview__meta">{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</p>
+                <h3><a href={`/news/${post.id}/`}>{post.data.title}</a></h3>
+                <p>{post.data.summary}</p>
+                <a class="text-link" href={`/news/${post.id}/`}>Read more ↗</a>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   )}
 
   <section class="section contact-cta">
     <div class="shell contact-cta__inner">
-      <span class="eyebrow">Open to the right next project</span>
-      <h2 class="section-title">Have an idea worth building together?</h2>
-      <a class="button" href="/contact/">Start a conversation</a>
+      <div>
+        <span class="eyebrow">Keep in touch</span>
+        <h2>Let’s connect on LinkedIn.</h2>
+        <p>Follow my work, share an idea, or bring the conversation there.</p>
+      </div>
+      <div class="contact-cta__actions">
+        <a class="button button--linkedin" href="https://www.linkedin.com/in/francescocastiglione5/" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V8.98h3.42v1.57h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.29zM5.32 7.41a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM3.54 8.98H7.1v11.47H3.54V8.98z"></path></svg>
+          <span>Connect on LinkedIn ↗</span>
+        </a>
+        <a class="text-link" href="/contact/">Other contact options</a>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .personal-hero { padding: clamp(3.5rem, 8vw, 7.5rem) 0; }
-  .personal-hero__grid {
-    display: grid;
-    grid-template-columns: minmax(19rem, .8fr) 1.2fr;
-    gap: clamp(3rem, 9vw, 8rem);
-    align-items: center;
-  }
+  .personal-hero { padding: clamp(2.2rem, 5.5vw, 5rem) 0; }
+  .personal-hero__grid { display: grid; grid-template-columns: minmax(17rem, .72fr) 1.28fr; gap: clamp(2.5rem, 7vw, 6rem); align-items: center; }
   .personal-hero__portrait { position: relative; }
-  .personal-hero__portrait::before {
-    content: '';
-    position: absolute;
-    inset: 1rem -1rem -1rem 1rem;
-    z-index: -1;
-    border-radius: var(--radius-xl);
-    background: var(--surface-strong);
-  }
-  .personal-hero__portrait img {
-    width: 100%;
-    aspect-ratio: .92;
-    object-fit: cover;
-    object-position: 50% 30%;
-    border-radius: var(--radius-xl);
-  }
-  .personal-hero__location {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: .25rem .55rem;
-    margin-top: 1.15rem;
-    color: var(--muted);
-    font-size: clamp(.74rem, .9vw, .82rem);
-    line-height: 1.5;
-    letter-spacing: .005em;
-  }
-  .personal-hero__location strong { color: var(--ink); font-weight: 620; }
-  .personal-hero__separator { color: var(--accent); font-weight: 700; }
-  .personal-hero__name { margin: 1rem 0 1.5rem; font: inherit; }
-  .personal-hero__statement {
-    max-width: 38rem;
-    margin: 0 0 1rem;
-    font-size: clamp(1.45rem, 2.7vw, 2.25rem);
-    font-weight: 560;
-    line-height: 1.12;
-    letter-spacing: -.045em;
-  }
-  .personal-hero__copy .lede { max-width: 42rem; margin: 0; }
-  .personal-hero__actions { display: flex; align-items: center; gap: 1.5rem; margin-top: 2rem; }
+  .personal-hero__portrait::before { content: ''; position: absolute; inset: .8rem -.8rem -.8rem .8rem; z-index: -1; border-radius: var(--radius-xl); background: var(--surface-strong); }
+  .personal-hero__portrait img { width: 100%; aspect-ratio: .9; object-fit: cover; object-position: 50% 30%; border-radius: var(--radius-xl); }
+  .personal-hero__name { margin: 0 0 1.25rem; font: inherit; }
+  .personal-hero__description { display: grid; gap: .8rem; max-width: 48rem; color: var(--ink); font-size: clamp(.9rem, 1.35vw, 1.02rem); font-weight: 430; line-height: 1.62; letter-spacing: -.005em; text-align: justify; text-justify: inter-word; hyphens: auto; }
+  .personal-hero__description p { margin: 0; }
+  .personal-hero__facts { display: grid; grid-template-columns: .8fr 1.45fr 1.2fr; gap: .55rem; margin-top: 1.5rem; }
+  .personal-hero__facts > span { position: relative; min-width: 0; display: grid; gap: .3rem; padding: .8rem .85rem .82rem 1rem; overflow: hidden; border: 1px solid var(--line); border-radius: .75rem; background: linear-gradient(145deg, var(--white), var(--blue-mist)); }
+  .personal-hero__facts > span::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .personal-hero__facts small { color: var(--accent-dark); font-size: .55rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+  .personal-hero__facts strong { color: var(--ink); font-size: .68rem; font-weight: 650; line-height: 1.35; }
+  .personal-hero__actions { display: flex; align-items: center; gap: 1.5rem; margin-top: 1.6rem; }
 
-  .map-preview__intro { margin-bottom: clamp(2.8rem, 6vw, 5rem); }
-  .map-preview__intro > h2 {
-    max-width: 68rem;
-    margin: 1rem 0 clamp(2.8rem, 6vw, 5rem);
-    font-size: clamp(2.6rem, 6vw, 5.4rem);
-    font-weight: 610;
-    line-height: .98;
-    letter-spacing: -.065em;
-  }
-  .map-preview__intro > h2 span { color: var(--accent); }
-  .map-preview__context {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 3rem;
-    align-items: end;
-    padding-top: 1.4rem;
-    border-top: 1px solid var(--line);
-  }
-  .map-preview__context h3 {
-    margin: 0 0 .7rem;
-    font-size: clamp(1.5rem, 3vw, 2.4rem);
-    font-weight: 610;
-    line-height: 1.05;
-    letter-spacing: -.045em;
-  }
-  .map-preview__context p { max-width: 43rem; margin: 0; color: var(--muted); }
-  .map-preview__actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: flex-end; }
-
+  .section { padding-block: clamp(3.7rem, 7vw, 6.2rem); }
+  .home-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: end; margin-bottom: clamp(1.8rem, 4vw, 3rem); }
+  .home-heading h2 { max-width: 46rem; margin: .45rem 0 0; font-size: clamp(1.9rem, 3.7vw, 3.15rem); line-height: 1; letter-spacing: -.055em; }
+  .home-heading p { max-width: 44rem; margin: .8rem 0 0; color: var(--muted); font-size: .88rem; }
+  .home-heading--map { padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
   .projects-preview__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-  .projects-preview__link { margin-top: 2rem; }
 
-  .section--soft-blue .eyebrow, .section--soft-blue .section-heading p { color: var(--muted); }
+  .capabilities__heading { grid-template-columns: 1fr; }
   .capabilities__grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid rgba(51,73,104,.16); }
-  .capabilities article { min-height: 18rem; padding: 1.4rem 1.4rem 1.4rem 0; border-right: 1px solid rgba(51,73,104,.16); }
-  .capabilities article + article { padding-left: 1.4rem; }
+  .capabilities article { min-height: 13rem; padding: 1.25rem 1.25rem 1rem 0; border-right: 1px solid rgba(51,73,104,.16); }
+  .capabilities article + article { padding-left: 1.25rem; }
   .capabilities article:last-child { border-right: 0; }
-  .capabilities article > span { color: var(--accent); font-size: .68rem; }
-  .capabilities h3 { margin: 7rem 0 .7rem; font-size: 1.15rem; letter-spacing: -.025em; }
-  .capabilities article p { margin: 0; color: var(--muted); font-size: .8rem; }
+  .capabilities article > span { color: var(--accent); font-size: .66rem; font-weight: 700; }
+  .capabilities h3 { margin: 3.5rem 0 .65rem; font-size: 1.05rem; letter-spacing: -.025em; }
+  .capabilities article p { margin: 0; color: var(--muted); font-size: .76rem; }
 
-  .latest-note { border-bottom: 1px solid var(--line); }
-  .latest-note__inner { display: grid; grid-template-columns: 1fr 1fr 1.2fr auto; gap: 2rem; align-items: center; }
-  .latest-note h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.035em; }
-  .latest-note p { margin: 0; color: var(--muted); font-size: .82rem; }
+  .latest-news__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .news-preview { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
+  .news-preview__media { display: grid; aspect-ratio: 16 / 10; overflow: hidden; place-items: center; background: linear-gradient(145deg, var(--blue-mist), var(--surface-strong)); text-decoration: none; }
+  .news-preview__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+  .news-preview:hover .news-preview__media img { transform: scale(1.025); }
+  .news-preview__media span { color: var(--accent-dark); font-size: .65rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+  .news-preview__body { padding: 1.15rem; }
+  .news-preview__meta { margin: 0 0 .55rem; color: var(--accent-dark); font-size: .61rem; font-weight: 700; text-transform: capitalize; }
+  .news-preview h3 { margin: 0; font-size: 1.08rem; line-height: 1.15; letter-spacing: -.03em; }
+  .news-preview h3 a { color: inherit; text-decoration: none; }
+  .news-preview__body > p:not(.news-preview__meta) { margin: .65rem 0 .9rem; color: var(--muted); font-size: .74rem; }
 
+  .contact-cta { border-top: 1px solid var(--line); }
   .contact-cta__inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: end; }
-  .contact-cta__inner .eyebrow { grid-column: 1 / -1; margin-bottom: -1.5rem; }
-  .contact-cta .section-title { max-width: 52rem; }
+  .contact-cta h2 { margin: .55rem 0 0; font-size: clamp(2rem, 4.3vw, 3.7rem); line-height: 1; letter-spacing: -.06em; }
+  .contact-cta p { margin: .8rem 0 0; color: var(--muted); }
+  .contact-cta__actions { display: flex; align-items: center; gap: 1.2rem; }
+  .button--linkedin { display: inline-flex; align-items: center; gap: .62rem; }
+  .button--linkedin svg { width: 1.05rem; height: 1.05rem; flex: none; fill: currentColor; }
 
   @media (max-width: 900px) {
-    .personal-hero__grid, .map-preview__context { grid-template-columns: 1fr; }
-    .map-preview__actions { justify-content: flex-start; }
-    .personal-hero__portrait { width: min(29rem, 92%); }
-    .capabilities__grid { grid-template-columns: repeat(2, 1fr); }
+    .personal-hero__grid { grid-template-columns: minmax(14rem, .75fr) 1.25fr; gap: 2.5rem; }
+    .capabilities__grid, .latest-news__grid { grid-template-columns: repeat(2, 1fr); }
     .capabilities article:nth-child(2) { border-right: 0; }
     .capabilities article:nth-child(n+3) { border-top: 1px solid rgba(51,73,104,.16); }
-    .latest-note__inner { grid-template-columns: 1fr 1fr; }
+    .latest-news__grid article:last-child { grid-column: 1 / -1; }
+    .contact-cta__inner { grid-template-columns: 1fr; }
   }
 
-  @media (max-width: 650px) {
-    .personal-hero { padding-top: 1.5rem; }
-    .personal-hero__grid { gap: 2.8rem; }
-    .personal-hero__portrait { width: calc(100% - .8rem); }
-    .personal-hero__location { gap: .2rem .45rem; }
-    .projects-preview__grid, .capabilities__grid { grid-template-columns: 1fr; }
-    .capabilities article { border-right: 0; border-top: 1px solid rgba(51,73,104,.16); padding-left: 0 !important; }
-    .capabilities h3 { margin-top: 4rem; }
-    .latest-note__inner, .contact-cta__inner { grid-template-columns: 1fr; }
-    .contact-cta__inner .eyebrow { margin-bottom: 0; }
+  @media (max-width: 700px) {
+    .personal-hero { padding-top: 1.4rem; }
+    .personal-hero__grid { grid-template-columns: 1fr; gap: 2rem; }
+    .personal-hero__portrait { width: min(25rem, calc(100% - .7rem)); }
+    .personal-hero__facts { grid-template-columns: 1fr; }
+    .personal-hero__facts > span { grid-template-columns: 5.5rem 1fr; align-items: baseline; }
+    .home-heading { grid-template-columns: 1fr; align-items: start; }
+    .projects-preview__grid, .capabilities__grid, .latest-news__grid { grid-template-columns: 1fr; }
+    .capabilities article { min-height: 11rem; padding-left: 0 !important; border-right: 0; border-top: 1px solid rgba(51,73,104,.16); }
+    .capabilities h3 { margin-top: 2.5rem; }
+    .latest-news__grid article:last-child { grid-column: auto; }
+    .contact-cta__actions { align-items: flex-start; flex-direction: column; }
   }
 </style>

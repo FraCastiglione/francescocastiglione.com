@@ -20,6 +20,9 @@ skills:
   - Educational methods
 organisations:
   - "Documenta — Center for Dealing with the Past"
+image: "/assets/gallery/projects/meeting-memories-ljubljana.jpg"
+imageAlt: "Meeting Memories participants gathered in Ljubljana"
+imagePosition: "center 68%"
 featured: false
 ---
 

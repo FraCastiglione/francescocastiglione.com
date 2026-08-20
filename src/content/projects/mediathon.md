@@ -20,6 +20,8 @@ skills:
   - Collaborative ideation
 organisations:
   - "Noorteühendus Life Zone"
+image: "/assets/gallery/projects/mediathon.jpg"
+imageAlt: "Francesco Castiglione presenting One Hour for Europe during Mediathon"
 featured: false
 ---
 

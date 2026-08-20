@@ -18,6 +18,9 @@ organisations:
   - "SIW International Volunteer Projects"
   - "Associazione InformaGiovani"
 featured: false
+image: "/assets/gallery/projects/ivs4life-online-training.jpg"
+imageAlt: "Participants in the online IVS4Life training programme"
+imagePosition: "50% 45%"
 ---
 
 ## The project

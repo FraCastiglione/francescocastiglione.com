@@ -1,10 +1,10 @@
 ---
 title: "Greening the Present, Saving the Future"
-summary: "A 42-hour European Solidarity Corps training course connecting environmental responsibility with group leadership and project learning."
+summary: "A 42-hour Erasmus+ training course connecting environmental responsibility with group leadership and project learning."
 yearLabel: "2022"
 sortDate: "2022-05-07"
 role: "Participant"
-program: "European Solidarity Corps"
+program: "Erasmus+"
 activityType: "Training course"
 status: "complete"
 deliveryMode: "in-person"
@@ -20,12 +20,14 @@ skills:
   - Intercultural learning
 organisations:
   - "Associazione InformaGiovani"
+image: "/assets/gallery/projects/greening-present-saving-future-filaga.jpg"
+imageAlt: "Participants gathered during Greening the Present, Saving the Future in Filaga"
 featured: false
 ---
 
 ## The project
 
-This 42-hour training course took place in Filaga, Sicily, from 29 April to 7 May 2022 within the European Solidarity Corps.
+This 42-hour Erasmus+ training course took place in Filaga, Sicily, from 29 April to 7 May 2022.
 
 ## What I developed
 

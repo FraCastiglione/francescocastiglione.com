@@ -12,6 +12,7 @@ relatedNews:
 relatedAffiliations:
   - "innovators-community-lab"
 featured: true
+featuresFrancesco: true
 mediaType: "photo"
 src: "/assets/gallery/innovators-community-lab-opening-2026.webp"
 ---

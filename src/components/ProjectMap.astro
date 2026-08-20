@@ -9,6 +9,14 @@ interface Props {
 const { projects, compact = false } = Astro.props;
 const mapId = `project-map-${Math.random().toString(36).slice(2, 10)}`;
 const dataId = `${mapId}-data`;
+const getCategory = (program: string) => {
+  const name = program.toLowerCase();
+  if (name.includes('erasmus+')) return 'erasmus';
+  if (name.includes('solidarity corps')) return 'esc';
+  if (name.includes('national grant')) return 'national-grants';
+  if (['horizon', 'digital europe', 'european parliament', 'europe for citizens', 'meeting memories', 'european project'].some((label) => name.includes(label))) return 'eu-grants';
+  return 'other';
+};
 const features = projects.flatMap((project) =>
   project.data.locations.map((location) => ({
     type: 'Feature' as const,
@@ -22,6 +30,12 @@ const features = projects.flatMap((project) =>
       locationLabel: `${location.city}, ${location.country}`,
       yearLabel: project.data.yearLabel,
       program: project.data.program,
+      category: getCategory(project.data.program),
+      summary: project.data.summary,
+      role: project.data.role,
+      activityType: project.data.activityType,
+      image: project.data.image ?? '',
+      imageAlt: project.data.imageAlt ?? '',
       href: `/projects/${project.id}/`,
     },
   })),
@@ -33,6 +47,13 @@ const geojson = { type: 'FeatureCollection' as const, features };
 <div class:list={['project-map-wrap', { 'project-map-wrap--compact': compact }]}>
   <div id={mapId} class="project-map" data-project-map data-json-id={dataId} aria-label="Interactive map of project locations"></div>
   <button class="project-map__reset" type="button" data-map-reset aria-label="Reset map to Europe">Europe</button>
+  <div class="project-map__legend" aria-label="Project categories">
+    <span><i class="project-map__dot project-map__dot--erasmus"></i>Erasmus+</span>
+    <span><i class="project-map__dot project-map__dot--esc"></i>ESC</span>
+    <span><i class="project-map__dot project-map__dot--eu"></i>EU Grants</span>
+    <span><i class="project-map__dot project-map__dot--national"></i>National Grants</span>
+    <span><i class="project-map__dot project-map__dot--other"></i>Other</span>
+  </div>
   <script is:inline id={dataId} type="application/json" set:html={JSON.stringify(geojson)}></script>
   <div class="project-map__empty" data-map-empty hidden={features.length > 0}>
     <span class="eyebrow">Map ready</span>
@@ -51,6 +72,12 @@ const geojson = { type: 'FeatureCollection' as const, features };
     locationLabel: string;
     yearLabel: string;
     program: string;
+    category: string;
+    summary: string;
+    role: string;
+    activityType: string;
+    image: string;
+    imageAlt: string;
     href: string;
   }>;
 
@@ -107,11 +134,14 @@ const geojson = { type: 'FeatureCollection' as const, features };
       projects.forEach((project) => {
         const link = document.createElement('a');
         link.href = project.href;
+        link.dataset.category = project.category;
+        const dot = document.createElement('i');
+        dot.className = `map-category-dot map-category-dot--${project.category}`;
         const title = document.createElement('b');
         title.textContent = project.projectTitle;
         const meta = document.createElement('small');
         meta.textContent = `${project.program} · ${project.yearLabel}`;
-        link.append(title, meta);
+        link.append(dot, title, meta);
         list.append(link);
       });
 
@@ -134,7 +164,7 @@ const geojson = { type: 'FeatureCollection' as const, features };
         data: filteredData(),
         cluster: true,
         clusterMaxZoom: 13,
-        clusterRadius: 56,
+        clusterRadius: 14,
       });
 
       map.addLayer({
@@ -143,7 +173,7 @@ const geojson = { type: 'FeatureCollection' as const, features };
         source: 'projects',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': '#4068c8',
+          'circle-color': '#43516a',
           'circle-radius': ['step', ['get', 'point_count'], 20, 8, 25, 20, 31],
           'circle-stroke-width': 4,
           'circle-stroke-color': 'rgba(255,255,255,.82)',
@@ -169,7 +199,15 @@ const geojson = { type: 'FeatureCollection' as const, features };
         source: 'projects',
         filter: ['!', ['has', 'point_count']],
         paint: {
-          'circle-color': '#123b67',
+          'circle-color': [
+            'match', ['get', 'category'],
+            'erasmus', '#4f70cc',
+            'esc', '#278b78',
+            'eu-grants', '#c27b2a',
+            'national-grants', '#b65362',
+            'other', '#7c60a8',
+            '#43516a',
+          ],
           'circle-radius': 8,
           'circle-stroke-width': 3,
           'circle-stroke-color': '#ffffff',
@@ -206,6 +244,20 @@ const geojson = { type: 'FeatureCollection' as const, features };
         const properties = feature.properties as ProjectFeature['properties'];
         const popup = document.createElement('div');
         popup.className = 'map-card';
+        popup.dataset.category = properties.category;
+
+        if (properties.image) {
+          const media = document.createElement('div');
+          media.className = 'map-card__media';
+          const image = document.createElement('img');
+          image.src = properties.image;
+          image.alt = properties.imageAlt;
+          media.append(image);
+          popup.append(media);
+        }
+
+        const content = document.createElement('div');
+        content.className = 'map-card__content';
 
         const meta = document.createElement('span');
         meta.textContent = `${properties.program} · ${properties.yearLabel}`;
@@ -213,13 +265,18 @@ const geojson = { type: 'FeatureCollection' as const, features };
         title.textContent = properties.projectTitle;
         const location = document.createElement('span');
         location.textContent = properties.locationLabel;
+        const role = document.createElement('small');
+        role.textContent = `${properties.role} · ${properties.activityType}`;
+        const summary = document.createElement('p');
+        summary.textContent = properties.summary;
         const link = document.createElement('a');
         link.href = properties.href;
-        link.textContent = 'View project';
-        popup.append(meta, title, location, link);
+        link.textContent = 'View project ↗';
+        content.append(meta, title, location, role, summary, link);
+        popup.append(content);
 
         activePopup?.remove();
-        activePopup = new maplibregl.Popup({ offset: 14, closeButton: true })
+        activePopup = new maplibregl.Popup({ offset: 14, closeButton: true, maxWidth: '285px' })
           .setLngLat(feature.geometry.coordinates as [number, number])
           .setDOMContent(popup)
           .addTo(map);
@@ -272,6 +329,30 @@ const geojson = { type: 'FeatureCollection' as const, features };
     cursor: pointer;
   }
 
+  .project-map__legend {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem .8rem;
+    padding: .58rem .72rem;
+    border: 1px solid rgba(37,37,37,.12);
+    border-radius: .7rem;
+    color: var(--muted);
+    background: rgba(255,255,255,.94);
+    box-shadow: 0 5px 18px rgba(22,35,52,.08);
+    font-size: .58rem;
+  }
+  .project-map__legend span { display: flex; align-items: center; gap: .3rem; }
+  .project-map__dot, :global(.map-category-dot) { width: .48rem; height: .48rem; display: inline-block; border-radius: 50%; background: #43516a; }
+  .project-map__dot--erasmus, :global(.map-category-dot--erasmus) { background: #4f70cc; }
+  .project-map__dot--esc, :global(.map-category-dot--esc) { background: #278b78; }
+  .project-map__dot--eu, :global(.map-category-dot--eu-grants) { background: #c27b2a; }
+  .project-map__dot--national, :global(.map-category-dot--national-grants) { background: #b65362; }
+  .project-map__dot--other, :global(.map-category-dot--other) { background: #7c60a8; }
+
   .project-map__empty {
     position: absolute;
     left: clamp(1rem, 4vw, 2rem);
@@ -309,16 +390,24 @@ const geojson = { type: 'FeatureCollection' as const, features };
   }
 
   :global(.map-card) {
-    min-width: 14rem;
-    display: grid;
-    gap: 0.35rem;
-    padding: 1rem;
+    width: 17rem;
     font-family: var(--font-sans);
+    border-top: 3px solid #43516a;
   }
-
-  :global(.map-card > span) { color: var(--muted); font-size: 0.7rem; }
-  :global(.map-card strong) { color: var(--ink); font-size: 1rem; }
-  :global(.map-card a) { margin-top: 0.35rem; color: var(--accent); font-size: 0.76rem; font-weight: 650; }
+  :global(.map-card[data-category='erasmus']) { border-top-color: #4f70cc; }
+  :global(.map-card[data-category='esc']) { border-top-color: #278b78; }
+  :global(.map-card[data-category='eu-grants']) { border-top-color: #c27b2a; }
+  :global(.map-card[data-category='national-grants']) { border-top-color: #b65362; }
+  :global(.map-card[data-category='other']) { border-top-color: #7c60a8; }
+  :global(.map-card__media) { height: 7.4rem; overflow: hidden; background: var(--surface-strong); }
+  :global(.map-card__media img) { width: 100%; height: 100%; object-fit: cover; }
+  :global(.map-card__content) { display: grid; gap: .34rem; padding: .85rem; }
+  :global(.map-card__content > span) { color: var(--muted); font-size: .62rem; }
+  :global(.map-card__content > span:first-child) { color: var(--accent-dark); font-weight: 700; text-transform: uppercase; }
+  :global(.map-card strong) { color: var(--ink); font-size: .98rem; line-height: 1.1; }
+  :global(.map-card small) { color: var(--soft); font-size: .58rem; }
+  :global(.map-card p) { display: -webkit-box; margin: .25rem 0; overflow: hidden; color: var(--muted); font-size: .67rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+  :global(.map-card a) { margin-top: .25rem; padding-top: .55rem; border-top: 1px solid var(--line); color: var(--ink); font-size: .68rem; font-weight: 700; }
 
   :global(.map-cluster-card) {
     min-width: 15rem;
@@ -332,12 +421,14 @@ const geojson = { type: 'FeatureCollection' as const, features };
   :global(.map-cluster-card__list) { display: grid; gap: .45rem; margin-top: .45rem; }
   :global(.map-cluster-card__list a) {
     display: grid;
+    grid-template-columns: auto 1fr;
     gap: .12rem;
     padding: .65rem .7rem;
     border-radius: .6rem;
     color: var(--ink);
     background: var(--surface);
   }
+  :global(.map-cluster-card__list i) { grid-row: 1 / 3; align-self: center; }
   :global(.map-cluster-card__list a:hover) { background: var(--blue-soft); }
   :global(.map-cluster-card__list b) { font-size: .76rem; }
   :global(.map-cluster-card__list small) { color: var(--muted); font-size: .62rem; }
