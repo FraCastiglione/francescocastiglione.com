@@ -16,6 +16,14 @@ const certificateLocationSchema = z.object({
 
 const certificatePdfPathSchema = z.string().regex(/^\/documents\/certificates\/[a-z0-9-]+\.pdf$/);
 const certificatePreviewPathSchema = z.string().regex(/^\/assets\/certificates\/[a-z0-9-]+\.jpg$/);
+const galleryImagePathSchema = z.string().regex(
+  /^\/assets\/gallery\/[a-z0-9\/_-]+\.(?:avif|jpe?g|png|webp)$/,
+  'Gallery photos and posters must be web-ready images inside /public/assets/gallery/',
+);
+const galleryVideoPathSchema = z.string().regex(
+  /^\/assets\/gallery\/[a-z0-9\/_-]+\.(?:mp4|webm)$/,
+  'Gallery videos must be MP4 or WebM files inside /public/assets/gallery/',
+);
 
 const certificateDocumentSchema = z.object({
   label: z.string(),
@@ -82,10 +90,63 @@ const news = defineCollection({
     dateLabel: z.string().optional(),
     category: z.enum(['project', 'article', 'event', 'update']),
     relatedProjects: z.array(z.string()).default([]),
+    relatedAffiliations: z.array(z.string()).default([]),
     image: z.string().optional(),
     imageAlt: z.string().optional(),
+    imageCaption: z.string().optional(),
+    imageCredit: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { projects, certificates, news };
+const galleryCommonSchema = {
+  title: z.string(),
+  caption: z.string(),
+  alt: z.string(),
+  category: z.string().default('Project'),
+  sortDate: z.coerce.date(),
+  dateLabel: z.string().optional(),
+  location: z.string().optional(),
+  relatedProjects: z.array(z.string()).default([]),
+  relatedNews: z.array(z.string()).default([]),
+  relatedAffiliations: z.array(z.string()).default([]),
+  credit: z.string().optional(),
+  creditUrl: z.url().optional(),
+  fit: z.enum(['cover', 'contain']).default('cover'),
+  featured: z.boolean().default(false),
+};
+
+const gallery = defineCollection({
+  loader: glob({ base: './src/content/gallery', pattern: '**/*.md' }),
+  schema: z.discriminatedUnion('mediaType', [
+    z.object({
+      ...galleryCommonSchema,
+      mediaType: z.literal('photo'),
+      src: galleryImagePathSchema,
+    }),
+    z.object({
+      ...galleryCommonSchema,
+      mediaType: z.literal('video'),
+      src: galleryVideoPathSchema,
+      poster: galleryImagePathSchema.optional(),
+    }),
+  ]),
+});
+
+const affiliations = defineCollection({
+  loader: glob({ base: './src/content/affiliations', pattern: '**/*.md' }),
+  schema: z.object({
+    name: z.string(),
+    role: z.string(),
+    period: z.string(),
+    location: z.string(),
+    summary: z.string(),
+    monogram: z.string().min(2).max(5),
+    externalUrl: z.url(),
+    relatedProjects: z.array(z.string()).default([]),
+    sortOrder: z.number().int().default(0),
+    active: z.boolean().default(true),
+  }),
+});
+
+export const collections = { projects, certificates, news, gallery, affiliations };

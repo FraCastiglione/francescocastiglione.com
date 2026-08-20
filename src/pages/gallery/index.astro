@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryExplorer from '../../components/GalleryExplorer.astro';
+
+const items = (await getCollection('gallery')).sort((a, b) => {
+  return b.data.sortDate.valueOf() - a.data.sortDate.valueOf() || a.data.title.localeCompare(b.data.title);
+});
+const projects = (await getCollection('projects')).map((project) => ({
+  id: project.id,
+  title: project.data.title,
+}));
+const news = (await getCollection('news', ({ data }) => !data.draft)).map((post) => ({
+  id: post.id,
+  title: post.data.title,
+}));
+const affiliations = (await getCollection('affiliations')).map((affiliation) => ({
+  id: affiliation.id,
+  title: affiliation.data.name,
+}));
+---
+
+<BaseLayout title="Gallery — Francesco Castiglione" description="Photos and videos connected to Francesco Castiglione's projects, events, and professional stories across Europe.">
+  <header class="page-intro gallery-intro">
+    <div class="shell">
+      <span class="eyebrow">Visual archive</span>
+      <div class="page-intro__grid">
+        <h1 class="page-title">The people, places, and moments behind the work.</h1>
+        <p class="page-intro__copy">A growing collection of photos and videos connected directly to the projects, events, and stories they document.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="gallery-index" aria-label="Gallery collection">
+    <div class="shell"><GalleryExplorer items={items} projects={projects} news={news} affiliations={affiliations} /></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gallery-intro { background: linear-gradient(180deg, var(--white), var(--blue-mist)); }
+  .gallery-index { padding: 0 0 clamp(6rem, 12vw, 10rem); background: linear-gradient(180deg, var(--blue-mist), var(--white) 18rem); }
+</style>

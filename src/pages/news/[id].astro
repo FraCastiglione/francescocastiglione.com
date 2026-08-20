@@ -17,9 +17,22 @@ const { Content } = await render(post);
     <header class="article-page__header">
       <div class="shell article-page__header-inner">
         <a href="/news/">← News & notes</a>
-        <span class="eyebrow">{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-        <h1>{post.data.title}</h1>
-        <p>{post.data.summary}</p>
+        <div class="article-page__heading">
+          <span class="eyebrow">{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          <h1>{post.data.title}</h1>
+          <p>{post.data.summary}</p>
+        </div>
+        {post.data.image && (
+          <figure class="article-page__cover">
+            <img src={post.data.image} alt={post.data.imageAlt ?? ''} />
+            {(post.data.imageCaption || post.data.imageCredit) && (
+              <figcaption>
+                {post.data.imageCaption && <span>{post.data.imageCaption}</span>}
+                {post.data.imageCredit && <span>Image: {post.data.imageCredit}</span>}
+              </figcaption>
+            )}
+          </figure>
+        )}
       </div>
     </header>
     <div class="shell article-page__content"><div class="prose"><Content /></div></div>
@@ -28,9 +41,16 @@ const { Content } = await render(post);
 
 <style>
   .article-page__header { padding: clamp(4rem, 9vw, 8rem) 0; border-bottom: 1px solid var(--line); }
-  .article-page__header-inner { max-width: 58rem; }
+  .article-page__header-inner { max-width: 72rem; }
   .article-page__header a { display: inline-block; margin-bottom: clamp(4rem, 9vw, 7rem); color: var(--muted); font-size: .75rem; }
+  .article-page__heading { max-width: 58rem; }
   .article-page h1 { margin: 1.2rem 0 1.5rem; font-size: clamp(3.2rem, 8vw, 6.5rem); font-weight: 580; line-height: .92; letter-spacing: -.07em; }
   .article-page__header p { max-width: 42rem; margin: 0; color: var(--muted); font-size: 1.1rem; }
+  .article-page__cover { margin: clamp(3rem, 7vw, 6rem) 0 0; }
+  .article-page__cover img { width: 100%; display: block; border-radius: var(--radius-lg); background: var(--surface); }
+  .article-page__cover figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: .75rem; color: var(--muted); font-size: .65rem; }
   .article-page__content { display: grid; justify-content: center; padding-block: clamp(4rem, 9vw, 8rem); }
+  @media (max-width: 760px) {
+    .article-page__cover figcaption { display: grid; }
+  }
 </style>

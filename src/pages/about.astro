@@ -1,5 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AffiliationsSection from '../components/AffiliationsSection.astro';
+
+const affiliations = (await getCollection('affiliations')).sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+const projects = await getCollection('projects');
+const news = await getCollection('news');
 ---
 
 <BaseLayout title="About — Francesco Castiglione" description="About Francesco Castiglione and his work across European projects, mobility, youth participation, and international collaboration.">
@@ -31,6 +37,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </div>
   </section>
+
+  <AffiliationsSection affiliations={affiliations} projects={projects} news={news} />
 
   <section class="section section--surface principles">
     <div class="shell">

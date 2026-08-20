@@ -1,0 +1,158 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface RelatedRecord {
+  id: string;
+  title: string;
+}
+
+interface Props {
+  item: CollectionEntry<'gallery'>;
+  relatedProjects?: RelatedRecord[];
+  relatedNews?: RelatedRecord[];
+  relatedAffiliations?: RelatedRecord[];
+}
+
+const { item, relatedProjects = [], relatedNews = [], relatedAffiliations = [] } = Astro.props;
+const { data } = item;
+const formattedDate = data.dateLabel ?? data.sortDate.toLocaleDateString('en-GB', {
+  month: 'long',
+  year: 'numeric',
+});
+const mediaLabel = data.mediaType === 'photo' ? 'Photograph' : 'Video';
+---
+
+<article class="gallery-card">
+  <figure class="gallery-card__figure">
+    <div class:list={['gallery-card__media', { 'gallery-card__media--contain': data.fit === 'contain' }]}>
+      {data.mediaType === 'photo' ? (
+        <a href={data.src} target="_blank" rel="noreferrer" aria-label={`Open ${data.title} at full size`}>
+          <img src={data.src} alt={data.alt} loading="lazy" decoding="async" />
+        </a>
+      ) : (
+        <video
+          src={data.src}
+          poster={data.poster}
+          controls
+          preload="metadata"
+          aria-label={data.alt}
+        >
+          Your browser does not support embedded video. <a href={data.src}>Open the video</a> instead.
+        </video>
+      )}
+      <span class="gallery-card__format">{mediaLabel}</span>
+    </div>
+
+    <figcaption class="gallery-card__content">
+      <div class="gallery-card__meta">
+        <span>{data.category}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={data.sortDate.toISOString()}>{formattedDate}</time>
+        {data.location && <><span aria-hidden="true">·</span><span>{data.location}</span></>}
+      </div>
+      <h2>{data.title}</h2>
+      <p>{data.caption}</p>
+
+      {(relatedProjects.length > 0 || relatedNews.length > 0 || relatedAffiliations.length > 0) && (
+        <nav class="gallery-card__links" aria-label={`Related pages for ${data.title}`}>
+          {relatedProjects.map((project) => (
+            <a href={`/projects/${project.id}/`}><span>Project</span>{project.title} ↗</a>
+          ))}
+          {relatedNews.map((post) => (
+            <a href={`/news/${post.id}/`}><span>Story</span>{post.title} ↗</a>
+          ))}
+          {relatedAffiliations.map((affiliation) => (
+            <a href="/about/#affiliations"><span>Affiliation</span>{affiliation.title} ↗</a>
+          ))}
+        </nav>
+      )}
+
+      {data.credit && (
+        <p class="gallery-card__credit">
+          Credit: {data.creditUrl ? <a href={data.creditUrl} target="_blank" rel="noreferrer">{data.credit}</a> : data.credit}
+        </p>
+      )}
+    </figcaption>
+  </figure>
+</article>
+
+<style>
+  .gallery-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms var(--ease-out);
+  }
+
+  .gallery-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+  }
+
+  .gallery-card__figure { height: 100%; display: flex; flex-direction: column; margin: 0; }
+  .gallery-card__media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--surface-strong);
+  }
+
+  .gallery-card__media > a,
+  .gallery-card__media img,
+  .gallery-card__media video { width: 100%; height: 100%; display: block; }
+  .gallery-card__media img,
+  .gallery-card__media video { object-fit: cover; }
+  .gallery-card__media--contain img,
+  .gallery-card__media--contain video { object-fit: contain; background: #171717; }
+  .gallery-card__media img { transition: transform 520ms var(--ease-out); }
+  .gallery-card:hover .gallery-card__media img { transform: scale(1.025); }
+
+  .gallery-card__format {
+    position: absolute;
+    top: .8rem;
+    left: .8rem;
+    z-index: 1;
+    padding: .38rem .58rem;
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 999px;
+    color: var(--ink);
+    background: rgba(255,255,255,.9);
+    box-shadow: 0 .25rem 1rem rgba(23,23,23,.08);
+    backdrop-filter: blur(10px);
+    font-size: .57rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .gallery-card__content { flex: 1; display: flex; flex-direction: column; padding: 1.25rem; }
+  .gallery-card__meta { display: flex; flex-wrap: wrap; gap: .25rem .5rem; color: var(--muted); font-size: .63rem; }
+  .gallery-card__meta > span:first-child { color: var(--accent-dark); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .gallery-card h2 { margin: .72rem 0 .55rem; font-size: clamp(1.28rem, 2vw, 1.62rem); line-height: 1.08; letter-spacing: -.04em; }
+  .gallery-card__content > p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.6; }
+
+  .gallery-card__links { display: grid; gap: .45rem; margin-top: auto; padding-top: 1.15rem; }
+  .gallery-card__links a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .8rem;
+    padding-top: .62rem;
+    border-top: 1px solid var(--line);
+    font-size: .7rem;
+    font-weight: 650;
+  }
+  .gallery-card__links a:hover { color: var(--accent-dark); }
+  .gallery-card__links span { color: var(--muted); font-size: .58rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+  .gallery-card__credit { margin-top: .9rem !important; font-size: .61rem !important; }
+  .gallery-card__credit a { text-decoration: underline; text-underline-offset: .15em; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-card:hover { transform: none; }
+    .gallery-card:hover .gallery-card__media img { transform: none; }
+  }
+</style>

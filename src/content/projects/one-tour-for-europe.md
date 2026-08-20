@@ -1,37 +1,58 @@
 ---
 title: "One Tour for Europe"
-summary: "This project record is being prepared. Its locations, program, role, outcomes, and media will be added after the first content review."
-yearLabel: "Details forthcoming"
-role: "To be confirmed"
-program: "European project"
-activityType: "Details forthcoming"
-status: "details-pending"
+summary: "A youth-led campaign combining street actions, art, digital communication, and community engagement to encourage participation in the 2024 European Parliament elections, particularly among first-time voters."
+yearLabel: "February–June 2024"
+sortDate: "2024-06-24"
+role: "Project manager"
+program: "European Parliament co-funded campaign"
+activityType: "Youth participation awareness campaign"
+deliveryMode: "hybrid"
+status: "complete"
 locations:
-  - city: "Catania"
-    country: "Italy"
-    latitude: 37.5079
-    longitude: 15.0830
-  - city: "Rome"
-    country: "Italy"
-    latitude: 41.9028
-    longitude: 12.4964
   - city: "Genoa"
     country: "Italy"
     latitude: 44.4056
     longitude: 8.9463
+  - city: "Forlì"
+    country: "Italy"
+    latitude: 44.2227
+    longitude: 12.0407
+  - city: "Rome"
+    country: "Italy"
+    latitude: 41.9028
+    longitude: 12.4964
+  - city: "Catania"
+    country: "Italy"
+    latitude: 37.5079
+    longitude: 15.0830
   - city: "Milan"
     country: "Italy"
     latitude: 45.4642
     longitude: 9.1900
-skills: []
-organisations: []
+skills:
+  - Youth participation
+  - Campaign coordination
+  - Community engagement
+  - Digital communication
+  - Stakeholder collaboration
+  - Public outreach
+organisations:
+  - "One Hour for Europe Italia APS"
+externalUrl: "https://www.onehourforeurope.it/general-7-2"
 featured: true
+relatedCertificates: []
 ---
 
-## The project
+## The campaign
 
-This page is ready to hold the complete project story: the context, Francesco's role, the work carried out, the people and organisations involved, and the results.
+One Tour for Europe was a youth-led awareness campaign designed to encourage participation in the 2024 European Parliament elections, particularly among first-time voters. Led by One Hour for Europe Italia APS and co-funded by the European Parliament Offices, it brought democratic participation into public spaces through direct outreach, art, and online communication.
 
-## What will be connected here
+As project manager, Francesco coordinated the campaign's development and delivery across its physical and digital activities, working with the local networks that made each intervention possible.
 
-Locations from every project stage will feed the interactive map. Related certificates, articles, photographs, infopacks, and external links will appear here without duplicating information elsewhere on the website.
+## From public spaces to digital participation
+
+The campaign combined street actions in Italian cities with online media, informational booths, flyers, hashtags, QR codes, and a digital wall. Murals, benches, installations, and other participatory artistic interventions offered a visible and creative route into conversations about EU values, democracy, and the elections.
+
+## A network-led approach
+
+Local volunteers and civil-society organisations helped adapt the activities to each city and make them inclusive, visible, and useful. The campaign reflects One Hour for Europe's wider commitment to inclusion and diversity, participatory methods, and sustained youth engagement with European democracy.
