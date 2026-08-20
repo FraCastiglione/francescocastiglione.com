@@ -13,6 +13,9 @@ locations:
     longitude: 15.0830
 skills: []
 organisations: []
+image: "/assets/gallery/projects/yes-and.jpg"
+imageAlt: "Yes, and..! Erasmus+ Training Course project artwork"
+imageFit: "contain"
 featured: true
 ---
 

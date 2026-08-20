@@ -10,6 +10,9 @@ image: "/assets/gallery/one-hour-for-europe-eye21-strasbourg-2021.jpg"
 imageAlt: "Francesco Castiglione with a One Hour for Europe delegation at the European Parliament in Strasbourg during EYE2021"
 relatedProjects:
   - "one-tour-for-europe"
+  - "euniversity-genoa"
+  - "flowrest"
+  - "erasmus-visibility-meeting-2026"
 sortOrder: 1
 active: true
 ---

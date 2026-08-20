@@ -27,6 +27,8 @@ export const experience = [
       { label: 'Official website', href: 'https://onehourforeurope.it' },
       { label: 'Affiliation', href: '/about/#affiliations' },
       { label: 'One Tour for Europe', href: '/projects/one-tour-for-europe/' },
+      { label: 'Flowrest', href: '/projects/flowrest/' },
+      { label: 'EUniversity Genoa', href: '/projects/euniversity-genoa/' },
     ],
   },
   {
@@ -36,9 +38,12 @@ export const experience = [
     organisation: 'EU Youth Stakeholders Group · European Commission',
     summary:
       'Contributes to a European network connecting youth organisations and stakeholders with EU youth-policy discussions, consultations, the Commission youth check, and the implementation of the EU Youth Strategy.',
-    highlights: ['Participated in the first meeting of the Group in Brussels on 27–28 March 2025.'],
+    highlights: [
+      'Participated in the first meeting of the Group in Brussels on 27–28 March 2025.',
+      'Acts as a registered interest representative, supporting youth interests and access to European mobility programmes.',
+    ],
     links: [
-      { label: 'European Youth Portal', href: 'https://youth.europa.eu/strategy/euyouthstrategygroup_en' },
+      { label: 'European Youth Portal', href: 'https://youth.europa.eu/strategy/euyouthstakeholdersgroup_en' },
       { label: 'Affiliation', href: '/about/#affiliations' },
       { label: 'Meeting photo', href: '/gallery/' },
     ],

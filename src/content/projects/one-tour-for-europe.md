@@ -58,3 +58,9 @@ The campaign combined street actions in Italian cities with online media, inform
 ## A network-led approach
 
 Local volunteers and civil-society organisations helped adapt the activities to each city and make them inclusive, visible, and useful. The campaign reflects One Hour for Europe's wider commitment to inclusion and diversity, participatory methods, and sustained youth engagement with European democracy.
+
+## From Forlì to the European Parliament
+
+During the Forlì stage, young people created a customised European flag as one of the campaign's artistic outcomes. The work, created by artist Rachel Rouzaud, was later exhibited in the European Parliament's flags hall in Strasbourg in 2025—carrying a local, youth-led contribution into a European institutional space.
+
+![The customised One Tour for Europe flag created in Forlì and later exhibited at the European Parliament](/assets/gallery/projects/one-tour-for-europe-forli-flag.jpg)
