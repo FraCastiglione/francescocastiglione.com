@@ -18,6 +18,9 @@ skills:
 organisations:
   - "Eurodesk Italy"
   - "Turin Chamber of Commerce"
+image: "/assets/gallery/projects/erasmus-for-young-entrepreneurs-webinar.jpg"
+imageAlt: "Erasmus for Young Entrepreneurs programme logo"
+imageFit: "contain"
 externalUrl: "https://www.erasmus-entrepreneurs.eu/"
 featured: false
 ---

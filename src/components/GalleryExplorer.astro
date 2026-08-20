@@ -36,6 +36,7 @@ const categories = [...new Set(items.map((item) => item.data.category))].sort((a
             <span class="sr-only">Category</span>
             <select data-gallery-filter="category">
               <option value="">All categories</option>
+              {items.some((item) => item.data.featuresFrancesco) && <option value="photos-of-francesco">Photos of Francesco</option>}
               {categories.map((category) => <option value={category.toLowerCase()}>{category}</option>)}
             </select>
           </label>
@@ -81,7 +82,7 @@ const categories = [...new Set(items.map((item) => item.data.category))].sort((a
             <div
               data-gallery-item
               data-search-text={searchText}
-              data-category={item.data.category.toLowerCase()}
+              data-category={`${item.data.category.toLowerCase()}${item.data.featuresFrancesco ? '|photos-of-francesco' : ''}`}
               data-media-type={item.data.mediaType}
             >
               <GalleryCard item={item} relatedProjects={relatedProjects} relatedNews={relatedNews} relatedAffiliations={relatedAffiliations} />
@@ -124,7 +125,9 @@ const categories = [...new Set(items.map((item) => item.data.category))].sort((a
 
       items.forEach((item) => {
         const matchesSearch = !query || (item.dataset.searchText ?? '').includes(query);
-        const matchesFilters = Object.entries(selected).every(([key, value]) => !value || item.dataset[key] === value);
+        const matchesFilters = Object.entries(selected).every(([key, value]) =>
+          !value || (item.dataset[key] ?? '').split('|').includes(value),
+        );
         const matches = matchesSearch && matchesFilters;
         item.hidden = !matches;
         if (matches) visible += 1;

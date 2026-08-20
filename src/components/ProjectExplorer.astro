@@ -6,11 +6,36 @@ import ProjectMap from './ProjectMap.astro';
 interface Props { projects: CollectionEntry<'projects'>[]; }
 const { projects } = Astro.props;
 
-const clean = (values: string[]) => [...new Set(values.filter((value) => value && !value.toLowerCase().includes('confirm') && !value.toLowerCase().includes('forthcoming')))];
-const programs = clean(projects.map((project) => project.data.program));
-const roles = clean(projects.map((project) => project.data.role));
-const countries = clean(projects.flatMap((project) => project.data.locations.map((location) => location.country)));
-const years = clean(projects.map((project) => project.data.yearLabel));
+const getProgramCategory = (program: string) => {
+  const name = program.toLowerCase();
+  if (name.includes('erasmus+')) return 'erasmus';
+  if (name.includes('solidarity corps')) return 'esc';
+  if (name.includes('national grant')) return 'national-grants';
+  if (['horizon', 'digital europe', 'european parliament', 'europe for citizens', 'meeting memories', 'european project'].some((label) => name.includes(label))) return 'eu-grants';
+  return 'other';
+};
+const getRoleCategory = (role: string) => {
+  const name = role.toLowerCase();
+  if (['project manager', 'coordinator', 'project lead'].some((label) => name.includes(label))) return 'project-management';
+  if (name.includes('volunteer')) return 'volunteer';
+  if (['participant', 'adult learner', 'member of the european parliament'].some((label) => name.includes(label))) return 'participant';
+  return 'contributor';
+};
+const getYear = (project: CollectionEntry<'projects'>) => String(project.data.sortDate?.getUTCFullYear() ?? project.data.yearLabel.match(/(?:19|20)\d{2}/)?.[0] ?? '');
+const years = [...new Set(projects.map(getYear).filter(Boolean))].sort((a, b) => Number(b) - Number(a));
+const programFilters = [
+  { value: 'erasmus', label: 'Erasmus+' },
+  { value: 'esc', label: 'European Solidarity Corps (ESC)' },
+  { value: 'eu-grants', label: 'EU Grants' },
+  { value: 'national-grants', label: 'National Grants' },
+  { value: 'other', label: 'Others' },
+];
+const roleFilters = [
+  { value: 'project-management', label: 'Project Management' },
+  { value: 'participant', label: 'Participant' },
+  { value: 'volunteer', label: 'Volunteer' },
+  { value: 'contributor', label: 'Contributor' },
+];
 ---
 
 <section class="project-explorer" data-project-explorer>
@@ -22,10 +47,9 @@ const years = clean(projects.map((project) => project.data.yearLabel));
     </label>
 
     <div class="project-filters" aria-label="Filter projects">
-      <label><span class="sr-only">Program</span><select data-filter="program"><option value="">All programs</option>{programs.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>
-      <label><span class="sr-only">Role</span><select data-filter="role"><option value="">All roles</option>{roles.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>
-      {countries.length > 0 && <label><span class="sr-only">Country</span><select data-filter="country"><option value="">All countries</option>{countries.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>}
-      {years.length > 0 && <label><span class="sr-only">Year</span><select data-filter="year"><option value="">All years</option>{years.map((value) => <option value={value.toLowerCase()}>{value}</option>)}</select></label>}
+      <label><span class="sr-only">Program</span><select data-filter="program"><option value="">All programs</option>{programFilters.map((option) => <option value={option.value}>{option.label}</option>)}</select></label>
+      <label><span class="sr-only">Role</span><select data-filter="role"><option value="">All roles</option>{roleFilters.map((option) => <option value={option.value}>{option.label}</option>)}</select></label>
+      {years.length > 0 && <label><span class="sr-only">Year</span><select data-filter="year"><option value="">All years</option>{years.map((value) => <option value={value}>{value}</option>)}</select></label>}
     </div>
 
     <div class="view-switcher" aria-label="Project view">
@@ -53,10 +77,11 @@ const years = clean(projects.map((project) => project.data.yearLabel));
         data-project-id={project.id}
         data-title={project.data.title.toLowerCase()}
         data-summary={project.data.summary.toLowerCase()}
-        data-program={project.data.program.toLowerCase()}
-        data-role={project.data.role.toLowerCase()}
+        data-program={getProgramCategory(project.data.program)}
+        data-program-name={project.data.program.toLowerCase()}
+        data-role={getRoleCategory(project.data.role)}
         data-country={project.data.locations.map((location) => location.country.toLowerCase()).join('|')}
-        data-year={project.data.yearLabel.toLowerCase()}
+        data-year={getYear(project)}
         data-skills={project.data.skills.join('|').toLowerCase()}
       >
         <ProjectCard project={project} index={index} />
@@ -66,6 +91,8 @@ const years = clean(projects.map((project) => project.data.yearLabel));
 
   <div data-view-panel="list" class="project-list" hidden>
     {projects.map((project) => {
+      const category = getProgramCategory(project.data.program);
+      const categoryLabel = programFilters.find((option) => option.value === category)?.label ?? 'Other';
       const physicalLocations = [...new Set(project.data.locations.map((location) => location.country))].join(', ');
       const locations = physicalLocations
         ? `${physicalLocations}${project.data.deliveryMode === 'hybrid' ? ' + online' : ''}`
@@ -77,16 +104,18 @@ const years = clean(projects.map((project) => project.data.yearLabel));
           data-project-id={project.id}
           data-title={project.data.title.toLowerCase()}
           data-summary={project.data.summary.toLowerCase()}
-          data-program={project.data.program.toLowerCase()}
-          data-role={project.data.role.toLowerCase()}
+          data-program={category}
+          data-program-name={project.data.program.toLowerCase()}
+          data-role={getRoleCategory(project.data.role)}
           data-country={project.data.locations.map((location) => location.country.toLowerCase()).join('|')}
-          data-year={project.data.yearLabel.toLowerCase()}
+          data-year={getYear(project)}
           data-skills={project.data.skills.join('|').toLowerCase()}
         >
-          <span class="project-list__year">{project.data.yearLabel}</span>
-          <div><h3><a href={`/projects/${project.id}/`}>{project.data.title}</a></h3><span>{project.data.program}</span></div>
-          <span>{project.data.role}</span>
-          <span>{locations}</span>
+          <a class:list={['project-list__media', `project-list__media--${category}`, { 'project-list__media--placeholder': !project.data.image }]} href={`/projects/${project.id}/`} tabindex="-1" aria-hidden="true">
+            {project.data.image ? <img src={project.data.image} alt="" loading="lazy" decoding="async" style={`object-fit: ${project.data.imageFit}; object-position: ${project.data.imagePosition ?? 'center center'}`} /> : <span>{getYear(project)}</span>}
+          </a>
+          <div class="project-list__meta"><span class:list={['project-list__category', `project-list__category--${category}`]}>{categoryLabel}</span><span>{getYear(project)}</span></div>
+          <div class="project-list__copy"><h3><a href={`/projects/${project.id}/`}>{project.data.title}</a></h3><p>{project.data.summary}</p><small>{project.data.role} · {locations}</small></div>
           <a class="project-list__arrow" href={`/projects/${project.id}/`} aria-label={`View ${project.data.title}`}>↗</a>
         </article>
       );
@@ -117,9 +146,9 @@ const years = clean(projects.map((project) => project.data.yearLabel));
       const visibleIds = new Set<string>();
 
       items.forEach((item) => {
-        const haystack = [item.dataset.title, item.dataset.summary, item.dataset.program, item.dataset.role, item.dataset.country, item.dataset.year, item.dataset.skills].join(' ');
+        const haystack = [item.dataset.title, item.dataset.summary, item.dataset.program, item.dataset.programName, item.dataset.role, item.dataset.country, item.dataset.year, item.dataset.skills].join(' ');
         const matchesQuery = !query || haystack.includes(query);
-        const matchesFilters = Object.entries(filters).every(([key, value]) => !value || (item.dataset[key] ?? '').includes(value));
+        const matchesFilters = Object.entries(filters).every(([key, value]) => !value || item.dataset[key] === value);
         const visible = matchesQuery && matchesFilters;
         item.hidden = !visible;
         if (visible && item.dataset.projectId) visibleIds.add(item.dataset.projectId);
@@ -231,23 +260,40 @@ const years = clean(projects.map((project) => project.data.yearLabel));
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
   }
+  .project-grid > [data-project-item] { min-width: 0; display: flex; }
+  .project-grid > [data-project-item] :global(.project-card) { width: 100%; }
 
   .project-list { border-top: 1px solid var(--line); }
   .project-list__row {
     display: grid;
-    grid-template-columns: 9rem minmax(13rem, 1.5fr) 1fr 1fr 2rem;
-    gap: 1rem;
+    grid-template-columns: 8rem 8rem minmax(0, 1fr) 2rem;
+    gap: 1.4rem;
     align-items: center;
-    padding: 1.4rem 0;
+    padding: 1.15rem 0;
     border-bottom: 1px solid var(--line);
     color: var(--muted);
     font-size: 0.78rem;
   }
 
-  .project-list__row h3 { margin: 0 0 0.2rem; color: var(--ink); font-size: 1rem; }
+  .project-list__media { overflow: hidden; display: block; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); background: var(--surface-strong); }
+  .project-list__media img { width: 100%; height: 100%; object-fit: cover; }
+  .project-list__media--placeholder { display: grid; place-items: center; font-size: .7rem; font-weight: 700; }
+  .project-list__media--erasmus { color: #375cb8; background: #dce6fa; }
+  .project-list__media--esc { color: #1d755f; background: #d7eee8; }
+  .project-list__media--eu-grants { color: #9b5c18; background: #f5e4ca; }
+  .project-list__media--national-grants { color: #96404f; background: #f5dce0; }
+  .project-list__media--other { color: #68498f; background: #eadff6; }
+  .project-list__meta { display: grid; gap: .35rem; color: var(--muted); font-size: .65rem; }
+  .project-list__category { font-weight: 700; }
+  .project-list__category--erasmus { color: #375cb8; }
+  .project-list__category--esc { color: #1d755f; }
+  .project-list__category--eu-grants { color: #9b5c18; }
+  .project-list__category--national-grants { color: #96404f; }
+  .project-list__category--other { color: #68498f; }
+  .project-list__row h3 { margin: 0; color: var(--ink); font-size: 1.05rem; }
   .project-list__row h3 a:hover { color: var(--accent); }
-  .project-list__row div span { font-size: 0.7rem; }
-  .project-list__year { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .project-list__copy p { max-width: 50rem; margin: .35rem 0; color: var(--muted); font-size: .74rem; }
+  .project-list__copy small { color: var(--soft); font-size: .65rem; }
   .project-list__arrow { color: var(--ink); font-size: 1rem; }
 
   .empty-state {
@@ -269,10 +315,12 @@ const years = clean(projects.map((project) => project.data.yearLabel));
     .project-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); display: grid; overflow: visible; }
     .project-filters label,
     .project-filters select { min-width: 0; width: 100%; max-width: none; }
-    .project-list__row { grid-template-columns: 6.5rem 1fr 2rem; }
-    .project-list__row > span:nth-of-type(n+2) { display: none; }
-    .project-list__row > div { grid-column: 2; }
-    .project-list__arrow { grid-column: 3; }
+    .project-list__row { grid-template-columns: 5rem minmax(0, 1fr) 1.5rem; gap: .8rem; }
+    .project-list__media { grid-row: 1 / 3; }
+    .project-list__meta { grid-column: 2; grid-row: 1; align-self: start; grid-template-columns: 1fr auto; }
+    .project-list__copy { grid-column: 2; }
+    .project-list__copy p { display: none; }
+    .project-list__arrow { grid-column: 3; grid-row: 1 / 3; }
   }
 
   @media (max-width: 520px) {

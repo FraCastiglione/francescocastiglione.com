@@ -21,13 +21,10 @@ const affiliations = (await getCollection('affiliations')).map((affiliation) => 
 ---
 
 <BaseLayout title="Gallery — Francesco Castiglione" description="Photos and videos connected to Francesco Castiglione's projects, events, and professional stories across Europe.">
-  <header class="page-intro gallery-intro">
-    <div class="shell">
-      <span class="eyebrow">Visual archive</span>
-      <div class="page-intro__grid">
-        <h1 class="page-title">The people, places, and moments behind the work.</h1>
-        <p class="page-intro__copy">A growing collection of photos and videos connected directly to the projects, events, and stories they document.</p>
-      </div>
+  <header class="collection-intro gallery-intro">
+    <div class="shell collection-intro__inner">
+      <h1>Gallery</h1>
+      <p>Photos and videos connected to projects, articles, events, and affiliations.</p>
     </div>
   </header>
 
@@ -38,5 +35,5 @@ const affiliations = (await getCollection('affiliations')).map((affiliation) => 
 
 <style>
   .gallery-intro { background: linear-gradient(180deg, var(--white), var(--blue-mist)); }
-  .gallery-index { padding: 0 0 clamp(6rem, 12vw, 10rem); background: linear-gradient(180deg, var(--blue-mist), var(--white) 18rem); }
+  .gallery-index { padding: 0 0 clamp(6rem, 12vw, 10rem); background: linear-gradient(180deg, var(--blue-mist), var(--white) 11rem); }
 </style>

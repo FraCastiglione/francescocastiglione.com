@@ -18,6 +18,9 @@ organisations:
   - "Model European Union Strasbourg"
   - "Bringing Europeans Together Association France"
 featured: false
+image: "/assets/gallery/projects/model-european-union-strasbourg-2021.jpg"
+imageAlt: "Francesco Castiglione seated inside the European Parliament hemicycle in Strasbourg"
+imagePosition: "50% 70%"
 ---
 
 ## The project

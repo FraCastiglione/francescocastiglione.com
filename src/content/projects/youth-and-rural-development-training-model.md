@@ -21,6 +21,9 @@ organisations:
   - "KOP Gençlik Derneği"
   - "Scambieuropei"
 featured: false
+image: "/assets/gallery/projects/youth-and-rural-development-training-model.jpg"
+imageAlt: "Francesco Castiglione speaking during the Youth and Rural Development Education Model in Konya"
+imagePosition: "68% 50%"
 ---
 
 ## The project

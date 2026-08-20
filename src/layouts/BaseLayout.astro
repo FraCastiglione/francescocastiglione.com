@@ -49,20 +49,5 @@ const socialImage = new URL(image, Astro.site);
     </main>
     <Footer />
 
-    <script>
-      document.addEventListener('click', (event) => {
-        const target = event.target as HTMLElement;
-        const toggle = target.closest<HTMLElement>('[data-card-toggle]');
-        if (!toggle) return;
-
-        const card = toggle.closest<HTMLElement>('[data-project-card]');
-        if (!card) return;
-
-        const isFlipped = card.classList.toggle('is-flipped');
-        card.querySelectorAll<HTMLElement>('[data-card-toggle]').forEach((button) => {
-          button.setAttribute('aria-expanded', String(isFlipped));
-        });
-      });
-    </script>
   </body>
 </html>

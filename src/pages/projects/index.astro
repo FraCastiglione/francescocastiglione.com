@@ -11,13 +11,10 @@ const projects = (await getCollection('projects')).sort((a, b) => {
 ---
 
 <BaseLayout title="Projects — Francesco Castiglione" description="Explore Francesco Castiglione's European projects by card, list, or interactive map.">
-  <header class="page-intro">
-    <div class="shell">
-      <span class="eyebrow">Project archive</span>
-      <div class="page-intro__grid">
-        <h1 class="page-title">The projects tell the story.</h1>
-        <p class="page-intro__copy">Browse the work visually, scan it as a list, or follow it across Europe. Every view is generated from the same connected project record.</p>
-      </div>
+  <header class="collection-intro">
+    <div class="shell collection-intro__inner">
+      <h1>Projects</h1>
+      <p>Explore the project record by card, list, or map, and filter it by programme, role, or year.</p>
     </div>
   </header>
   <section class="projects-index">

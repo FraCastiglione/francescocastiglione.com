@@ -16,7 +16,6 @@ const { certificates, projects } = Astro.props;
 const projectLookup = new Map(projects.map((project) => [project.id, project]));
 const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b));
 const categoryOptions = unique(certificates.map((certificate) => certificate.data.category));
-const programOptions = unique(certificates.map((certificate) => certificate.data.program));
 const countryOptions = unique(certificates.flatMap((certificate) => certificate.data.locations.map((location) => location.country)));
 const getYear = (certificate: CollectionEntry<'certificates'>) => {
   if (certificate.data.sortDate) return String(certificate.data.sortDate.getUTCFullYear());
@@ -41,13 +40,6 @@ const totalDocuments = certificates.reduce((sum, certificate) => sum + certifica
         <select data-certificate-filter="category">
           <option value="">All categories</option>
           {categoryOptions.map((value) => <option value={value.toLowerCase()}>{value}</option>)}
-        </select>
-      </label>
-      <label>
-        <span class="sr-only">Program</span>
-        <select data-certificate-filter="program">
-          <option value="">All programs</option>
-          {programOptions.map((value) => <option value={value.toLowerCase()}>{value}</option>)}
         </select>
       </label>
       <label>
@@ -96,10 +88,10 @@ const totalDocuments = certificates.reduce((sum, certificate) => sum + certifica
 
       return (
         <div
+          id={`certificate-${certificate.id}`}
           data-certificate-item
           data-search-text={searchText}
           data-category={certificate.data.category.toLowerCase()}
-          data-program={certificate.data.program.toLowerCase()}
           data-country={countries.join('|')}
           data-year={getYear(certificate)}
           data-document-count={certificate.data.documentCount}
@@ -203,7 +195,7 @@ const totalDocuments = certificates.reduce((sum, certificate) => sum + certifica
   .certificate-explorer__summary button { margin-left: auto; padding: .35rem 0; border: 0; border-bottom: 1px solid currentColor; color: var(--accent-dark); background: transparent; font: inherit; font-size: .68rem; cursor: pointer; }
 
   .certificate-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-  .certificate-grid > div { min-width: 0; }
+  .certificate-grid > div { min-width: 0; scroll-margin-top: 6rem; }
   .certificate-grid :global(.certificate-card) { height: 100%; }
 
   .certificate-empty { padding: 5rem 1rem; text-align: center; }

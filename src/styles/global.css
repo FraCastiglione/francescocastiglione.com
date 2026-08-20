@@ -166,6 +166,22 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .page-intro__copy { margin: 0; color: var(--muted); font-size: 1.08rem; }
 
+.collection-intro { padding: clamp(2.35rem, 5vw, 4rem) 0 clamp(1.4rem, 3vw, 2.2rem); }
+.collection-intro__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 32rem);
+  gap: 2rem;
+  align-items: end;
+}
+.collection-intro h1 {
+  margin: 0;
+  font-size: clamp(2.15rem, 5vw, 3.9rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.055em;
+}
+.collection-intro p { margin: 0; color: var(--muted); font-size: clamp(.86rem, 1.4vw, 1rem); }
+
 .prose {
   max-width: 45rem;
   color: #373a40;
@@ -222,7 +238,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 760px) {
   .shell { width: min(calc(100% - 1.5rem), var(--shell)); }
   .section-heading,
-  .page-intro__grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .page-intro__grid,
+  .collection-intro__inner { grid-template-columns: 1fr; gap: .8rem; }
   .section-heading .eyebrow { margin-bottom: 0; }
   .display { letter-spacing: -0.062em; }
 }

@@ -16,7 +16,7 @@ const { compact = false, hero = false, light = false } = Astro.props;
   .wordmark {
     position: relative;
     display: inline-block;
-    padding-bottom: .2rem;
+    padding-bottom: .2em;
     color: var(--ink);
     font-size: .98rem;
     font-weight: 450;
@@ -30,9 +30,9 @@ const { compact = false, hero = false, light = false } = Astro.props;
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 2.2rem;
-    height: 2px;
-    border-radius: 2px;
+    width: 2.2em;
+    height: .1276em;
+    border-radius: .1276em;
     background: var(--accent);
   }
 
@@ -41,14 +41,7 @@ const { compact = false, hero = false, light = false } = Astro.props;
   .wordmark--compact > span { display: none; }
 
   .wordmark--hero {
-    padding-bottom: .38rem;
-    font-size: clamp(1.95rem, 6.3vw, 5.15rem);
-    letter-spacing: -.06em;
-  }
-
-  .wordmark--hero::after {
-    width: clamp(3rem, 6vw, 5rem);
-    height: 3px;
+    font-size: clamp(2.05rem, 4.5vw, 4rem);
   }
 
   @media (max-width: 650px) {

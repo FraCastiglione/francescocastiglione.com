@@ -6,7 +6,7 @@ interface Props {
   index?: number;
 }
 
-const { project, index = 0 } = Astro.props;
+const { project } = Astro.props;
 const { data } = project;
 const physicalLocationLabel = [...new Set(data.locations.map((location) => `${location.city}, ${location.country}`))].join(' · ');
 const locationLabel = physicalLocationLabel
@@ -14,94 +14,83 @@ const locationLabel = physicalLocationLabel
   : data.deliveryMode === 'online' ? 'Online' : 'Locations to be added';
 const visibleTags = data.skills.length ? data.skills.slice(0, 3) : [data.program, data.role];
 const projectHref = `/projects/${project.id}/`;
-const tone = (index % 4) + 1;
+const programName = data.program.toLowerCase();
+const categoryKey = programName.includes('erasmus+')
+  ? 'erasmus'
+  : programName.includes('solidarity corps')
+    ? 'esc'
+    : programName.includes('national grant')
+      ? 'national-grants'
+    : ['horizon', 'digital europe', 'european parliament', 'europe for citizens', 'meeting memories', 'european project'].some((label) => programName.includes(label))
+      ? 'eu-grants'
+      : 'other';
+const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === 'esc' ? 'European Solidarity Corps' : categoryKey === 'eu-grants' ? 'EU Grants' : categoryKey === 'national-grants' ? 'National Grants' : 'Other';
 ---
 
-<article class:list={['project-card', `project-card--tone-${tone}`, { 'project-card--image': Boolean(data.image) }]} data-project-card data-project-id={project.id}>
-  <div class="project-card__inner">
-    <div class="project-card__face project-card__front">
-      {data.image && <img src={data.image} alt={data.imageAlt ?? ''} loading="lazy" />}
+<article class:list={['project-card', `project-card--${categoryKey}`, { 'project-card--image': Boolean(data.image) }]} data-project-card data-project-id={project.id}>
+  <div class="project-card__media">
+      {data.image && <img src={data.image} alt={data.imageAlt ?? ''} loading="lazy" style={`object-fit: ${data.imageFit}; object-position: ${data.imagePosition ?? 'center center'}`} />}
       <div class="project-card__veil"></div>
       <div class="project-card__topline">
         <span>{data.yearLabel}</span>
-        <span>{data.program}</span>
+        <span class="project-card__category" title={data.program}>{categoryLabel}</span>
       </div>
-      <div class="project-card__front-copy">
+      <div class="project-card__headline">
         <p>{locationLabel}</p>
         <h3><a href={projectHref}>{data.title}</a></h3>
-        <div class="tag-list" aria-label="Project attributes">
-          {visibleTags.map((tag) => <span>{tag}</span>)}
-        </div>
       </div>
-      <button class="project-card__flip" type="button" data-card-toggle aria-expanded="false" aria-label={`Show details for ${data.title}`}>
-        <span>Project view</span>
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10M11 6l4 4-4 4" /></svg>
-      </button>
-    </div>
+  </div>
 
-    <div class="project-card__face project-card__back">
-      <div class="project-card__topline">
-        <span>{data.role}</span>
-        <span>{data.activityType}</span>
-      </div>
-      <div class="project-card__back-copy">
-        <p class="eyebrow">The short version</p>
-        <h3>{data.title}</h3>
-        <p>{data.summary}</p>
-      </div>
-      <div class="project-card__actions">
-        <a class="button button--light button--small" href={projectHref}>More details</a>
-        {data.externalUrl && <a class="text-link text-link--light" href={data.externalUrl} target="_blank" rel="noreferrer">Project website ↗</a>}
-      </div>
-      <button class="project-card__close" type="button" data-card-toggle aria-expanded="false" aria-label={`Show front of ${data.title}`}>
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10M9 6l-4 4 4 4" /></svg>
-      </button>
+  <div class="project-card__body">
+    <div class="project-card__meta"><span>{data.role}</span><span>{data.activityType}</span></div>
+    <p class="project-card__summary">{data.summary}</p>
+    <div class="tag-list" aria-label="Project skills">
+      {visibleTags.map((tag) => <span>{tag}</span>)}
+    </div>
+    <div class="project-card__actions">
+      <a class="project-card__details" href={projectHref}>View project <span>↗</span></a>
+      {data.externalUrl && <a class="project-card__external" href={data.externalUrl} target="_blank" rel="noreferrer">Project website ↗</a>}
     </div>
   </div>
 </article>
 
 <style>
   .project-card {
-    min-height: 31rem;
-    perspective: 1200px;
-  }
-
-  .project-card__inner {
-    position: relative;
-    width: 100%;
-    min-height: 31rem;
-    transform-style: preserve-3d;
-    transition: transform 620ms var(--ease-out);
-  }
-
-  .project-card.is-flipped .project-card__inner { transform: rotateY(180deg); }
-
-  .project-card__face {
-    position: absolute;
-    inset: 0;
+    --category-color: #7182a2;
+    --category-soft: #e8edf5;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: 1.35rem;
+    min-height: 100%;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--category-color);
     border-radius: var(--radius-lg);
-    backface-visibility: hidden;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    background: var(--white);
+    transition: transform 200ms var(--ease-out), border-color 180ms ease, box-shadow 180ms ease;
   }
+  .project-card:hover { border-color: color-mix(in srgb, var(--accent) 32%, var(--line)); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
 
-  .project-card__front {
+  .project-card__media {
+    position: relative;
+    overflow: hidden;
+    min-height: 20rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
     color: var(--blue-deep);
     background:
       radial-gradient(circle at 78% 18%, rgba(255,255,255,.2), transparent 30%),
-      linear-gradient(145deg, var(--card-a), var(--card-b));
+      linear-gradient(145deg, #f4f7fb, var(--category-soft));
   }
 
-  .project-card--tone-1 { --card-a: #dcecff; --card-b: #9dc4f1; }
-  .project-card--tone-2 { --card-a: #e8f2ff; --card-b: #b2d2f3; }
-  .project-card--tone-3 { --card-a: #d8e9fb; --card-b: #8eb6e1; }
-  .project-card--tone-4 { --card-a: #edf5ff; --card-b: #bdd8f3; }
-  .project-card--image .project-card__front { color: var(--white); }
+  .project-card--erasmus { --category-color: #4f70cc; --category-soft: #b9cdf6; }
+  .project-card--esc { --category-color: #278b78; --category-soft: #b9e3d9; }
+  .project-card--eu-grants { --category-color: #c27b2a; --category-soft: #f0d3ab; }
+  .project-card--national-grants { --category-color: #b65362; --category-soft: #f2ced4; }
+  .project-card--other { --category-color: #7c60a8; --category-soft: #d8caee; }
+  .project-card--image .project-card__media { color: var(--white); }
 
-  .project-card__front::before {
+  .project-card__media::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -113,15 +102,17 @@ const tone = (index % 4) + 1;
     transform: scale(1.08) rotate(-5deg);
   }
 
-  .project-card__front img {
+  .project-card__media img {
     position: absolute;
     inset: -3%;
     width: 106%;
     height: 106%;
     object-fit: cover;
-    filter: blur(3px) saturate(0.8);
-    transform: scale(1.04);
+    filter: saturate(.84) brightness(.82);
+    transform: scale(1.02);
+    transition: transform 520ms var(--ease-out), filter 280ms ease;
   }
+  .project-card:hover .project-card__media img { filter: saturate(.92) brightness(.86); transform: scale(1.045); }
 
   .project-card__veil {
     position: absolute;
@@ -131,8 +122,7 @@ const tone = (index % 4) + 1;
   .project-card--image .project-card__veil { background: linear-gradient(180deg, rgba(30, 42, 60, .22), rgba(30, 42, 60, .12) 35%, rgba(30, 42, 60, .76)); }
 
   .project-card__topline,
-  .project-card__front-copy,
-  .project-card__flip { position: relative; z-index: 1; }
+  .project-card__headline { position: relative; z-index: 1; }
 
   .project-card__topline {
     display: flex;
@@ -146,115 +136,60 @@ const tone = (index % 4) + 1;
   }
 
   .project-card__topline span:last-child { text-align: right; }
+  .project-card__category { padding: .3rem .48rem; border-radius: 999px; color: var(--white); background: var(--category-color); font-size: .58rem; letter-spacing: .05em; }
 
-  .project-card__front-copy { margin-top: auto; padding: 5rem 0 0; }
-  .project-card__front-copy > p {
+  .project-card__headline { margin-top: auto; padding-top: 4rem; }
+  .project-card__headline > p {
     margin: 0 0 0.85rem;
     color: color-mix(in srgb, currentColor 70%, transparent);
     font-size: 0.78rem;
+    line-height: 1.45;
   }
 
   .project-card h3 {
     margin: 0;
-    font-size: clamp(1.8rem, 4vw, 2.65rem);
-    line-height: 0.98;
+    font-size: clamp(1.65rem, 3.2vw, 2.35rem);
+    line-height: 1;
     letter-spacing: -0.055em;
   }
+  .project-card h3 a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .14em; }
 
-  .project-card h3 a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
+  .project-card__body { flex: 1; display: flex; flex-direction: column; padding: 1.2rem 1.25rem 1.3rem; }
+  .project-card__meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; color: var(--category-color); font-size: .64rem; font-weight: 700; letter-spacing: .045em; text-transform: uppercase; }
+  .project-card__summary { margin: .9rem 0 0; color: var(--muted); font-size: .8rem; line-height: 1.6; }
 
   .tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.45rem;
-    margin-top: 1.35rem;
+    margin-top: 1rem;
   }
 
   .tag-list span {
     padding: 0.42rem 0.65rem;
-    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    border: 1px solid var(--line);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.24);
-    backdrop-filter: blur(8px);
-    color: currentColor;
-    font-size: 0.67rem;
-  }
-
-  .project-card__flip {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1.3rem;
-    padding: 0.95rem 0 0;
-    border: 0;
-    border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-    color: currentColor;
-    background: transparent;
-    font: inherit;
-    font-size: 0.74rem;
-    cursor: pointer;
-  }
-
-  .project-card__flip svg,
-  .project-card__close svg {
-    width: 1.1rem;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-  }
-
-  .project-card__back {
-    color: var(--white);
-    background: #174a7e;
-    transform: rotateY(180deg);
-  }
-
-  .project-card__back-copy {
-    margin: auto 0;
-  }
-
-  .project-card__back-copy .eyebrow { color: rgba(255,255,255,.5); }
-  .project-card__back-copy h3 { margin-top: 0.65rem; }
-  .project-card__back-copy > p:last-child {
-    margin: 1.2rem 0 1.6rem;
-    color: rgba(255,255,255,.7);
-    font-size: 0.88rem;
-    line-height: 1.55;
+    color: var(--muted);
+    background: var(--surface);
+    font-size: 0.64rem;
   }
 
   .project-card__actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 1rem;
+    margin-top: auto;
+    padding-top: 1.15rem;
+    border-top: 1px solid var(--line);
   }
-
-  .project-card__close {
-    position: absolute;
-    top: 3.4rem;
-    right: 1.35rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: grid;
-    place-items: center;
-    border: 1px solid rgba(255,255,255,.2);
-    border-radius: 50%;
-    color: var(--white);
-    background: transparent;
-    cursor: pointer;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .project-card:hover .project-card__inner,
-    .project-card:focus-within .project-card__inner { transform: rotateY(180deg); }
-  }
+  .project-card__details { display: flex; justify-content: space-between; gap: 1rem; color: var(--ink); font-size: .72rem; font-weight: 700; }
+  .project-card__details:hover, .project-card__external:hover { color: var(--accent-dark); }
+  .project-card__external { color: var(--muted); font-size: .67rem; font-weight: 650; }
 
   @media (prefers-reduced-motion: reduce) {
-    .project-card__inner { transition-duration: 0.01ms; }
+    .project-card:hover { transform: none; }
+    .project-card:hover .project-card__media img { transform: scale(1.02); }
   }
 </style>

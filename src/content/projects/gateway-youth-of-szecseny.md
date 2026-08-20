@@ -21,6 +21,9 @@ organisations:
   - "Egyesek Youth Association"
   - "Lunaria"
 featured: false
+image: "/assets/gallery/projects/gateway-youth-of-szecseny.jpg"
+imageAlt: "View across the Danube towards the Hungarian Parliament in Budapest"
+imagePosition: "50% 76%"
 ---
 
 ## The project

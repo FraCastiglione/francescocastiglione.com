@@ -32,6 +32,9 @@ organisations:
   - "Municipality of Åmål"
   - "Europe Direct Fyrbodal"
   - "Lunaria Volontariato Internazionale"
+image: "/assets/gallery/projects/seeds-of-solidarity-amal.jpg"
+imageAlt: "Francesco Castiglione at a European opportunities information stand in Åmål"
+imagePosition: "center 57%"
 featured: false
 ---
 

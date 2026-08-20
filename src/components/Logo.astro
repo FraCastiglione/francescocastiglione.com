@@ -3,14 +3,15 @@ import Wordmark from './Wordmark.astro';
 
 interface Props {
   compact?: boolean;
+  hero?: boolean;
   light?: boolean;
 }
 
-const { compact = false, light = false } = Astro.props;
+const { compact = false, hero = false, light = false } = Astro.props;
 ---
 
 <span class:list={['logo', { 'logo--compact': compact, 'logo--light': light }]}>
-  <Wordmark compact={compact} light={light} />
+  <Wordmark compact={compact} hero={hero} light={light} />
 </span>
 
 <style>

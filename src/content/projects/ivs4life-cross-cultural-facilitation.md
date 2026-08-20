@@ -22,6 +22,8 @@ organisations:
   - "SIW International Volunteer Projects"
   - "Associazione InformaGiovani"
 featured: false
+image: "/assets/gallery/projects/ivs4life-cross-cultural-facilitation.jpg"
+imageAlt: "IVS4Life participants during the cross-cultural facilitation course in the Netherlands"
 ---
 
 ## The project

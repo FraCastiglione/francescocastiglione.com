@@ -38,6 +38,8 @@ skills:
   - Public outreach
 organisations:
   - "One Hour for Europe Italia APS"
+image: "/assets/gallery/projects/one-tour-for-europe-catania.jpg"
+imageAlt: "A public mural created for the Catania stage of One Tour for Europe"
 externalUrl: "https://www.onehourforeurope.it/general-7-2"
 featured: true
 relatedCertificates: []

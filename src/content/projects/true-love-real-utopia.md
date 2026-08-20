@@ -21,6 +21,8 @@ skills:
 organisations:
   - "European Youth Education and Meeting Centre Weimar"
 featured: false
+image: "/assets/gallery/projects/true-love-real-utopia.jpg"
+imageAlt: "Participants in the True Love — Real Utopia youth exchange in Weimar"
 ---
 
 ## The project

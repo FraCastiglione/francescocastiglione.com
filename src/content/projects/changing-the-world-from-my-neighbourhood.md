@@ -20,6 +20,9 @@ skills:
 organisations:
   - "Syncro — Synergy Croatia"
 featured: false
+image: "/assets/gallery/projects/changing-the-world-from-my-neighbourhood.jpg"
+imageAlt: "View of St Mark's Church and its tiled roof in Zagreb, Croatia"
+imagePosition: "50% 74%"
 ---
 
 ## The project

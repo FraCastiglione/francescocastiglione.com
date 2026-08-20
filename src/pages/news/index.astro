@@ -1,45 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsExplorer from '../../components/NewsExplorer.astro';
 
 const posts = (await getCollection('news', ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 ---
 
-<BaseLayout title="News & Notes — Francesco Castiglione" description="Professional updates, project stories, articles, events, and notes from Francesco Castiglione.">
-  <header class="page-intro">
-    <div class="shell">
-      <span class="eyebrow">News & notes</span>
-      <div class="page-intro__grid">
-        <h1 class="page-title">Updates from the work in progress.</h1>
-        <p class="page-intro__copy">Professional updates, conference notes, project stories, articles, and observations gathered along the way.</p>
-      </div>
+<BaseLayout title="News, Articles, and Publications — Francesco Castiglione" description="News, articles, publications, project stories, events, and professional updates from Francesco Castiglione.">
+  <header class="collection-intro">
+    <div class="shell collection-intro__inner news-intro__inner">
+      <h1>News, Articles, and Publications</h1>
+      <p>Project stories, professional updates, articles, events, and published work.</p>
     </div>
   </header>
   <section class="news-index">
-    <div class="shell news-list">
-      {posts.map((post) => (
-        <article>
-          <div class="news-list__meta">
-            <span>{post.data.category}</span>
-            <time datetime={post.data.publishedAt.toISOString()}>{post.data.dateLabel ?? post.data.publishedAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</time>
-          </div>
-          <h2><a href={`/news/${post.id}/`}>{post.data.title}</a></h2>
-          <p>{post.data.summary}</p>
-          <a class="news-list__arrow" href={`/news/${post.id}/`} aria-label={`Read ${post.data.title}`}>↗</a>
-        </article>
-      ))}
-    </div>
+    <div class="shell"><NewsExplorer posts={posts} /></div>
   </section>
 </BaseLayout>
 
 <style>
+  .news-intro__inner { grid-template-columns: 1fr; gap: .65rem; align-items: start; }
+  .news-intro__inner h1 { max-width: 58rem; }
+  .news-intro__inner p { max-width: 42rem; margin: 0; }
   .news-index { padding: 0 0 clamp(6rem, 12vw, 10rem); }
-  .news-list { border-top: 1px solid var(--line); }
-  .news-list article { position: relative; display: grid; grid-template-columns: 10rem minmax(14rem, 1fr) minmax(16rem, .9fr) 3rem; gap: 2rem; align-items: center; padding: 2.2rem 0; border-bottom: 1px solid var(--line); }
-  .news-list__meta { display: grid; gap: .3rem; color: var(--muted); font-size: .7rem; text-transform: capitalize; }
-  .news-list h2 { margin: 0; font-size: 1.4rem; line-height: 1.1; letter-spacing: -.035em; }
-  .news-list h2 a:hover { color: var(--accent); }
-  .news-list p { margin: 0; color: var(--muted); font-size: .8rem; }
-  .news-list__arrow { font-size: 1.2rem; text-align: right; }
-  @media (max-width: 760px) { .news-list article { grid-template-columns: 1fr 2rem; gap: 1rem; } .news-list__meta, .news-list h2, .news-list p { grid-column: 1; } .news-list__arrow { grid-column: 2; grid-row: 1 / 4; align-self: center; } }
 </style>

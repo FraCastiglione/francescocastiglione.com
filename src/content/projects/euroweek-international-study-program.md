@@ -17,6 +17,9 @@ skills:
 organisations:
   - "Euroweek International Study Program"
 featured: false
+image: "/assets/gallery/projects/euroweek-international-study-program.jpg"
+imageAlt: "Euroweek Foundation logo"
+imageFit: "contain"
 ---
 
 ## The programme

@@ -21,6 +21,9 @@ skills:
 organisations:
   - "MTÜ Discovering Opportunities"
 featured: false
+image: "/assets/gallery/projects/the-power-of-storytelling.jpg"
+imageAlt: "The Power of Storytelling participant group in the snow near Roosta, Estonia"
+imagePosition: "50% 76%"
 ---
 
 ## The project

@@ -5,6 +5,8 @@ publishedAt: 2022-05-01
 dateLabel: "May 2022"
 category: "event"
 relatedProjects: []
+relatedAffiliations:
+  - "european-year-of-youth-ambassador-2022"
 draft: false
 ---
 

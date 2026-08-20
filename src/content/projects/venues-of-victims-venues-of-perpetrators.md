@@ -25,6 +25,9 @@ skills:
   - Teamwork
 organisations:
   - "Documenta — Center for Dealing with the Past"
+image: "/assets/gallery/projects/venues-of-victims-venues-of-perpetrators.jpg"
+imageAlt: "A memorial monument and reflecting pool visited during Venues of Victims / Venues of Perpetrators"
+imagePosition: "center 72%"
 featured: false
 relatedCertificates: []
 ---
