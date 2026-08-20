@@ -19,6 +19,9 @@ const relatedCertificates = (await getCollection('certificates'))
     const bDate = b.data.sortDate?.valueOf() ?? Number.NEGATIVE_INFINITY;
     return bDate - aDate || a.data.title.localeCompare(b.data.title);
   });
+const relatedNews = (await getCollection('news', ({ data: newsData }) => !newsData.draft))
+  .filter((post) => post.data.relatedProjects.includes(project.id))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 const physicalLocationLabel = [...new Set(data.locations.map((location) => `${location.city}, ${location.country}`))].join(' · ');
 const locationLabel = physicalLocationLabel
   ? `${physicalLocationLabel}${data.deliveryMode === 'hybrid' ? ' · Online' : ''}`
@@ -28,11 +31,20 @@ const locationLabel = physicalLocationLabel
 <BaseLayout title={`${data.title} — Francesco Castiglione`} description={data.summary} image={data.image}>
   <article class="project-detail">
     <header class="project-detail__hero">
-      <div class="shell">
+      <div class:list={['shell', 'project-detail__hero-shell', { 'project-detail__hero-shell--with-image': Boolean(data.image) }]}>
         <a class="project-detail__back" href="/projects/">← All projects</a>
-        <div class="project-detail__meta"><span>{data.yearLabel}</span><span>{data.program}</span><span>{data.activityType}</span></div>
-        <h1>{data.title}</h1>
-        <p>{data.summary}</p>
+        <div class="project-detail__hero-grid">
+          <div>
+            <div class="project-detail__meta"><span>{data.yearLabel}</span><span>{data.program}</span><span>{data.activityType}</span></div>
+            <h1>{data.title}</h1>
+            <p>{data.summary}</p>
+          </div>
+          {data.image && (
+            <figure class="project-detail__cover">
+              <img src={data.image} alt={data.imageAlt ?? ''} />
+            </figure>
+          )}
+        </div>
       </div>
     </header>
 
@@ -66,15 +78,44 @@ const locationLabel = physicalLocationLabel
         </div>
       </section>
     )}
+
+    {relatedNews.length > 0 && (
+      <section class="project-stories">
+        <div class="shell">
+          <div class="section-heading project-stories__heading">
+            <span class="eyebrow">Related stories</span>
+            <h2 class="section-title">Read the experience behind the record.</h2>
+          </div>
+          <div class="project-stories__grid">
+            {relatedNews.map((post) => (
+              <article class:list={['project-story', { 'project-story--image': Boolean(post.data.image) }]}>
+                {post.data.image && <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" />}
+                <div>
+                  <span>{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.getFullYear()}</span>
+                  <h3><a href={`/news/${post.id}/`}>{post.data.title}</a></h3>
+                  <p>{post.data.summary}</p>
+                  <a class="text-link" href={`/news/${post.id}/`}>Read article ↗</a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
   </article>
 </BaseLayout>
 
 <style>
   .project-detail__hero { padding: clamp(4rem, 9vw, 8rem) 0; color: var(--white); background: var(--ink); }
   .project-detail__back { display: inline-block; margin-bottom: clamp(4rem, 9vw, 8rem); color: rgba(255,255,255,.58); font-size: .75rem; }
+  .project-detail__hero-grid { display: grid; }
+  .project-detail__hero-shell--with-image .project-detail__hero-grid { grid-template-columns: minmax(0, 1.55fr) minmax(17rem, .65fr); gap: clamp(2rem, 6vw, 6rem); align-items: end; }
   .project-detail__meta { display: flex; flex-wrap: wrap; gap: 1.4rem; color: rgba(255,255,255,.55); font-size: .68rem; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }
   .project-detail h1 { max-width: 60rem; margin: 1.3rem 0 1.8rem; font-size: clamp(3.7rem, 10vw, 8.5rem); font-weight: 580; line-height: .88; letter-spacing: -.075em; }
+  .project-detail__hero-shell--with-image h1 { font-size: clamp(3.25rem, 7vw, 6.8rem); }
   .project-detail__hero p { max-width: 40rem; margin: 0; color: rgba(255,255,255,.65); font-size: 1.05rem; }
+  .project-detail__cover { overflow: hidden; aspect-ratio: 3 / 4; margin: 0; border-radius: var(--radius-lg); background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+  .project-detail__cover img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 66%; }
   .project-detail__body { display: grid; grid-template-columns: minmax(15rem, 22rem) 1fr; gap: clamp(3rem, 9vw, 8rem); padding-block: clamp(4rem, 9vw, 8rem); }
   .project-detail aside { position: sticky; top: 7rem; align-self: start; }
   .project-detail dl { margin: 0 0 2rem; border-top: 1px solid var(--line); }
@@ -85,9 +126,23 @@ const locationLabel = physicalLocationLabel
   .project-credentials { padding: clamp(4rem, 8vw, 7rem) 0 clamp(5rem, 10vw, 9rem); background: var(--surface); }
   .project-credentials__heading { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
   .project-credentials__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .project-stories { padding: clamp(4rem, 8vw, 7rem) 0 clamp(5rem, 10vw, 9rem); border-top: 1px solid var(--line); }
+  .project-stories__heading { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .project-stories__grid { display: grid; gap: 1rem; }
+  .project-story { overflow: hidden; display: grid; grid-template-columns: minmax(16rem, .9fr) minmax(0, 1.1fr); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
+  .project-story > img { width: 100%; height: 100%; min-height: 22rem; display: block; object-fit: contain; background: #171717; }
+  .project-story > div { display: flex; flex-direction: column; justify-content: center; padding: clamp(1.5rem, 5vw, 4rem); }
+  .project-story span { color: var(--accent-dark); font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+  .project-story h3 { margin: .75rem 0 1rem; font-size: clamp(2rem, 4vw, 3.5rem); line-height: .98; letter-spacing: -.055em; }
+  .project-story p { margin: 0 0 1.5rem; color: var(--muted); font-size: .82rem; }
+  .project-story .text-link { align-self: flex-start; }
   @media (max-width: 760px) {
+    .project-detail__hero-shell--with-image .project-detail__hero-grid { grid-template-columns: 1fr; }
+    .project-detail__cover { max-width: 28rem; aspect-ratio: 4 / 5; }
     .project-detail__body { grid-template-columns: 1fr; }
     .project-detail aside { position: static; }
     .project-credentials__grid { grid-template-columns: 1fr; }
+    .project-story { grid-template-columns: 1fr; }
+    .project-story > img { min-height: 0; aspect-ratio: 16 / 9; }
   }
 </style>

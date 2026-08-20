@@ -1,0 +1,86 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  affiliations: CollectionEntry<'affiliations'>[];
+  projects: CollectionEntry<'projects'>[];
+  news: CollectionEntry<'news'>[];
+}
+
+const { affiliations, projects, news } = Astro.props;
+const projectLookup = new Map(projects.map((project) => [project.id, project]));
+const publishedNews = news.filter((post) => !post.data.draft);
+const getRelatedProjects = (ids: string[]) => ids.flatMap((id) => {
+  const project = projectLookup.get(id);
+  return project ? [project] : [];
+});
+const getRelatedNews = (affiliationId: string) => publishedNews
+  .filter((post) => post.data.relatedAffiliations.includes(affiliationId))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+
+<section class="section affiliations" id="affiliations" aria-labelledby="affiliations-title">
+  <div class="shell">
+    <div class="section-heading affiliations__heading">
+      <span class="eyebrow">Affiliations</span>
+      <h2 class="section-title" id="affiliations-title">Communities I help build—and learn from.</h2>
+      <p>Long-term responsibilities and selected communities that connect my work with European participation, innovation, and entrepreneurship.</p>
+    </div>
+
+    <div class="affiliations__grid">
+      {affiliations.map((affiliation, index) => {
+        const relatedProjects = getRelatedProjects(affiliation.data.relatedProjects);
+        const relatedNews = getRelatedNews(affiliation.id);
+
+        return (
+          <article class="affiliation-card">
+            <div class="affiliation-card__topline">
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              {affiliation.data.active && <span class="affiliation-card__status">Current</span>}
+            </div>
+            <div class="affiliation-card__mark" aria-hidden="true">{affiliation.data.monogram}</div>
+            <div class="affiliation-card__body">
+              <p class="affiliation-card__role">{affiliation.data.role}</p>
+              <h3>{affiliation.data.name}</h3>
+              <p>{affiliation.data.summary}</p>
+            </div>
+            <div class="affiliation-card__meta">
+              <span>{affiliation.data.period}</span>
+              <span>{affiliation.data.location}</span>
+            </div>
+            <div class="affiliation-card__links">
+              <a href={affiliation.data.externalUrl} target="_blank" rel="noreferrer">Official website ↗</a>
+              {relatedProjects.map((project) => <a href={`/projects/${project.id}/`}>Related project ↗</a>)}
+              {relatedNews.slice(0, 1).map((post) => <a href={`/news/${post.id}/`}>Latest story ↗</a>)}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .affiliations { background: linear-gradient(150deg, var(--blue-mist), var(--white) 72%); border-top: 1px solid var(--line); }
+  .affiliations__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .affiliation-card { min-width: 0; display: flex; flex-direction: column; padding: clamp(1.4rem, 3vw, 2.2rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: rgba(255,255,255,.86); box-shadow: 0 1rem 3rem rgba(49,87,178,.06); }
+  .affiliation-card__topline { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .affiliation-card__status { padding: .28rem .5rem; border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line)); border-radius: 999px; color: var(--accent-dark); background: var(--blue-mist); }
+  .affiliation-card__mark { width: 5.4rem; height: 5.4rem; display: grid; place-items: center; margin: clamp(2rem, 5vw, 4.5rem) 0 2rem; border-radius: 50%; color: var(--white); background: var(--accent); font-size: .95rem; font-weight: 720; letter-spacing: -.03em; }
+  .affiliation-card__body { max-width: 33rem; }
+  .affiliation-card__role { margin: 0 0 .6rem !important; color: var(--accent-dark) !important; font-size: .68rem !important; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .affiliation-card h3 { margin: 0 0 .8rem; font-size: clamp(1.7rem, 3vw, 2.5rem); line-height: 1; letter-spacing: -.05em; }
+  .affiliation-card__body > p:last-child { margin: 0; color: var(--muted); font-size: .82rem; }
+  .affiliation-card__meta { display: grid; grid-template-columns: auto 1fr; gap: .8rem 1.5rem; margin-top: auto; padding-top: 2rem; color: var(--muted); font-size: .65rem; }
+  .affiliation-card__meta span:last-child { text-align: right; }
+  .affiliation-card__links { display: flex; flex-wrap: wrap; gap: .65rem 1.1rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  .affiliation-card__links a { color: var(--ink); font-size: .68rem; font-weight: 650; }
+  .affiliation-card__links a:hover { color: var(--accent-dark); }
+
+  @media (max-width: 760px) {
+    .affiliations__grid { grid-template-columns: 1fr; }
+    .affiliation-card__mark { margin-block: 2.5rem 1.6rem; }
+    .affiliation-card__meta { grid-template-columns: 1fr; }
+    .affiliation-card__meta span:last-child { text-align: left; }
+  }
+</style>

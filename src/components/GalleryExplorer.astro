@@ -1,0 +1,202 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import GalleryCard from './GalleryCard.astro';
+
+interface RelatedRecord {
+  id: string;
+  title: string;
+}
+
+interface Props {
+  items: CollectionEntry<'gallery'>[];
+  projects: RelatedRecord[];
+  news: RelatedRecord[];
+  affiliations: RelatedRecord[];
+}
+
+const { items, projects, news, affiliations } = Astro.props;
+const projectLookup = new Map(projects.map((project) => [project.id, project]));
+const newsLookup = new Map(news.map((post) => [post.id, post]));
+const affiliationLookup = new Map(affiliations.map((affiliation) => [affiliation.id, affiliation]));
+const categories = [...new Set(items.map((item) => item.data.category))].sort((a, b) => a.localeCompare(b));
+---
+
+<section class="gallery-explorer" data-gallery-explorer>
+  {items.length > 0 ? (
+    <>
+      <div class="gallery-explorer__tools">
+        <label class="gallery-search">
+          <span class="sr-only">Search the gallery</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m13 13 4 4"></path></svg>
+          <input type="search" placeholder="Search photos, videos, projects, or places" data-gallery-search />
+        </label>
+
+        <div class="gallery-filters" aria-label="Filter gallery">
+          <label>
+            <span class="sr-only">Category</span>
+            <select data-gallery-filter="category">
+              <option value="">All categories</option>
+              {categories.map((category) => <option value={category.toLowerCase()}>{category}</option>)}
+            </select>
+          </label>
+          <label>
+            <span class="sr-only">Media type</span>
+            <select data-gallery-filter="mediaType">
+              <option value="">Photos & videos</option>
+              <option value="photo">Photos</option>
+              <option value="video">Videos</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="gallery-explorer__summary" aria-live="polite">
+        Showing <strong data-gallery-count>{items.length}</strong> <span data-gallery-count-label>{items.length === 1 ? 'moment' : 'moments'}</span>
+        <button type="button" data-gallery-reset hidden>Clear filters</button>
+      </div>
+
+      <div class="gallery-grid">
+        {items.map((item) => {
+          const relatedProjects = item.data.relatedProjects
+            .map((id) => projectLookup.get(id))
+            .filter((record): record is RelatedRecord => Boolean(record));
+          const relatedNews = item.data.relatedNews
+            .map((id) => newsLookup.get(id))
+            .filter((record): record is RelatedRecord => Boolean(record));
+          const relatedAffiliations = item.data.relatedAffiliations
+            .map((id) => affiliationLookup.get(id))
+            .filter((record): record is RelatedRecord => Boolean(record));
+          const searchText = [
+            item.data.title,
+            item.data.caption,
+            item.data.category,
+            item.data.location ?? '',
+            item.data.dateLabel ?? '',
+            ...relatedProjects.map((record) => record.title),
+            ...relatedNews.map((record) => record.title),
+            ...relatedAffiliations.map((record) => record.title),
+          ].join(' ').toLowerCase();
+
+          return (
+            <div
+              data-gallery-item
+              data-search-text={searchText}
+              data-category={item.data.category.toLowerCase()}
+              data-media-type={item.data.mediaType}
+            >
+              <GalleryCard item={item} relatedProjects={relatedProjects} relatedNews={relatedNews} relatedAffiliations={relatedAffiliations} />
+            </div>
+          );
+        })}
+      </div>
+
+      <div class="gallery-empty" data-gallery-empty hidden>
+        <strong>No matching moments.</strong>
+        <p>Try another search term or clear one of the filters.</p>
+      </div>
+    </>
+  ) : (
+    <div class="gallery-coming-soon">
+      <span class="gallery-coming-soon__index" aria-hidden="true">01</span>
+      <div>
+        <strong>The visual archive is being assembled.</strong>
+        <p>Photos and videos from projects, events, and professional stories will appear here as they are added.</p>
+      </div>
+      <a class="text-link" href="/projects/">Explore the projects ↗</a>
+    </div>
+  )}
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gallery-explorer]').forEach((explorer) => {
+    const search = explorer.querySelector<HTMLInputElement>('[data-gallery-search]');
+    const filters = [...explorer.querySelectorAll<HTMLSelectElement>('[data-gallery-filter]')];
+    const items = [...explorer.querySelectorAll<HTMLElement>('[data-gallery-item]')];
+    const count = explorer.querySelector<HTMLElement>('[data-gallery-count]');
+    const countLabel = explorer.querySelector<HTMLElement>('[data-gallery-count-label]');
+    const reset = explorer.querySelector<HTMLButtonElement>('[data-gallery-reset]');
+    const empty = explorer.querySelector<HTMLElement>('[data-gallery-empty]');
+
+    const applyFilters = () => {
+      const query = search?.value.trim().toLowerCase() ?? '';
+      const selected = Object.fromEntries(filters.map((filter) => [filter.dataset.galleryFilter ?? '', filter.value]));
+      let visible = 0;
+
+      items.forEach((item) => {
+        const matchesSearch = !query || (item.dataset.searchText ?? '').includes(query);
+        const matchesFilters = Object.entries(selected).every(([key, value]) => !value || item.dataset[key] === value);
+        const matches = matchesSearch && matchesFilters;
+        item.hidden = !matches;
+        if (matches) visible += 1;
+      });
+
+      if (count) count.textContent = String(visible);
+      if (countLabel) countLabel.textContent = visible === 1 ? 'moment' : 'moments';
+      if (empty) empty.hidden = visible > 0;
+      if (reset) reset.hidden = !query && filters.every((filter) => !filter.value);
+    };
+
+    search?.addEventListener('input', applyFilters);
+    filters.forEach((filter) => filter.addEventListener('change', applyFilters));
+    reset?.addEventListener('click', () => {
+      if (search) search.value = '';
+      filters.forEach((filter) => { filter.value = ''; });
+      search?.focus();
+      applyFilters();
+    });
+
+    applyFilters();
+  });
+</script>
+
+<style>
+  .gallery-explorer__tools {
+    display: grid;
+    grid-template-columns: minmax(14rem, 1fr) auto;
+    gap: .75rem;
+    align-items: center;
+    padding: .75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+  }
+  .gallery-search { min-width: 0; display: flex; align-items: center; gap: .65rem; padding: 0 .55rem; }
+  .gallery-search svg { width: 1.1rem; flex: none; fill: none; stroke: var(--muted); stroke-width: 1.5; }
+  .gallery-search input { width: 100%; padding: .55rem 0; border: 0; outline: 0; color: var(--ink); background: transparent; font: inherit; font-size: .84rem; }
+  .gallery-filters { min-width: 0; display: flex; gap: .45rem; }
+  .gallery-filters select { max-width: 12rem; padding: .68rem 2rem .68rem .78rem; border: 1px solid var(--line); border-radius: .68rem; color: var(--ink); background: var(--surface); font: inherit; font-size: .7rem; }
+  .gallery-explorer__summary { display: flex; align-items: center; gap: .3rem; min-height: 3.5rem; color: var(--muted); font-size: .73rem; }
+  .gallery-explorer__summary strong { color: var(--ink); font-weight: 650; }
+  .gallery-explorer__summary button { margin-left: auto; padding: .35rem 0; border: 0; border-bottom: 1px solid currentColor; color: var(--accent-dark); background: transparent; font: inherit; font-size: .68rem; cursor: pointer; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr)); gap: 1rem; }
+  .gallery-grid > div { min-width: 0; }
+  .gallery-grid :global(.gallery-card) { height: 100%; }
+  .gallery-empty { padding: 5rem 1rem; text-align: center; }
+  .gallery-empty strong { font-size: 1.15rem; }
+  .gallery-empty p { margin: .5rem 0 0; color: var(--muted); font-size: .82rem; }
+
+  .gallery-coming-soon {
+    min-height: 21rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+    padding: clamp(2rem, 6vw, 5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(140deg, var(--blue-mist), var(--surface) 72%);
+  }
+  .gallery-coming-soon__index { color: var(--accent); font-size: clamp(3rem, 7vw, 6rem); font-weight: 560; line-height: 1; letter-spacing: -.07em; }
+  .gallery-coming-soon strong { display: block; font-size: clamp(1.55rem, 3vw, 2.5rem); line-height: 1.08; letter-spacing: -.045em; }
+  .gallery-coming-soon p { max-width: 35rem; margin: .8rem 0 0; color: var(--muted); font-size: .86rem; }
+
+  @media (max-width: 800px) {
+    .gallery-explorer__tools { grid-template-columns: 1fr; }
+    .gallery-filters label, .gallery-filters select { min-width: 0; width: 100%; max-width: none; }
+    .gallery-coming-soon { grid-template-columns: 1fr; align-items: start; }
+  }
+
+  @media (max-width: 520px) {
+    .gallery-filters { display: grid; grid-template-columns: 1fr; }
+  }
+</style>
