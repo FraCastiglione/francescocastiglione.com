@@ -8,35 +8,22 @@ interface Props {
 const { compact = false, hero = false, light = false } = Astro.props;
 ---
 
-<span class:list={['wordmark', { 'wordmark--compact': compact, 'wordmark--hero': hero, 'wordmark--light': light }]}>
+<span class:list={['wordmark', { 'wordmark--compact': compact, 'wordmark--hero': hero, 'wordmark--light': light }]}> 
   <span>Francesco</span> <strong>Castiglione</strong>
 </span>
 
 <style>
   .wordmark {
-    position: relative;
     display: inline-block;
-    padding-bottom: .2em;
     color: var(--ink);
     font-size: .98rem;
-    font-weight: 450;
+    font-weight: 430;
     line-height: 1;
-    letter-spacing: -.035em;
+    letter-spacing: -.018em;
     white-space: nowrap;
   }
 
-  .wordmark::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 2.2em;
-    height: .1276em;
-    border-radius: .1276em;
-    background: var(--accent);
-  }
-
-  .wordmark strong { font-weight: 720; }
+  .wordmark strong { font-weight: 620; }
   .wordmark--light { color: var(--white); }
   .wordmark--compact > span { display: none; }
 
