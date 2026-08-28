@@ -17,7 +17,7 @@ The Shoes on the Danube Bank memorial is quiet, direct, and difficult to pass wi
 
 ## Joining the Slovenian team
 
-From 22 to 31 July 2026, I participated in the Hungarian edition of the international youth exchange *Memory of Totalitarianism*. I joined the Slovenian team through Socialna Akademija, alongside young people from other European countries.
+From 22 to 31 July 2026, I participated in the Hungarian edition of the international youth exchange *Memory of Totalitarianism*. I joined the Slovenian team through Socialna Akademija in a group of 26 participants from Germany, Hungary, Poland, and Slovenia.
 
 The exchange focused on the totalitarian systems that marked twentieth-century Europe—fascism, Nazism, and communism—with particular attention to the 1956 Hungarian uprising, the decades of Goulash Communism, and the fall of the Iron Curtain in 1989. It asked us to look beyond dates and political labels and to consider how these experiences continue to shape public memory, identity, and democratic life.
 
@@ -25,7 +25,9 @@ The exchange focused on the totalitarian systems that marked twentieth-century E
 
 Our programme was based around Budapest and took us to Recsk, Dunaújváros, and Sopron. Each place offered a different way of approaching memory: through museums and memorials, through the physical traces of repression and political change, and through conversations about how history is interpreted in public life.
 
-The programme included a visit to the House of Terror, discussions and workshops on memory culture, group reflection, team-building activities, and the development of a final creative output. Moving between places made the historical timeline feel less abstract. It also showed how the same period can be remembered differently depending on the community, institution, or national perspective telling the story.
+The programme included a visit to the House of Terror, content-based workshops, group discussions, study visits, arts-based work, group reflection, team-building activities, and the development of a final creative output. Moving between places made the historical timeline feel less abstract. It also showed how the same period can be remembered differently depending on the community, institution, or national perspective telling the story.
+
+The exchange was hosted by Kispesti Waldorf School and connected partners from Hungary, Germany, Poland, and Slovenia, including Socialna Akademija, Kolegium Europy Wschodniej, and Volksbund Deutsche Kriegsgräberfürsorge e.V. These details are now also documented through the Youthpass issued after the activity.
 
 ## What the international group added
 

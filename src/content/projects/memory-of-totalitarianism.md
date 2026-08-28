@@ -34,14 +34,15 @@ skills:
   - Non-formal learning
 organisations:
   - "Socialna Akademija"
-  - "Volksbund Deutsche Kriegsgräberfürsorge"
+  - "Volksbund Deutsche Kriegsgräberfürsorge e.V."
   - "Kispesti Waldorf School"
   - "Kolegium Europy Wschodniej"
 featured: true
 image: "/assets/projects/memory-of-totalitarianism.jpg"
 imageAlt: "Shoes on the Danube Bank memorial beside the river in Budapest"
 externalUrl: "https://socialna-akademija.si/mednarodna-poletna-mladinska-izmenjava-memory-of-totalitarianism-madzarska-julij-2026/"
-relatedCertificates: []
+relatedCertificates:
+  - memory-of-totalitarianism-youthpass
 ---
 
 ## Learning from the past to strengthen the future
@@ -53,6 +54,8 @@ From 22 to 31 July 2026, I took part in the Hungarian edition of *Memory of Tota
 Budapest was the base for a programme that also included visits to Recsk, Dunaújváros, and Sopron. Museums, memorials, historical sites, discussions, and workshops connected the periods of 1939–45, the 1956 Revolution, Goulash Communism, and the fall of the Iron Curtain in 1989.
 
 The programme included the House of Terror, work on different cultures of remembrance, group reflection, team building, and the creation of a shared final output.
+
+The Youthpass records a group of 26 participants from Germany, Hungary, Poland, and Slovenia. It confirms that the programme combined content-based workshops, group discussions, study visits, arts and crafts, and multidisciplinary group work. The activity was hosted by Kispesti Waldorf School, with Socialna Akademija, Kolegium Europy Wschodniej, and Volksbund Deutsche Kriegsgräberfürsorge e.V. among the partner organisations.
 
 ## The Slovenian team
 
