@@ -11,12 +11,50 @@ const { compact = false, hero = false, light = false } = Astro.props;
 ---
 
 <span class:list={['logo', { 'logo--compact': compact, 'logo--light': light }]}>
-  <Wordmark compact={compact} hero={hero} light={light} />
+  {hero ? (
+    <Wordmark hero light={light} />
+  ) : (
+    <>
+      <img class="logo__symbol" src="/brand/european-superhero-mark.svg" alt="" aria-hidden="true" />
+      <span class="logo__divider" aria-hidden="true"></span>
+      <Wordmark compact={compact} brand light={light} />
+    </>
+  )}
 </span>
 
 <style>
   .logo {
     display: inline-flex;
     align-items: center;
+    gap: 0.68rem;
+    line-height: 1;
+  }
+
+  .logo__symbol {
+    width: 2.75rem;
+    height: 2.45rem;
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  .logo__divider {
+    width: 1px;
+    height: 1.72rem;
+    flex: 0 0 auto;
+    background: color-mix(in srgb, #003399 48%, transparent);
+  }
+
+  .logo--light .logo__symbol {
+    filter: brightness(0) invert(1);
+  }
+
+  .logo--light .logo__divider {
+    background: rgba(255, 255, 255, 0.52);
+  }
+
+  @media (max-width: 480px) {
+    .logo { gap: 0.55rem; }
+    .logo__symbol { width: 2.45rem; height: 2.15rem; }
+    .logo__divider { height: 1.5rem; }
   }
 </style>

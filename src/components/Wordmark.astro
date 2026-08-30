@@ -3,12 +3,13 @@ interface Props {
   compact?: boolean;
   hero?: boolean;
   light?: boolean;
+  brand?: boolean;
 }
 
-const { compact = false, hero = false, light = false } = Astro.props;
+const { compact = false, hero = false, light = false, brand = false } = Astro.props;
 ---
 
-<span class:list={['wordmark', { 'wordmark--compact': compact, 'wordmark--hero': hero, 'wordmark--light': light }]}> 
+<span class:list={['wordmark', { 'wordmark--compact': compact, 'wordmark--hero': hero, 'wordmark--brand': brand, 'wordmark--light': light }]}> 
   <span>Francesco</span> <strong>Castiglione</strong>
 </span>
 
@@ -24,6 +25,7 @@ const { compact = false, hero = false, light = false } = Astro.props;
   }
 
   .wordmark strong { font-weight: 620; }
+  .wordmark--brand { color: #003399; }
   .wordmark--light { color: var(--white); }
   .wordmark--compact > span { display: none; }
 
