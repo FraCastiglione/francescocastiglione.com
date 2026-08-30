@@ -10,9 +10,13 @@ interface Props {
 const { compact = false, hero = false, light = false } = Astro.props;
 ---
 
-<span class:list={['logo', { 'logo--compact': compact, 'logo--light': light }]}>
+<span class:list={['logo', { 'logo--compact': compact, 'logo--hero': hero, 'logo--light': light }]}>
   {hero ? (
-    <Wordmark hero light={light} />
+    <img
+      class="logo__hero-lockup"
+      src="/brand/francesco-castiglione-horizontal.svg"
+      alt="Francesco Castiglione"
+    />
   ) : (
     <>
       <img class="logo__symbol" src="/brand/european-superhero-mark.svg" alt="" aria-hidden="true" />
@@ -35,6 +39,15 @@ const { compact = false, hero = false, light = false } = Astro.props;
     height: 2.45rem;
     flex: 0 0 auto;
     object-fit: contain;
+  }
+
+  .logo--hero {
+    width: min(100%, 45rem);
+  }
+
+  .logo__hero-lockup {
+    width: 100%;
+    height: auto;
   }
 
   .logo__divider {
