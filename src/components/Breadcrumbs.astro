@@ -1,0 +1,37 @@
+---
+interface Item {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Item[];
+  light?: boolean;
+}
+
+const { items, light = false } = Astro.props;
+---
+
+<nav class:list={['breadcrumbs', { 'breadcrumbs--light': light }]} aria-label="Breadcrumb">
+  <ol>
+    {items.map((item, index) => (
+      <li>
+        {item.href && index < items.length - 1
+          ? <a href={item.href}>{item.label}</a>
+          : <span aria-current={index === items.length - 1 ? 'page' : undefined}>{item.label}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs ol { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; margin: 0; padding: 0; list-style: none; }
+  .breadcrumbs li { display: flex; align-items: center; gap: .45rem; color: var(--muted); font-size: .72rem; }
+  .breadcrumbs li:not(:last-child)::after { content: '/'; color: var(--line-strong); }
+  .breadcrumbs a { color: inherit; }
+  .breadcrumbs a:hover { color: var(--ink); }
+  .breadcrumbs span[aria-current='page'] { max-width: min(42rem, 64vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .breadcrumbs--light li { color: rgba(255,255,255,.6); }
+  .breadcrumbs--light li:not(:last-child)::after { color: rgba(255,255,255,.28); }
+  .breadcrumbs--light a:hover { color: var(--white); }
+</style>

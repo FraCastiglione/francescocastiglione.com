@@ -29,7 +29,7 @@ const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === '
 
 <article class:list={['project-card', `project-card--${categoryKey}`, { 'project-card--image': Boolean(data.image) }]} data-project-card data-project-id={project.id}>
   <div class="project-card__media">
-      {data.image && <img src={data.image} alt={data.imageAlt ?? ''} loading="lazy" style={`object-fit: ${data.imageFit}; object-position: ${data.imagePosition ?? 'center center'}`} />}
+      {data.image && <img src={data.image} alt={data.imageAlt ?? ''} loading="lazy" decoding="async" style={`object-fit: ${data.imageFit}; object-position: ${data.imagePosition ?? 'center center'}`} />}
       <div class="project-card__veil"></div>
       <div class="project-card__topline">
         <span>{data.yearLabel}</span>

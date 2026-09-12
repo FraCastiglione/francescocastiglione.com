@@ -2,19 +2,29 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AffiliationsSection from '../components/AffiliationsSection.astro';
+import { personStructuredData, siteProfile } from '../data/site';
 
 const affiliations = (await getCollection('affiliations')).sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 const projects = await getCollection('projects');
 const news = await getCollection('news');
+const profilePageStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': `${siteProfile.url}/about/#profile-page`,
+  url: `${siteProfile.url}/about/`,
+  name: `About ${siteProfile.name}`,
+  dateModified: `${siteProfile.profileLastUpdated}-01`,
+  mainEntity: personStructuredData,
+};
 ---
 
-<BaseLayout title="About — Francesco Castiglione" description="Francesco Castiglione works on EU-funded projects and studies Business Administration and Management, with experience in youth participation and European cooperation.">
+<BaseLayout title="About Francesco Castiglione — EU Project Management" description="Learn about Francesco Castiglione's work in EU-funded projects, European cooperation, youth participation, international mobility, and project management." ogType="profile" structuredData={profilePageStructuredData}>
   <section class="about-story">
     <h1 class="sr-only">About Francesco Castiglione</h1>
     <div class="shell">
       <div class="about-story__grid">
         <figure>
-          <img src="/assets/gallery/eu-youth-stakeholders-group-brussels-2025.jpg" alt="Francesco Castiglione speaking during the first EU Youth Stakeholders Group meeting in Brussels" />
+          <img src="/assets/gallery/eu-youth-stakeholders-group-brussels-2025.jpg" alt="Francesco Castiglione speaking during the first EU Youth Stakeholders Group meeting in Brussels" decoding="async" />
         </figure>
         <div class="prose about-story__intro">
           <span class="eyebrow">About me</span>
@@ -23,13 +33,14 @@ const news = await getCollection('news');
             <a class="button" href="/cv/">View the full CV</a>
             <a class="text-link" href="/projects/">Explore the projects</a>
           </div>
+          <p class="about-story__updated">Profile last updated <time datetime={siteProfile.profileLastUpdated}>{siteProfile.profileLastUpdatedLabel}</time></p>
         </div>
       </div>
 
       <div class="about-story__details">
         <article>
           <span class="eyebrow">Studies</span>
-          <p>Alongside my professional work, I study Business Administration and Management at the University of Trieste. Between 2026 and 2027, I am an Erasmus+ student at the University of Ljubljana – School of Economics and Business (SEB). My studies are giving me a stronger understanding of how organisations operate, how decisions are made, and how economic, managerial, and strategic thinking can be applied in practice. Studying abroad also exposes me to different academic perspectives and ways of approaching problems. Combined with my practical experience, this is helping me build strong foundations in management, analytical thinking, and professional judgement.</p>
+          <p>Alongside my professional work, I study Business Administration and Management at the University of Trieste. During {siteProfile.erasmusPeriod}, I am an Erasmus+ student at the University of Ljubljana – School of Economics and Business (SEB). My studies are giving me a stronger understanding of how organisations operate, how decisions are made, and how economic, managerial, and strategic thinking can be applied in practice. Studying abroad also exposes me to different academic perspectives and ways of approaching problems. Combined with my practical experience, this is helping me build strong foundations in management, analytical thinking, and professional judgement.</p>
         </article>
         <article>
           <span class="eyebrow">European engagement</span>
@@ -52,6 +63,7 @@ const news = await getCollection('news');
   .about-story__intro .eyebrow { display: block; margin-bottom: 1rem; }
   .about-story__intro .lede { max-width: 43rem; margin: 0; color: var(--ink); text-align: justify; text-justify: inter-word; hyphens: auto; }
   .about-story__actions { display: flex; align-items: center; gap: 1.5rem; margin-top: 2rem; }
+  .about-story__updated { margin: 1.25rem 0 0; color: var(--soft); font-size: .62rem; font-weight: 650; letter-spacing: .045em; text-transform: uppercase; }
   .about-story__details { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: clamp(3.5rem, 7vw, 5.5rem); }
   .about-story__details article { position: relative; overflow: hidden; padding: clamp(1.3rem, 3vw, 2rem) clamp(1.3rem, 3vw, 2rem) clamp(1.3rem, 3vw, 2rem) clamp(1.55rem, 3.4vw, 2.3rem); border: 1px solid var(--line); border-radius: .75rem; background: linear-gradient(145deg, var(--white), var(--blue-mist)); }
   .about-story__details article::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--accent); }

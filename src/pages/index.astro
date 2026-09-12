@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ProjectMap from '../components/ProjectMap.astro';
 import Logo from '../components/Logo.astro';
+import { personStructuredData, siteProfile, websiteStructuredData } from '../data/site';
 
 const projects = (await getCollection('projects')).sort((a, b) =>
   (b.data.sortDate?.valueOf() ?? 0) - (a.data.sortDate?.valueOf() ?? 0),
@@ -13,21 +14,25 @@ const news = (await getCollection('news', ({ data }) => !data.draft)).sort((a, b
   b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
 );
 const latestNews = news.slice(0, 3);
+const homeStructuredData = [
+  websiteStructuredData,
+  { '@context': 'https://schema.org', ...personStructuredData },
+];
 ---
 
-<BaseLayout>
+<BaseLayout structuredData={homeStructuredData}>
   <section class="personal-hero">
     <div class="shell personal-hero__grid">
       <div class="personal-hero__portrait">
-        <img src="/assets/francesco-castiglione.jpg" alt="Francesco Castiglione at the European Parliament" />
+        <img src="/assets/francesco-castiglione.jpg" alt="Francesco Castiglione at the European Parliament" decoding="async" fetchpriority="high" />
       </div>
       <div class="personal-hero__copy">
         <h1 class="personal-hero__name"><Logo hero /></h1>
         <div class="personal-hero__description">
           <p>I am proud to work as an assistant to a highly experienced Project Manager on ambitious EU-funded projects, alongside talented colleagues and prominent partners from academia and industry across Europe. Through this work, I am developing the experience, knowledge, and skills to grow into a capable Project Manager specialised in EU projects.</p>
-          <p>Alongside my professional work, I study Business Administration and Management at the University of Trieste and, as of September 2026, I am an Erasmus+ student at the University of Ljubljana – School of Economics and Business (SEB).</p>
+          <p>Alongside my professional work, I study Business Administration and Management at the University of Trieste and, as of {siteProfile.erasmusStatusAsOf}, I am an Erasmus+ student at the University of Ljubljana – School of Economics and Business (SEB).</p>
         </div>
-        <p class="personal-hero__updated">Profile last updated <time datetime="2026-09">September 2026</time></p>
+        <p class="personal-hero__updated">Profile last updated <time datetime={siteProfile.profileLastUpdated}>{siteProfile.profileLastUpdatedLabel}</time></p>
         <div class="personal-hero__facts" aria-label="Personal details and professional availability">
           <span><small>Born</small><strong>Catania, Italy</strong></span>
           <span><small>Based</small><strong>Trieste, Italy · Ljubljana, Slovenia</strong></span>
@@ -103,7 +108,7 @@ const latestNews = news.slice(0, 3);
             <article class="news-preview">
               <a class="news-preview__media" href={`/news/${post.id}/`} aria-label={`Read ${post.data.title}`}>
                 {post.data.image ? (
-                  <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" />
+                  <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" />
                 ) : (
                   <span aria-hidden="true">{post.data.category}</span>
                 )}
@@ -129,11 +134,11 @@ const latestNews = news.slice(0, 3);
         <p>Follow my work, share an idea, or bring the conversation there.</p>
       </div>
       <div class="contact-cta__actions">
-        <a class="button button--linkedin" href="https://www.linkedin.com/in/francescocastiglione5/" target="_blank" rel="noreferrer">
+        <a class="button button--linkedin" href={siteProfile.linkedIn} target="_blank" rel="noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V8.98h3.42v1.57h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.29zM5.32 7.41a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM3.54 8.98H7.1v11.47H3.54V8.98z"></path></svg>
           <span>Connect on LinkedIn ↗</span>
         </a>
-        <a class="text-link" href="/contact/">Other contact options</a>
+        <a class="text-link" href="/contact/">Contact information</a>
       </div>
     </div>
   </section>

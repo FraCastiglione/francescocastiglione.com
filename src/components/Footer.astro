@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import { siteProfile } from '../data/site';
 const year = new Date().getFullYear();
 ---
 
@@ -10,14 +11,19 @@ const year = new Date().getFullYear();
       <p>European projects, partnerships, and ideas — developed and delivered across borders.</p>
     </div>
     <div class="site-footer__contact">
-      <span class="eyebrow">Start a conversation</span>
-      <a href="/contact/">Contact options ↗</a>
+      <span class="eyebrow">Explore</span>
+      <nav aria-label="Footer navigation">
+        <a href="/projects/">Projects</a>
+        <a href="/news/">News</a>
+        <a href="/certificates/">Certificates</a>
+      </nav>
+      <a class="site-footer__linkedin" href={siteProfile.linkedIn} target="_blank" rel="noreferrer">Connect on LinkedIn ↗</a>
     </div>
   </div>
   <div class="shell site-footer__bottom">
     <span>Copyright © {year} | Francesco Castiglione | All rights reserved</span>
     <div>
-      <a href="https://www.linkedin.com/in/francescocastiglione5/" target="_blank" rel="noreferrer">LinkedIn</a>
+      <a href={siteProfile.linkedIn} target="_blank" rel="noreferrer">LinkedIn</a>
       <a href="/contact/">Contact</a>
     </div>
   </div>
@@ -56,6 +62,11 @@ const year = new Date().getFullYear();
     font-weight: 620;
     letter-spacing: -0.035em;
   }
+
+  .site-footer__contact nav { display: flex; flex-wrap: wrap; gap: .7rem 1.2rem; }
+  .site-footer__contact nav a { color: var(--muted); font-size: .78rem; font-weight: 560; letter-spacing: 0; }
+  .site-footer__contact nav a:hover { color: var(--ink); }
+  .site-footer__contact .site-footer__linkedin { margin-top: .45rem; }
 
   .site-footer__bottom {
     display: flex;

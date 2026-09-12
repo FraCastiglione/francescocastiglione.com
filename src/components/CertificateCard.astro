@@ -42,7 +42,7 @@ const publicDocuments = data.documentStatus === 'public'
 <article class:list={['certificate-card', { 'certificate-card--compact': compact }]}>
   <div class:list={['certificate-card__cover', { 'certificate-card__cover--image': Boolean(publicPreview) }]}>
     {publicPreview ? (
-      <img src={publicPreview} alt={data.previewAlt ?? `Preview of ${data.title}`} loading="lazy" />
+      <img src={publicPreview} alt={data.previewAlt ?? `Preview of ${data.title}`} loading="lazy" decoding="async" />
     ) : (
       <div class="certificate-cover" aria-hidden="true">
         <div class="certificate-cover__topline">

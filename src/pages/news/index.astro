@@ -6,7 +6,7 @@ import NewsExplorer from '../../components/NewsExplorer.astro';
 const posts = (await getCollection('news', ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 ---
 
-<BaseLayout title="News, Articles, and Publications — Francesco Castiglione" description="News, articles, publications, project stories, events, and professional updates from Francesco Castiglione.">
+<BaseLayout title="EU Project News & Articles — Francesco Castiglione" description="Articles, project stories, events, and professional updates about EU-funded projects, European cooperation, youth participation, and mobility.">
   <header class="collection-intro">
     <div class="shell collection-intro__inner news-intro__inner">
       <h1>News, Articles, and Publications</h1>

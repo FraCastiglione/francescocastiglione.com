@@ -2,6 +2,8 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CertificateCard from '../../components/CertificateCard.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { breadcrumbStructuredData, personStructuredData, siteProfile } from '../../data/site';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -26,13 +28,37 @@ const physicalLocationLabel = [...new Set(data.locations.map((location) => `${lo
 const locationLabel = physicalLocationLabel
   ? `${physicalLocationLabel}${data.deliveryMode === 'hybrid' ? ' · Online' : ''}`
   : data.deliveryMode === 'online' ? 'Online' : 'Locations to be added';
+const projectUrl = `${siteProfile.url}/projects/${project.id}/`;
+const projectStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    '@id': `${projectUrl}#project`,
+    url: projectUrl,
+    name: data.title,
+    description: data.summary,
+    image: data.image ? new URL(data.image, siteProfile.url).href : undefined,
+    creator: { '@id': `${siteProfile.url}/#person` },
+    contributor: personStructuredData,
+    keywords: [...data.skills, data.program, data.activityType].join(', '),
+    locationCreated: data.locations.map((location) => ({
+      '@type': 'Place',
+      name: `${location.city}, ${location.country}`,
+    })),
+  },
+  breadcrumbStructuredData([
+    { name: 'Home', path: '/' },
+    { name: 'Projects', path: '/projects/' },
+    { name: data.title, path: `/projects/${project.id}/` },
+  ]),
+];
 ---
 
-<BaseLayout title={`${data.title} — Francesco Castiglione`} description={data.summary} image={data.image}>
+<BaseLayout title={`${data.title} — ${data.activityType} | Francesco Castiglione`} description={data.summary} structuredData={projectStructuredData}>
   <article class="project-detail">
     <header class="project-detail__hero">
       <div class:list={['shell', 'project-detail__hero-shell', { 'project-detail__hero-shell--with-image': Boolean(data.image) }]}>
-        <a class="project-detail__back" href="/projects/">← All projects</a>
+        <div class="project-detail__back"><Breadcrumbs light items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: data.title }]} /></div>
         <div class="project-detail__hero-grid">
           <div>
             <div class="project-detail__meta"><span>{data.yearLabel}</span><span>{data.program}</span><span>{data.activityType}</span></div>
@@ -41,7 +67,7 @@ const locationLabel = physicalLocationLabel
           </div>
           {data.image && (
             <figure class="project-detail__cover">
-              <img src={data.image} alt={data.imageAlt ?? ''} style={`object-fit: ${data.imageFit}; object-position: ${data.imagePosition ?? 'center 66%'}`} />
+              <img src={data.image} alt={data.imageAlt ?? ''} decoding="async" style={`object-fit: ${data.imageFit}; object-position: ${data.imagePosition ?? 'center 66%'}`} />
             </figure>
           )}
         </div>
@@ -89,7 +115,7 @@ const locationLabel = physicalLocationLabel
           <div class="project-stories__grid">
             {relatedNews.map((post) => (
               <article class:list={['project-story', { 'project-story--image': Boolean(post.data.image) }]}>
-                {post.data.image && <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" />}
+                {post.data.image && <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" />}
                 <div>
                   <span>{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.getFullYear()}</span>
                   <h3><a href={`/news/${post.id}/`}>{post.data.title}</a></h3>
@@ -107,7 +133,7 @@ const locationLabel = physicalLocationLabel
 
 <style>
   .project-detail__hero { padding: clamp(4rem, 9vw, 8rem) 0; color: var(--white); background: var(--ink); }
-  .project-detail__back { display: inline-block; margin-bottom: clamp(4rem, 9vw, 8rem); color: rgba(255,255,255,.58); font-size: .75rem; }
+  .project-detail__back { margin-bottom: clamp(4rem, 9vw, 8rem); }
   .project-detail__hero-grid { display: grid; }
   .project-detail__hero-shell--with-image .project-detail__hero-grid { grid-template-columns: minmax(0, 1.55fr) minmax(17rem, .65fr); gap: clamp(2rem, 6vw, 6rem); align-items: end; }
   .project-detail__meta { display: flex; flex-wrap: wrap; gap: 1.4rem; color: rgba(255,255,255,.55); font-size: .68rem; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }

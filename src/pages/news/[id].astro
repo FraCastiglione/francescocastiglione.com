@@ -1,6 +1,8 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { breadcrumbStructuredData, personStructuredData, siteProfile } from '../../data/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('news', ({ data }) => !data.draft);
@@ -10,13 +12,34 @@ export async function getStaticPaths() {
 interface Props { post: CollectionEntry<'news'>; }
 const { post } = Astro.props;
 const { Content } = await render(post);
+const postUrl = `${siteProfile.url}/news/${post.id}/`;
+const articleStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${postUrl}#article`,
+    mainEntityOfPage: postUrl,
+    headline: post.data.title,
+    description: post.data.summary,
+    datePublished: post.data.publishedAt.toISOString(),
+    image: new URL(post.data.image ?? siteProfile.socialImage, siteProfile.url).href,
+    author: personStructuredData,
+    publisher: { '@id': `${siteProfile.url}/#person` },
+    about: post.data.relatedProjects.map((project) => ({ '@type': 'Thing', name: project })),
+  },
+  breadcrumbStructuredData([
+    { name: 'Home', path: '/' },
+    { name: 'News', path: '/news/' },
+    { name: post.data.title, path: `/news/${post.id}/` },
+  ]),
+];
 ---
 
-<BaseLayout title={`${post.data.title} — Francesco Castiglione`} description={post.data.summary} image={post.data.image}>
+<BaseLayout title={`${post.data.title} — Francesco Castiglione`} description={post.data.summary} ogType="article" publishedAt={post.data.publishedAt} structuredData={articleStructuredData}>
   <article class="article-page">
     <header class="article-page__header">
       <div class="shell article-page__header-inner">
-        <a href="/news/">← News & notes</a>
+        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'News', href: '/news/' }, { label: post.data.title }]} />
         <div class="article-page__heading">
           <span class="eyebrow">{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
           <h1>{post.data.title}</h1>
@@ -24,7 +47,7 @@ const { Content } = await render(post);
         </div>
         {post.data.image && (
           <figure class="article-page__cover">
-            <img src={post.data.image} alt={post.data.imageAlt ?? ''} />
+            <img src={post.data.image} alt={post.data.imageAlt ?? ''} decoding="async" />
             {(post.data.imageCaption || post.data.imageCredit) && (
               <figcaption>
                 {post.data.imageCaption && <span>{post.data.imageCaption}</span>}
@@ -42,7 +65,7 @@ const { Content } = await render(post);
 <style>
   .article-page__header { padding: clamp(4rem, 9vw, 8rem) 0; border-bottom: 1px solid var(--line); }
   .article-page__header-inner { max-width: 72rem; }
-  .article-page__header a { display: inline-block; margin-bottom: clamp(4rem, 9vw, 7rem); color: var(--muted); font-size: .75rem; }
+  .article-page__header :global(.breadcrumbs) { margin-bottom: clamp(4rem, 9vw, 7rem); }
   .article-page__heading { max-width: 58rem; }
   .article-page h1 { margin: 1.2rem 0 1.5rem; font-size: clamp(3.2rem, 8vw, 6.5rem); font-weight: 580; line-height: .92; letter-spacing: -.07em; }
   .article-page__header p { max-width: 42rem; margin: 0; color: var(--muted); font-size: 1.1rem; }

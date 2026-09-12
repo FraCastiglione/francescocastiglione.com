@@ -63,8 +63,7 @@ const geojson = { type: 'FeatureCollection' as const, features };
 </div>
 
 <script>
-  import maplibregl from 'maplibre-gl';
-  import 'maplibre-gl/dist/maplibre-gl.css';
+  import type { GeoJSONSource, Popup } from 'maplibre-gl';
 
   type ProjectFeature = GeoJSON.Feature<GeoJSON.Point, {
     projectId: string;
@@ -83,8 +82,13 @@ const geojson = { type: 'FeatureCollection' as const, features };
 
   type ProjectCollection = GeoJSON.FeatureCollection<GeoJSON.Point, ProjectFeature['properties']>;
 
-  document.querySelectorAll<HTMLElement>('[data-project-map]:not([data-map-ready])').forEach((element) => {
+  const initialiseMap = async (element: HTMLElement) => {
+    const [{ default: maplibregl }] = await Promise.all([
+      import('maplibre-gl'),
+      import('maplibre-gl/dist/maplibre-gl.css'),
+    ]);
     element.dataset.mapReady = 'true';
+    element.setAttribute('aria-busy', 'false');
     const jsonId = element.dataset.jsonId;
     const jsonElement = jsonId ? document.getElementById(jsonId) : null;
     if (!jsonElement) return;
@@ -105,7 +109,7 @@ const geojson = { type: 'FeatureCollection' as const, features };
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
-    let activePopup: maplibregl.Popup | null = null;
+    let activePopup: Popup | null = null;
     const resetButton = element.closest<HTMLElement>('.project-map-wrap')?.querySelector<HTMLButtonElement>('[data-map-reset]');
     resetButton?.addEventListener('click', () => {
       activePopup?.remove();
@@ -217,7 +221,7 @@ const geojson = { type: 'FeatureCollection' as const, features };
       map.on('click', 'project-clusters', async (event) => {
         const feature = map.queryRenderedFeatures(event.point, { layers: ['project-clusters'] })[0];
         if (!feature || feature.geometry.type !== 'Point') return;
-        const source = map.getSource('projects') as maplibregl.GeoJSONSource;
+        const source = map.getSource('projects') as GeoJSONSource;
         const clusterId = Number(feature.properties?.cluster_id);
         const pointCount = Number(feature.properties?.point_count);
         const leaves = await source.getClusterLeaves(clusterId, pointCount, 0);
@@ -290,14 +294,39 @@ const geojson = { type: 'FeatureCollection' as const, features };
 
     document.addEventListener('projects:filter', ((event: CustomEvent<{ ids: string[] }>) => {
       visibleIds = new Set(event.detail.ids);
-      const source = map.getSource('projects') as maplibregl.GeoJSONSource | undefined;
+      const source = map.getSource('projects') as GeoJSONSource | undefined;
       source?.setData(filteredData());
     }) as EventListener);
 
     document.addEventListener('projects:view', () => {
       window.requestAnimationFrame(() => map.resize());
     });
-  });
+  };
+
+  const maps = document.querySelectorAll<HTMLElement>('[data-project-map]:not([data-map-ready])');
+  const loadMap = (element: HTMLElement) => {
+    if (element.dataset.mapReady) return;
+    element.dataset.mapReady = 'loading';
+    element.setAttribute('aria-busy', 'true');
+    initialiseMap(element).catch((error) => {
+      element.dataset.mapReady = 'error';
+      element.setAttribute('aria-busy', 'false');
+      console.error('Unable to load the project map.', error);
+    });
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        loadMap(entry.target as HTMLElement);
+      });
+    }, { rootMargin: '320px' });
+    maps.forEach((element) => observer.observe(element));
+  } else {
+    maps.forEach(loadMap);
+  }
 </script>
 
 <style>
