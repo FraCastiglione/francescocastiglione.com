@@ -25,8 +25,9 @@ const latestNews = news.slice(0, 3);
         <h1 class="personal-hero__name"><Logo hero /></h1>
         <div class="personal-hero__description">
           <p>I am proud to work as an assistant to a highly experienced Project Manager on ambitious EU-funded projects, alongside talented colleagues and prominent partners from academia and industry across Europe. Through this work, I am developing the experience, knowledge, and skills to grow into a capable Project Manager specialised in EU projects.</p>
-          <p>Alongside my professional work, I study Business Administration and Management at the University of Trieste and am currently an Erasmus+ student at the University of Ljubljana – School of Economics and Business (SEB).</p>
+          <p>Alongside my professional work, I study Business Administration and Management at the University of Trieste and, as of September 2026, I am an Erasmus+ student at the University of Ljubljana – School of Economics and Business (SEB).</p>
         </div>
+        <p class="personal-hero__updated">Profile last updated <time datetime="2026-09">September 2026</time></p>
         <div class="personal-hero__facts" aria-label="Personal details and professional availability">
           <span><small>Born</small><strong>Catania, Italy</strong></span>
           <span><small>Based</small><strong>Trieste, Italy · Ljubljana, Slovenia</strong></span>
@@ -147,7 +148,9 @@ const latestNews = news.slice(0, 3);
   .personal-hero__name { margin: 0 0 1.25rem; font: inherit; }
   .personal-hero__description { display: grid; gap: .8rem; max-width: 48rem; color: var(--ink); font-size: clamp(.9rem, 1.35vw, 1.02rem); font-weight: 430; line-height: 1.62; letter-spacing: -.005em; text-align: justify; text-justify: inter-word; hyphens: auto; }
   .personal-hero__description p { margin: 0; }
-  .personal-hero__facts { display: grid; grid-template-columns: .8fr 1.45fr 1.2fr; gap: .55rem; margin-top: 1.5rem; }
+  .personal-hero__updated { margin: 1rem 0 0; color: var(--soft); font-size: .64rem; font-weight: 650; letter-spacing: .045em; text-transform: uppercase; }
+  .personal-hero__updated time { color: var(--muted); }
+  .personal-hero__facts { display: grid; grid-template-columns: .8fr 1.45fr 1.2fr; gap: .55rem; margin-top: 1rem; }
   .personal-hero__facts > span { position: relative; min-width: 0; display: grid; gap: .3rem; padding: .8rem .85rem .82rem 1rem; overflow: hidden; border: 1px solid var(--line); border-radius: .75rem; background: linear-gradient(145deg, var(--white), var(--blue-mist)); }
   .personal-hero__facts > span::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
   .personal-hero__facts small { color: var(--accent-dark); font-size: .55rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
