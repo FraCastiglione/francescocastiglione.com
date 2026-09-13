@@ -27,7 +27,6 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const socialImage = new URL(image, Astro.site);
-const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 ---
 
 <!doctype html>
@@ -39,7 +38,6 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <meta name="theme-color" content="#ffffff" />
     <meta name="description" content={description} />
     <meta name="author" content={siteProfile.name} />
-    {googleSiteVerification && <meta name="google-site-verification" content={googleSiteVerification} />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/brand/european-superhero-mark.svg" />
     <meta property="og:site_name" content={siteProfile.name} />
