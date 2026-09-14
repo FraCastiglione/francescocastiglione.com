@@ -24,7 +24,7 @@ I co-organised the event and moderated parts of the programme. Working on both t
 
 The programme addressed digital competence, EU citizenship, misinformation, active participation, and the 2024 European Parliament elections. These subjects are closely connected. Digital skills influence how people find information, while media literacy and civic knowledge influence whether that information can become meaningful participation.
 
-<img src="/assets/gallery/projects/euniversity-genoa-eurhope.jpg" srcset="/assets/gallery/projects/euniversity-genoa-eurhope.w480.webp 480w, /assets/gallery/projects/euniversity-genoa-eurhope.w800.webp 800w, /assets/gallery/projects/euniversity-genoa-eurhope.w1200.webp 1200w, /assets/gallery/projects/euniversity-genoa-eurhope.jpg 1500w" sizes="(max-width: 760px) 100vw, 48rem" width="1500" height="2000" alt="Presenting the EurHope campaign at EUniversity Genoa" loading="lazy" decoding="async">
+![Presenting the EurHope campaign at EUniversity Genoa](/assets/gallery/projects/euniversity-genoa-eurhope.jpg)
 
 The EurHope campaign introduced a creative reflection on the future of Europe, while a participatory game invited attendees to think about the forthcoming elections. Participants also worked together on the Genoa Communiqué, a shared outcome that gathered priorities and ideas developed during the day.
 

@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ProjectMap from '../components/ProjectMap.astro';
 import Logo from '../components/Logo.astro';
-import SiteImage from '../components/SiteImage.astro';
 import { personStructuredData, siteProfile, websiteStructuredData } from '../data/site';
 
 const projects = (await getCollection('projects')).sort((a, b) =>
@@ -25,7 +24,7 @@ const homeStructuredData = [
   <section class="personal-hero">
     <div class="shell personal-hero__grid">
       <div class="personal-hero__portrait">
-        <SiteImage src="/assets/francesco-castiglione.jpg" alt="Francesco Castiglione at the European Parliament" decoding="async" fetchpriority="high" sizes="(max-width: 900px) 100vw, 38vw" />
+        <img src="/assets/francesco-castiglione.jpg" alt="Francesco Castiglione at the European Parliament" decoding="async" fetchpriority="high" />
       </div>
       <div class="personal-hero__copy">
         <h1 class="personal-hero__name"><Logo hero /></h1>
@@ -109,7 +108,7 @@ const homeStructuredData = [
             <article class="news-preview">
               <a class="news-preview__media" href={`/news/${post.id}/`} aria-label={`Read ${post.data.title}`}>
                 {post.data.image ? (
-                  <SiteImage src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" sizes="(max-width: 700px) 100vw, 33vw" />
+                  <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" />
                 ) : (
                   <span aria-hidden="true">{post.data.category}</span>
                 )}

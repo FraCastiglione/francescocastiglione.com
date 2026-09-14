@@ -28,7 +28,7 @@ The first meeting brought together people with different roles and forms of expe
 
 For me, the meeting was both a responsibility and a learning opportunity. It offered a clearer view of how the European Commission consults stakeholders, how priorities are discussed, and how organisations can contribute constructively without losing sight of the people they represent.
 
-<img src="/assets/gallery/eu-youth-stakeholders-group-brussels-2025.jpg" srcset="/assets/gallery/eu-youth-stakeholders-group-brussels-2025.w480.webp 480w, /assets/gallery/eu-youth-stakeholders-group-brussels-2025.w800.webp 800w, /assets/gallery/eu-youth-stakeholders-group-brussels-2025.jpg 1086w" sizes="(max-width: 760px) 100vw, 48rem" width="1086" height="724" alt="Francesco Castiglione speaking during the first EU Youth Stakeholders Group meeting" loading="lazy" decoding="async">
+![Francesco Castiglione speaking during the first EU Youth Stakeholders Group meeting](/assets/gallery/eu-youth-stakeholders-group-brussels-2025.jpg)
 
 *Contributing to the discussion as a representative of One Hour for Europe.*
 

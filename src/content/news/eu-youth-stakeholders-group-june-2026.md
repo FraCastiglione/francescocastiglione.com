@@ -27,7 +27,7 @@ The meeting included an exchange with Glenn Micallef, European Commissioner for 
 
 That kind of conversation matters because youth participation is most useful when it is connected to real decision-making. It also creates a responsibility for representatives: to arrive prepared, to listen carefully, and to bring the discussion back to the organisations and communities they represent.
 
-<img src="/assets/gallery/eu-youth-stakeholders-group-june-2026-participation.jpg" srcset="/assets/gallery/eu-youth-stakeholders-group-june-2026-participation.w480.webp 480w, /assets/gallery/eu-youth-stakeholders-group-june-2026-participation.w800.webp 800w, /assets/gallery/eu-youth-stakeholders-group-june-2026-participation.w1200.webp 1200w, /assets/gallery/eu-youth-stakeholders-group-june-2026-participation.jpg 2200w" sizes="(max-width: 760px) 100vw, 48rem" width="2200" height="1467" alt="Francesco Castiglione participating in the June 2026 EU Youth Stakeholders Group meeting" loading="lazy" decoding="async">
+![Francesco Castiglione participating in the June 2026 EU Youth Stakeholders Group meeting](/assets/gallery/eu-youth-stakeholders-group-june-2026-participation.jpg)
 
 *Taking part in the meeting as a representative of One Hour for Europe.*
 

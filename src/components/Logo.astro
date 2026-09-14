@@ -16,12 +16,10 @@ const { compact = false, hero = false, light = false } = Astro.props;
       class="logo__hero-lockup"
       src="/brand/francesco-castiglione-horizontal.svg"
       alt="Francesco Castiglione"
-      width="2423"
-      height="520"
     />
   ) : (
     <>
-      <img class="logo__symbol" src="/brand/european-superhero-mark.svg" alt="" aria-hidden="true" width="1200" height="1057" />
+      <img class="logo__symbol" src="/brand/european-superhero-mark.svg" alt="" aria-hidden="true" />
       <span class="logo__divider" aria-hidden="true"></span>
       <Wordmark compact={compact} brand light={light} />
     </>

@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SiteImage from '../components/SiteImage.astro';
 import { siteProfile } from '../data/site';
 import { experience, education, languages } from '../data/cv';
 ---
@@ -10,7 +9,7 @@ import { experience, education, languages } from '../data/cv';
     <h1 class="sr-only">Curriculum vitae</h1>
     <div class="shell cv-hero__grid">
       <div class="cv-hero__portrait">
-        <SiteImage src="/assets/francesco-castiglione.jpg" alt="Portrait of Francesco Castiglione at the European Parliament" decoding="async" sizes="(max-width: 760px) 100vw, 15rem" />
+        <img src="/assets/francesco-castiglione.jpg" alt="Portrait of Francesco Castiglione at the European Parliament" decoding="async" />
       </div>
       <div class="cv-hero__summary">
         <p>I work as an Assistant Project Manager on EU-funded research and innovation projects and as a Co-Founder, Advisor, and Project Manager at One Hour for Europe. Alongside this, I study Business Administration and Management, building on experience in youth participation, European mobility, facilitation, and aviation.</p>

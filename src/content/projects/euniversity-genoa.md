@@ -38,4 +38,4 @@ I co-organised the event and moderated parts of the programme. The day brought t
 
 Participants also worked on the Genoa Communiqué, a shared outcome capturing ideas and priorities developed during the event. The EurHope campaign added a creative, forward-looking perspective on European participation and hope.
 
-<img src="/assets/gallery/projects/euniversity-genoa-eurhope.jpg" srcset="/assets/gallery/projects/euniversity-genoa-eurhope.w480.webp 480w, /assets/gallery/projects/euniversity-genoa-eurhope.w800.webp 800w, /assets/gallery/projects/euniversity-genoa-eurhope.w1200.webp 1200w, /assets/gallery/projects/euniversity-genoa-eurhope.jpg 1500w" sizes="(max-width: 760px) 100vw, 48rem" width="1500" height="2000" alt="Presenting EurHope during EUniversity Genoa" loading="lazy" decoding="async">
+![Presenting EurHope during EUniversity Genoa](/assets/gallery/projects/euniversity-genoa-eurhope.jpg)

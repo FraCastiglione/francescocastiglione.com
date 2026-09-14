@@ -3,7 +3,6 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CertificateCard from '../../components/CertificateCard.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import SiteImage from '../../components/SiteImage.astro';
 import { breadcrumbStructuredData, personStructuredData, siteProfile } from '../../data/site';
 
 export async function getStaticPaths() {
@@ -68,7 +67,7 @@ const projectStructuredData = [
           </div>
           {data.image && (
             <figure class="project-detail__cover">
-              <SiteImage src={data.image} alt={data.imageAlt ?? ''} decoding="async" sizes="(max-width: 760px) 100vw, 28rem" style={`object-fit: ${data.imageFit}; object-position: ${data.imagePosition ?? 'center 66%'}`} />
+              <img src={data.image} alt={data.imageAlt ?? ''} decoding="async" style={`object-fit: ${data.imageFit}; object-position: ${data.imagePosition ?? 'center 66%'}`} />
             </figure>
           )}
         </div>
@@ -116,7 +115,7 @@ const projectStructuredData = [
           <div class="project-stories__grid">
             {relatedNews.map((post) => (
               <article class:list={['project-story', { 'project-story--image': Boolean(post.data.image) }]}>
-                {post.data.image && <SiteImage src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" sizes="(max-width: 760px) 100vw, 42vw" />}
+                {post.data.image && <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" />}
                 <div>
                   <span>{post.data.category} · {post.data.dateLabel ?? post.data.publishedAt.getFullYear()}</span>
                   <h3><a href={`/news/${post.id}/`}>{post.data.title}</a></h3>

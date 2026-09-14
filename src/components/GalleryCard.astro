@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import SiteImage from './SiteImage.astro';
 
 interface RelatedRecord {
   id: string;
@@ -28,7 +27,7 @@ const mediaLabel = data.mediaType === 'photo' ? 'Photograph' : 'Video';
     <div class:list={['gallery-card__media', { 'gallery-card__media--contain': data.fit === 'contain' }]}>
       {data.mediaType === 'photo' ? (
         <a href={data.src} target="_blank" rel="noreferrer" aria-label={`Open ${data.title} at full size`}>
-          <SiteImage src={data.src} alt={data.alt} loading="lazy" decoding="async" sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" />
+          <img src={data.src} alt={data.alt} loading="lazy" decoding="async" />
         </a>
       ) : (
         <video

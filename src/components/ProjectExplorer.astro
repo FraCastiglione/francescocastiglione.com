@@ -2,7 +2,6 @@
 import type { CollectionEntry } from 'astro:content';
 import ProjectCard from './ProjectCard.astro';
 import ProjectMap from './ProjectMap.astro';
-import SiteImage from './SiteImage.astro';
 
 interface Props { projects: CollectionEntry<'projects'>[]; }
 const { projects } = Astro.props;
@@ -113,7 +112,7 @@ const roleFilters = [
           data-skills={project.data.skills.join('|').toLowerCase()}
         >
           <a class:list={['project-list__media', `project-list__media--${category}`, { 'project-list__media--placeholder': !project.data.image }]} href={`/projects/${project.id}/`} tabindex="-1" aria-hidden="true">
-            {project.data.image ? <SiteImage src={project.data.image} alt="" loading="lazy" decoding="async" sizes="8rem" style={`object-fit: ${project.data.imageFit}; object-position: ${project.data.imagePosition ?? 'center center'}`} /> : <span>{getYear(project)}</span>}
+            {project.data.image ? <img src={project.data.image} alt="" loading="lazy" decoding="async" style={`object-fit: ${project.data.imageFit}; object-position: ${project.data.imagePosition ?? 'center center'}`} /> : <span>{getYear(project)}</span>}
           </a>
           <div class="project-list__meta"><span class:list={['project-list__category', `project-list__category--${category}`]}>{categoryLabel}</span><span>{getYear(project)}</span></div>
           <div class="project-list__copy"><h3><a href={`/projects/${project.id}/`}>{project.data.title}</a></h3><p>{project.data.summary}</p><small>{project.data.role} · {locations}</small></div>

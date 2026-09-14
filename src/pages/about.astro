@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AffiliationsSection from '../components/AffiliationsSection.astro';
-import SiteImage from '../components/SiteImage.astro';
 import { personStructuredData, siteProfile } from '../data/site';
 
 const affiliations = (await getCollection('affiliations')).sort((a, b) => a.data.sortOrder - b.data.sortOrder);
@@ -25,7 +24,7 @@ const profilePageStructuredData = {
     <div class="shell">
       <div class="about-story__grid">
         <figure>
-          <SiteImage src="/assets/gallery/eu-youth-stakeholders-group-brussels-2025.jpg" alt="Francesco Castiglione speaking during the first EU Youth Stakeholders Group meeting in Brussels" decoding="async" sizes="(max-width: 900px) 100vw, 48vw" />
+          <img src="/assets/gallery/eu-youth-stakeholders-group-brussels-2025.jpg" alt="Francesco Castiglione speaking during the first EU Youth Stakeholders Group meeting in Brussels" decoding="async" />
         </figure>
         <div class="prose about-story__intro">
           <span class="eyebrow">About me</span>
