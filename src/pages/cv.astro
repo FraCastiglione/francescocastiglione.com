@@ -22,10 +22,10 @@ import { experience, education, languages } from '../data/cv';
   </header>
 
   <section class="cv-snapshot">
-    <div class="shell cv-snapshot__grid">
-      <article><span>Professional focus</span><strong>EU Project Management</strong><p>Proposal development, coordination, implementation, and partner relations</p></article>
-      <article><span>Current studies</span><strong>Business Administration</strong><p>University of Trieste · Erasmus+ at Ljubljana SEB</p></article>
-      <article><span>European engagement</span><strong>Youth policy & participation</strong><p>EU Youth Stakeholders Group · One Hour for Europe</p></article>
+    <div class="shell cv-snapshot__grid" aria-label="Professional profile at a glance">
+      <article><small>Professional focus</small><strong>EU Project Management</strong><p>Proposal development, coordination, implementation, and partner relations</p></article>
+      <article><small>Current studies</small><strong>Business Administration</strong><p>University of Trieste · Erasmus+ at Ljubljana SEB</p></article>
+      <article><small>European engagement</small><strong>Youth policy & participation</strong><p>EU Youth Stakeholders Group · One Hour for Europe</p></article>
     </div>
   </section>
 
@@ -107,14 +107,13 @@ import { experience, education, languages } from '../data/cv';
   .cv-hero__summary > p { max-width: 50rem; margin: 0; color: var(--ink); font-size: clamp(.95rem, 1.5vw, 1.08rem); line-height: 1.65; }
   .cv-hero__actions { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; }
 
-  .cv-snapshot { border-block: 1px solid var(--line); background: var(--surface); }
-  .cv-snapshot__grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-  .cv-snapshot article { min-width: 0; padding: 1.25rem 1.5rem 1.25rem 0; border-right: 1px solid var(--line); }
-  .cv-snapshot article + article { padding-left: 1.5rem; }
-  .cv-snapshot article:last-child { border-right: 0; }
-  .cv-snapshot span { display: block; margin-bottom: .55rem; color: var(--ink); font-size: .57rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
-  .cv-snapshot strong { display: block; font-size: .9rem; line-height: 1.25; }
-  .cv-snapshot p { margin: .28rem 0 0; color: var(--muted); font-size: .68rem; }
+  .cv-snapshot { padding: 0 0 clamp(2.5rem, 5vw, 4rem); }
+  .cv-snapshot__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; }
+  .cv-snapshot article { position: relative; min-width: 0; display: grid; align-content: start; gap: .3rem; padding: .8rem .85rem .82rem 1rem; overflow: hidden; border: 1px solid var(--line); border-radius: .75rem; background: linear-gradient(145deg, var(--white), var(--blue-mist)); }
+  .cv-snapshot article::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .cv-snapshot small { color: var(--accent-dark); font-size: .55rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+  .cv-snapshot strong { color: var(--ink); font-size: .68rem; font-weight: 650; line-height: 1.35; }
+  .cv-snapshot p { margin: 0; color: var(--muted); font-size: .64rem; line-height: 1.45; }
 
   .cv-block { padding: clamp(3.5rem, 7vw, 6.5rem) 0; }
   .cv-block + .cv-block { border-top: 1px solid var(--line); }
@@ -166,8 +165,6 @@ import { experience, education, languages } from '../data/cv';
     .cv-hero__portrait { width: min(15rem, 100%); }
     .cv-block__heading, .languages-layout { grid-template-columns: 1fr; }
     .cv-snapshot__grid { grid-template-columns: 1fr; }
-    .cv-snapshot article { padding-inline: 0 !important; border-right: 0; border-bottom: 1px solid var(--line); }
-    .cv-snapshot article:last-child { border-bottom: 0; }
     .education-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 580px) {
