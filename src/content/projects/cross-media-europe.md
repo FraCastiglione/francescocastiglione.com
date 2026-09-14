@@ -42,4 +42,4 @@ Workshops on fake news, social media, public opinion, and disinformation connect
 
 The experience strengthened my ability to evaluate sources, read political communication critically, and connect European decision-making with the way it is explained to the public. It also gave me a more concrete understanding of how institutions, journalists, and civil-society organisations contribute to democratic participation.
 
-![Cross Media Europe participants at the Council of Europe in Strasbourg](/assets/gallery/projects/cross-media-europe-council-of-europe.jpg)
+<img src="/assets/gallery/projects/cross-media-europe-council-of-europe.jpg" srcset="/assets/gallery/projects/cross-media-europe-council-of-europe.w480.webp 480w, /assets/gallery/projects/cross-media-europe-council-of-europe.w800.webp 800w, /assets/gallery/projects/cross-media-europe-council-of-europe.jpg 1125w" sizes="(max-width: 760px) 100vw, 48rem" width="1125" height="2000" alt="Cross Media Europe participants at the Council of Europe in Strasbourg" loading="lazy" decoding="async">

@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import SiteImage from './SiteImage.astro';
 
 interface Props {
   affiliations: CollectionEntry<'affiliations'>[];
@@ -35,7 +36,7 @@ const getRelatedNews = (affiliationId: string) => publishedNews
           <article class="affiliation-card" data-affiliation={affiliation.id}>
             <div class:list={['affiliation-card__media', { 'affiliation-card__media--placeholder': !affiliation.data.image, 'affiliation-card__media--contain': affiliation.data.imageFit === 'contain' }]}>
               {affiliation.data.image
-                ? <img src={affiliation.data.image} alt={affiliation.data.imageAlt ?? ''} loading="lazy" decoding="async" />
+                ? <SiteImage src={affiliation.data.image} alt={affiliation.data.imageAlt ?? ''} loading="lazy" decoding="async" sizes="(max-width: 760px) 100vw, 50vw" />
                 : <span aria-hidden="true">{affiliation.data.monogram}</span>}
               <div class="affiliation-card__topline">
                 <span>{String(index + 1).padStart(2, '0')}</span>

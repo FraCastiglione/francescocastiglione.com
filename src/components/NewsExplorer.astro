@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import SiteImage from './SiteImage.astro';
 
 interface Props { posts: CollectionEntry<'news'>[]; }
 const { posts } = Astro.props;
@@ -53,7 +54,7 @@ const formatDate = (post: CollectionEntry<'news'>) => post.data.dateLabel ?? pos
         data-year={String(post.data.publishedAt.getUTCFullYear())}
       >
         <a class:list={['news-card__media', { 'news-card__media--placeholder': !post.data.image }]} href={`/news/${post.id}/`} aria-label={`Read ${post.data.title}`}>
-          {post.data.image ? <img src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" /> : <span>{post.data.category}</span>}
+          {post.data.image ? <SiteImage src={post.data.image} alt={post.data.imageAlt ?? ''} loading="lazy" decoding="async" sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw" /> : <span>{post.data.category}</span>}
         </a>
         <div class="news-card__body">
           <div class="news-card__meta"><span>{post.data.category}</span><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post)}</time></div>
@@ -76,7 +77,7 @@ const formatDate = (post: CollectionEntry<'news'>) => post.data.dateLabel ?? pos
         data-year={String(post.data.publishedAt.getUTCFullYear())}
       >
         <a class:list={['news-row__media', { 'news-row__media--placeholder': !post.data.image }]} href={`/news/${post.id}/`} tabindex="-1" aria-hidden="true">
-          {post.data.image ? <img src={post.data.image} alt="" loading="lazy" decoding="async" /> : <span>{post.data.category}</span>}
+          {post.data.image ? <SiteImage src={post.data.image} alt="" loading="lazy" decoding="async" sizes="8rem" /> : <span>{post.data.category}</span>}
         </a>
         <div class="news-row__meta"><span>{post.data.category}</span><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post)}</time></div>
         <div class="news-row__copy"><h2><a href={`/news/${post.id}/`}>{post.data.title}</a></h2><p>{post.data.summary}</p></div>

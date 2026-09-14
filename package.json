@@ -6,10 +6,12 @@
   "packageManager": "pnpm@11.19.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && node scripts/audit-site.mjs",
+    "build": "node scripts/prepare-images.mjs && astro check && astro build && node scripts/audit-site.mjs",
     "preview": "astro preview",
     "check": "astro check",
+    "images:prepare": "node scripts/prepare-images.mjs",
     "audit:site": "node scripts/audit-site.mjs",
+    "audit:live": "node scripts/audit-live.mjs",
     "validate": "pnpm build"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
     "@types/geojson": "^7946.0.16",
+    "sharp": "^0.35.3",
     "typescript": "^5.9.3"
   }
 }

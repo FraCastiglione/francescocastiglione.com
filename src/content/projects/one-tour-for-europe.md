@@ -63,4 +63,4 @@ Local volunteers and civil-society organisations helped adapt the activities to 
 
 During the Forlì stage, young people created a customised European flag as one of the campaign's artistic outcomes. The work, created by artist Rachel Rouzaud, was later exhibited in the European Parliament's flags hall in Strasbourg in 2025—carrying a local, youth-led contribution into a European institutional space.
 
-![The customised One Tour for Europe flag created in Forlì and later exhibited at the European Parliament](/assets/gallery/projects/one-tour-for-europe-forli-flag.jpg)
+<img src="/assets/gallery/projects/one-tour-for-europe-forli-flag.jpg" srcset="/assets/gallery/projects/one-tour-for-europe-forli-flag.w480.webp 480w, /assets/gallery/projects/one-tour-for-europe-forli-flag.w800.webp 800w, /assets/gallery/projects/one-tour-for-europe-forli-flag.jpg 1125w" sizes="(max-width: 760px) 100vw, 48rem" width="1125" height="2000" alt="The customised One Tour for Europe flag created in Forlì and later exhibited at the European Parliament" loading="lazy" decoding="async">

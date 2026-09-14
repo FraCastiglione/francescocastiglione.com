@@ -2,6 +2,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SiteImage from '../../components/SiteImage.astro';
 import { breadcrumbStructuredData, personStructuredData, siteProfile } from '../../data/site';
 
 export async function getStaticPaths() {
@@ -47,7 +48,7 @@ const articleStructuredData = [
         </div>
         {post.data.image && (
           <figure class="article-page__cover">
-            <img src={post.data.image} alt={post.data.imageAlt ?? ''} decoding="async" />
+            <SiteImage src={post.data.image} alt={post.data.imageAlt ?? ''} decoding="async" sizes="(max-width: 760px) 100vw, 72rem" />
             {(post.data.imageCaption || post.data.imageCredit) && (
               <figcaption>
                 {post.data.imageCaption && <span>{post.data.imageCaption}</span>}

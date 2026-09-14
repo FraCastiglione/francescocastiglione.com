@@ -21,7 +21,7 @@ At the European Parliament, we followed plenary work and discussions on current 
 
 The Council of Europe offered a different perspective. The conversations there focused on human rights, trafficking, legal safeguards, digital press freedom, and the mechanisms used to protect democratic standards across the continent.
 
-![Inside the Council of Europe during Cross Media Europe](/assets/gallery/projects/cross-media-europe-council-of-europe.jpg)
+<img src="/assets/gallery/projects/cross-media-europe-council-of-europe.jpg" srcset="/assets/gallery/projects/cross-media-europe-council-of-europe.w480.webp 480w, /assets/gallery/projects/cross-media-europe-council-of-europe.w800.webp 800w, /assets/gallery/projects/cross-media-europe-council-of-europe.jpg 1125w" sizes="(max-width: 760px) 100vw, 48rem" width="1125" height="2000" alt="Inside the Council of Europe during Cross Media Europe" loading="lazy" decoding="async">
 
 ## Media literacy as a democratic skill
 

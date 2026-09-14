@@ -1,0 +1,33 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import manifest from '../data/image-manifest.json';
+
+interface Props extends Omit<HTMLAttributes<'img'>, 'src'> {
+  src: string;
+  alt: string;
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  sizes = '100vw',
+  width,
+  height,
+  ...attributes
+} = Astro.props;
+const metadata = manifest[src as keyof typeof manifest];
+const srcset = metadata?.sources.length > 1
+  ? metadata.sources.map((source) => `${source.src} ${source.width}w`).join(', ')
+  : undefined;
+---
+
+<img
+  src={src}
+  srcset={srcset}
+  sizes={srcset ? sizes : undefined}
+  width={width ?? metadata?.width}
+  height={height ?? metadata?.height}
+  alt={alt}
+  {...attributes}
+/>
