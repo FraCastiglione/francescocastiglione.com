@@ -42,6 +42,7 @@ const features = projects.flatMap((project) =>
 );
 
 const geojson = { type: 'FeatureCollection' as const, features };
+const safeGeojson = JSON.stringify(geojson).replace(/</g, '\\u003c');
 ---
 
 <div class:list={['project-map-wrap', { 'project-map-wrap--compact': compact }]}>
@@ -54,16 +55,21 @@ const geojson = { type: 'FeatureCollection' as const, features };
     <span><i class="project-map__dot project-map__dot--national"></i>National Grants</span>
     <span><i class="project-map__dot project-map__dot--other"></i>Other</span>
   </div>
-  <script is:inline id={dataId} type="application/json" set:html={JSON.stringify(geojson)}></script>
+  <script is:inline id={dataId} type="application/json" set:html={safeGeojson}></script>
   <div class="project-map__empty" data-map-empty hidden={features.length > 0}>
     <span class="eyebrow">Map ready</span>
     <strong>Locations are the next layer.</strong>
     <p>The project entries are connected to the map; precise city-level locations will appear here as soon as they are added.</p>
   </div>
+  <div class="project-map__error" data-map-error hidden role="status">
+    <strong>The interactive map is unavailable on this device.</strong>
+    <p>You can still explore every project in the <a href="/projects/">project list</a>.</p>
+  </div>
 </div>
 
 <script>
   import type { GeoJSONSource, Popup } from 'maplibre-gl';
+  import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 
   type ProjectFeature = GeoJSON.Feature<GeoJSON.Point, {
     projectId: string;
@@ -83,10 +89,11 @@ const geojson = { type: 'FeatureCollection' as const, features };
   type ProjectCollection = GeoJSON.FeatureCollection<GeoJSON.Point, ProjectFeature['properties']>;
 
   const initialiseMap = async (element: HTMLElement) => {
-    const [{ default: maplibregl }] = await Promise.all([
+    const [maplibregl] = await Promise.all([
       import('maplibre-gl'),
       import('maplibre-gl/dist/maplibre-gl.css'),
     ]);
+    maplibregl.setWorkerUrl(workerUrl);
     element.dataset.mapReady = 'true';
     element.setAttribute('aria-busy', 'false');
     const jsonId = element.dataset.jsonId;
@@ -311,6 +318,8 @@ const geojson = { type: 'FeatureCollection' as const, features };
     initialiseMap(element).catch((error) => {
       element.dataset.mapReady = 'error';
       element.setAttribute('aria-busy', 'false');
+      const fallback = element.closest<HTMLElement>('.project-map-wrap')?.querySelector<HTMLElement>('[data-map-error]');
+      if (fallback) fallback.hidden = false;
       console.error('Unable to load the project map.', error);
     });
   };
@@ -341,6 +350,23 @@ const geojson = { type: 'FeatureCollection' as const, features };
 
   .project-map-wrap--compact { min-height: 32rem; }
   .project-map { position: absolute; inset: 0; }
+
+  .project-map__error {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: .45rem;
+    padding: 2rem;
+    color: var(--ink);
+    background: var(--surface);
+    text-align: center;
+  }
+  .project-map__error[hidden] { display: none; }
+  .project-map__error p { margin: 0; color: var(--muted); }
+  .project-map__error a { color: var(--accent-dark); text-decoration: underline; }
 
   .project-map__reset {
     position: absolute;

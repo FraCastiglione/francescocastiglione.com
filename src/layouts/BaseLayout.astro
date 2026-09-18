@@ -27,6 +27,7 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const socialImage = new URL(image, Astro.site);
+const safeStructuredData = structuredData && JSON.stringify(structuredData).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -56,8 +57,8 @@ const socialImage = new URL(image, Astro.site);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={imageAlt} />
-    {structuredData && (
-      <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    {safeStructuredData && (
+      <script is:inline type="application/ld+json" set:html={safeStructuredData}></script>
     )}
     <title>{title}</title>
   </head>
