@@ -131,6 +131,16 @@ export const education = [
     ],
   },
   {
+    period: 'Aug — Sep 2026',
+    status: 'Completed',
+    title: 'Intensive Slovene for Erasmus+ Students · Level I',
+    institution: 'University of Ljubljana · Centre for Slovene as a Second and Foreign Language · 60 classroom hours · 3 ECTS',
+    links: [
+      { label: 'Course certificate', href: '/certificates/#certificate-intensive-slovene-erasmus-students-2026' },
+      { label: 'My experience', href: '/news/a-first-step-into-slovene-and-life-in-slovenia/' },
+    ],
+  },
+  {
     period: 'Current',
     status: 'Current',
     title: 'Bachelor · Business Administration and Management',
@@ -200,8 +210,10 @@ export const languages = [
   {
     flag: '🇸🇮',
     language: 'Slovene',
-    level: 'A2',
-    note: 'Currently studying',
-    certificates: [],
+    level: 'Level I',
+    note: 'Completed a 60-hour introductory course; continuing to study',
+    certificates: [
+      { label: 'Slovene course transcript', href: '/certificates/#certificate-intensive-slovene-erasmus-students-2026' },
+    ],
   },
 ];
