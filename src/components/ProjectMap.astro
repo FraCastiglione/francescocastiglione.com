@@ -68,10 +68,11 @@ const safeGeojson = JSON.stringify(geojson).replace(/</g, '\\u003c');
 </div>
 
 <script>
+  import type { Feature, FeatureCollection, Point } from 'geojson';
   import type { GeoJSONSource, Popup } from 'maplibre-gl';
   import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 
-  type ProjectFeature = GeoJSON.Feature<GeoJSON.Point, {
+  type ProjectFeature = Feature<Point, {
     projectId: string;
     projectTitle: string;
     locationLabel: string;
@@ -86,7 +87,7 @@ const safeGeojson = JSON.stringify(geojson).replace(/</g, '\\u003c');
     href: string;
   }>;
 
-  type ProjectCollection = GeoJSON.FeatureCollection<GeoJSON.Point, ProjectFeature['properties']>;
+  type ProjectCollection = FeatureCollection<Point, ProjectFeature['properties']>;
 
   const initialiseMap = async (element: HTMLElement) => {
     const [maplibregl] = await Promise.all([
@@ -124,7 +125,7 @@ const safeGeojson = JSON.stringify(geojson).replace(/</g, '\\u003c');
       map.easeTo({ center: initialCenter, zoom: initialZoom });
     });
 
-    const showClusterProjects = (leaves: GeoJSON.Feature[], coordinates: [number, number]) => {
+    const showClusterProjects = (leaves: Feature[], coordinates: [number, number]) => {
       const uniqueProjects = new Map<string, ProjectFeature['properties']>();
       leaves.forEach((leaf) => {
         const properties = leaf.properties as ProjectFeature['properties'] | null;
@@ -235,7 +236,7 @@ const safeGeojson = JSON.stringify(geojson).replace(/</g, '\\u003c');
         const coordinateKeys = new Set(
           leaves
             .filter((leaf) => leaf.geometry.type === 'Point')
-            .map((leaf) => (leaf.geometry as GeoJSON.Point).coordinates.map((value) => Number(value).toFixed(5)).join(',')),
+            .map((leaf) => (leaf.geometry as Point).coordinates.map((value) => Number(value).toFixed(5)).join(',')),
         );
         const coordinates = feature.geometry.coordinates as [number, number];
 
