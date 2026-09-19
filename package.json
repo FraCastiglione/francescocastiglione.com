@@ -9,6 +9,7 @@
     "build": "astro check && astro build && node scripts/audit-site.mjs",
     "preview": "astro preview",
     "check": "astro check",
+    "audit:dependencies": "node scripts/audit-dependencies.mjs",
     "audit:site": "node scripts/audit-site.mjs",
     "test:smoke": "playwright test",
     "validate": "pnpm build && pnpm test:smoke"
