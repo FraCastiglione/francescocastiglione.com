@@ -7,12 +7,20 @@ category: "article"
 relatedProjects: []
 relatedAffiliations:
   - "ljubljana-school-of-economics-and-business"
+image: "/assets/gallery/slovene-course-erasmus-participants.jpg"
+imageAlt: "Francesco Castiglione with participants in the intensive Slovene course for Erasmus+ students in Ljubljana"
+imageCaption: "Participants in the intensive Slovene course for Erasmus+ students at the University of Ljubljana, 16 September 2026."
 draft: false
 ---
 
 From 31 August to 18 September 2026, just before the start of my Erasmus+ semester at the University of Ljubljana School of Economics and Business, I took the [Intensive Course of Slovene for Erasmus+ Students](https://centerslo.si/en/courses-for-adults/courses/erasmus/) at the University of Ljubljana's Centre for Slovene as a Second and Foreign Language. It was a lovely experience and a chance to begin my time in Slovenia with more than a few memorised phrases.
 
 The course gave me 60 classroom hours of structured learning. My [transcript of records](/certificates/#certificate-intensive-slovene-erasmus-students-2026) records completion of Level I with a local grade of 10, an ECTS grade of A, and 3 ECTS credits. It is a record of this course, not a claim that I have already reached professional fluency or a particular CEFR level.
+
+<figure class="story-photo">
+  <img src="/assets/gallery/slovene-course-level-one-group.jpg" alt="Francesco Castiglione with classmates on a staircase at the University of Ljubljana Faculty of Arts" loading="lazy" decoding="async" />
+  <figcaption>With classmates during the intensive Slovene course at the University of Ljubljana Faculty of Arts.</figcaption>
+</figure>
 
 ## A language that makes a place feel closer
 

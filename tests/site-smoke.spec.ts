@@ -51,7 +51,14 @@ test('certificate and article remain reachable', async ({ page, request }) => {
 
   await page.goto('/news/a-first-step-into-slovene-and-life-in-slovenia/');
   await expect(page.getByRole('heading', { level: 1, name: 'A first step into Slovene and life in Slovenia' })).toBeVisible();
+  await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/slovene-course-erasmus-participants.jpg');
+  await expect(page.locator('.story-photo img')).toHaveAttribute('src', '/assets/gallery/slovene-course-level-one-group.jpg');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /slovene-course-erasmus-participants\.jpg$/);
   await expect(page.getByRole('link', { name: 'my CV' })).toHaveAttribute('href', '/cv/#languages');
+
+  await page.goto('/gallery/');
+  await expect(page.getByRole('heading', { level: 2, name: 'Intensive Slovene course for Erasmus+ students', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Learning Slovene together in Ljubljana', exact: true })).toBeVisible();
 });
 
 test('mobile navigation opens and reaches the CV', async ({ page }) => {
