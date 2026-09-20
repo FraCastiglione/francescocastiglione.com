@@ -56,7 +56,7 @@ const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === '
 
 <style>
   .project-card {
-    --category-color: #7182a2;
+    --category-color: #566986;
     --category-soft: #e8edf5;
     overflow: hidden;
     display: flex;
@@ -83,10 +83,10 @@ const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === '
       linear-gradient(145deg, #f4f7fb, var(--category-soft));
   }
 
-  .project-card--erasmus { --category-color: #4f70cc; --category-soft: #b9cdf6; }
-  .project-card--esc { --category-color: #278b78; --category-soft: #b9e3d9; }
-  .project-card--eu-grants { --category-color: #c27b2a; --category-soft: #f0d3ab; }
-  .project-card--national-grants { --category-color: #b65362; --category-soft: #f2ced4; }
+  .project-card--erasmus { --category-color: #405fae; --category-soft: #b9cdf6; }
+  .project-card--esc { --category-color: #1f7464; --category-soft: #b9e3d9; }
+  .project-card--eu-grants { --category-color: #925816; --category-soft: #f0d3ab; }
+  .project-card--national-grants { --category-color: #963e4c; --category-soft: #f2ced4; }
   .project-card--other { --category-color: #7c60a8; --category-soft: #d8caee; }
   .project-card--image .project-card__media { color: var(--white); }
 
@@ -136,7 +136,7 @@ const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === '
   }
 
   .project-card__topline span:last-child { text-align: right; }
-  .project-card__category { padding: .3rem .48rem; border-radius: 999px; color: var(--white); background: var(--category-color); font-size: .58rem; letter-spacing: .05em; }
+  .project-card__category { padding: .34rem .52rem; border-radius: 999px; color: var(--white); background: var(--category-color); font-size: .68rem; letter-spacing: .04em; }
 
   .project-card__headline { margin-top: auto; padding-top: 4rem; }
   .project-card__headline > p {
@@ -155,7 +155,7 @@ const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === '
   .project-card h3 a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .14em; }
 
   .project-card__body { flex: 1; display: flex; flex-direction: column; padding: 1.2rem 1.25rem 1.3rem; }
-  .project-card__meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; color: var(--category-color); font-size: .64rem; font-weight: 700; letter-spacing: .045em; text-transform: uppercase; }
+  .project-card__meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; color: var(--category-color); font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
   .project-card__summary { margin: .9rem 0 0; color: var(--muted); font-size: .8rem; line-height: 1.6; }
 
   .tag-list {
@@ -171,7 +171,7 @@ const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === '
     border-radius: 999px;
     color: var(--muted);
     background: var(--surface);
-    font-size: 0.64rem;
+    font-size: 0.72rem;
   }
 
   .project-card__actions {
@@ -186,7 +186,7 @@ const categoryLabel = categoryKey === 'erasmus' ? 'Erasmus+' : categoryKey === '
   }
   .project-card__details { display: flex; justify-content: space-between; gap: 1rem; color: var(--ink); font-size: .72rem; font-weight: 700; }
   .project-card__details:hover, .project-card__external:hover { color: var(--accent-dark); }
-  .project-card__external { color: var(--muted); font-size: .67rem; font-weight: 650; }
+  .project-card__external { color: var(--muted); font-size: .74rem; font-weight: 650; }
 
   @media (prefers-reduced-motion: reduce) {
     .project-card:hover { transform: none; }

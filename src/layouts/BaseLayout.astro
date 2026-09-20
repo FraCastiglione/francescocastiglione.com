@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
 import '@fontsource-variable/manrope/index.css';
 import '../styles/global.css';
 import { siteProfile } from '../data/site';
@@ -60,12 +61,13 @@ const safeStructuredData = structuredData && JSON.stringify(structuredData).repl
     {safeStructuredData && (
       <script is:inline type="application/ld+json" set:html={safeStructuredData}></script>
     )}
+    <Analytics />
     <title>{title}</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <Header />
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
     <Footer />

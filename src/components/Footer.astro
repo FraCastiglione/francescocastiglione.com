@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import { siteProfile } from '../data/site';
 const year = new Date().getFullYear();
+const linkedInEvent = `contact-linkedin:${Astro.url.pathname}`;
 ---
 
 <footer class="site-footer">
@@ -17,13 +18,13 @@ const year = new Date().getFullYear();
         <a href="/news/">News</a>
         <a href="/certificates/">Certificates</a>
       </nav>
-      <a class="site-footer__linkedin" href={siteProfile.linkedIn} target="_blank" rel="noreferrer">Connect on LinkedIn ↗</a>
+      <a class="site-footer__linkedin" href={siteProfile.linkedIn} target="_blank" rel="noreferrer" data-goatcounter-click={linkedInEvent} data-goatcounter-title="Primary contact: LinkedIn">Connect on LinkedIn ↗</a>
     </div>
   </div>
   <div class="shell site-footer__bottom">
     <span>Copyright © {year} | Francesco Castiglione | All rights reserved</span>
     <div>
-      <a href={siteProfile.linkedIn} target="_blank" rel="noreferrer">LinkedIn</a>
+      <a href={siteProfile.linkedIn} target="_blank" rel="noreferrer" data-goatcounter-click={linkedInEvent} data-goatcounter-title="Primary contact: LinkedIn">LinkedIn</a>
       <a href="/contact/">Contact</a>
     </div>
   </div>

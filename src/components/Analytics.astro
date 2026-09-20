@@ -1,0 +1,13 @@
+---
+const accountCode = import.meta.env.PUBLIC_GOATCOUNTER_CODE?.trim();
+const endpoint = accountCode ? `https://${accountCode}.goatcounter.com/count` : undefined;
+---
+
+{endpoint && (
+  <script
+    is:inline
+    async
+    src="https://gc.zgo.at/count.js"
+    data-goatcounter={endpoint}
+  ></script>
+)}

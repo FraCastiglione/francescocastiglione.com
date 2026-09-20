@@ -5,12 +5,25 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { breadcrumbStructuredData, personStructuredData, siteProfile } from '../../data/site';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('news', ({ data }) => !data.draft);
-  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+  const posts = (await getCollection('news', ({ data }) => !data.draft))
+    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+  return posts.map((post, index) => ({
+    params: { id: post.id },
+    props: {
+      post,
+      previousPost: posts[index + 1],
+      nextPost: posts[index - 1],
+    },
+  }));
 }
 
-interface Props { post: CollectionEntry<'news'>; }
-const { post } = Astro.props;
+interface Props {
+  post: CollectionEntry<'news'>;
+  previousPost?: CollectionEntry<'news'>;
+  nextPost?: CollectionEntry<'news'>;
+}
+const { post, previousPost, nextPost } = Astro.props;
 const { Content } = await render(post);
 const postUrl = `${siteProfile.url}/news/${post.id}/`;
 const articleStructuredData = [
@@ -59,6 +72,22 @@ const articleStructuredData = [
       </div>
     </header>
     <div class="shell article-page__content"><div class="prose"><Content /></div></div>
+    {(previousPost || nextPost) && (
+      <nav class="shell article-navigation" aria-label="More articles">
+        {previousPost ? (
+          <a class="article-navigation__link article-navigation__link--previous" href={`/news/${previousPost.id}/`} rel="prev">
+            <span aria-hidden="true">←</span>
+            <span><small>Previous article</small><strong>{previousPost.data.title}</strong></span>
+          </a>
+        ) : <span></span>}
+        {nextPost && (
+          <a class="article-navigation__link article-navigation__link--next" href={`/news/${nextPost.id}/`} rel="next">
+            <span><small>Next article</small><strong>{nextPost.data.title}</strong></span>
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
+      </nav>
+    )}
   </article>
 </BaseLayout>
 
@@ -71,9 +100,35 @@ const articleStructuredData = [
   .article-page__header p { max-width: 42rem; margin: 0; color: var(--muted); font-size: 1.1rem; }
   .article-page__cover { margin: clamp(3rem, 7vw, 6rem) 0 0; }
   .article-page__cover img { width: 100%; display: block; border-radius: var(--radius-lg); background: var(--surface); }
-  .article-page__cover figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: .75rem; color: var(--muted); font-size: .65rem; }
+  .article-page__cover figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: .75rem; color: var(--muted); font-size: .78rem; line-height: 1.55; }
   .article-page__content { display: grid; justify-content: center; padding-block: clamp(4rem, 9vw, 8rem); }
+  .article-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding-bottom: clamp(4rem, 9vw, 8rem);
+    border-top: 1px solid var(--line);
+  }
+  .article-navigation__link {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+  .article-navigation__link:hover { border-color: var(--accent); background: var(--blue-mist); }
+  .article-navigation__link--next { grid-template-columns: minmax(0, 1fr) auto; text-align: right; }
+  .article-navigation__link > span[aria-hidden='true'] { color: var(--accent-dark); font-size: 1.35rem; }
+  .article-navigation__link small { display: block; margin-bottom: .35rem; color: var(--accent-dark); font-size: .75rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+  .article-navigation__link strong { display: block; font-size: clamp(.92rem, 1.6vw, 1.08rem); line-height: 1.35; }
   @media (max-width: 760px) {
     .article-page__cover figcaption { display: grid; }
+    .article-navigation { grid-template-columns: 1fr; }
+    .article-navigation > span:empty { display: none; }
   }
 </style>

@@ -2,7 +2,7 @@
   --white: #ffffff;
   --ink: #171717;
   --muted: #61656b;
-  --soft: #8b9097;
+  --soft: #70757d;
   --line: #dfe5ec;
   --surface: #f7f9fb;
   --surface-strong: #e9eff6;
@@ -69,7 +69,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .eyebrow {
   color: var(--muted);
-  font-size: 0.67rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -201,7 +201,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .prose ul { padding-left: 1.2rem; }
 .prose .story-photo { margin: 2.5rem 0 3rem; }
 .prose .story-photo img { width: 100%; border-radius: var(--radius-lg); background: var(--surface); }
-.prose .story-photo figcaption { margin-top: .7rem; color: var(--muted); font-size: .68rem; line-height: 1.5; }
+.prose .story-photo figcaption { margin-top: .7rem; color: var(--muted); font-size: .78rem; line-height: 1.55; }
 
 .pill-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .pill {
@@ -210,7 +210,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 999px;
   color: var(--muted);
   background: var(--white);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 
 .skip-link {
