@@ -11,12 +11,13 @@
     "check": "astro check",
     "audit:dependencies": "node scripts/audit-dependencies.mjs",
     "audit:site": "node scripts/audit-site.mjs",
+    "indexnow:submit": "node scripts/submit-indexnow.mjs",
     "test:smoke": "playwright test",
     "validate": "pnpm build && pnpm test:smoke"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.6.0",
-    "@fontsource-variable/manrope": "^5.2.8",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/manrope": "^5.3.0",
     "astro": "^7.3.3",
     "maplibre-gl": "^6.10.0"
   },

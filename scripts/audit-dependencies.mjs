@@ -1,38 +1,72 @@
 import { spawn } from 'node:child_process';
 
-const audit = spawn('pnpm', ['audit', '--audit-level=moderate'], {
-  env: process.env,
-  stdio: ['ignore', 'pipe', 'pipe'],
-});
+const retryDelays = [0, 5_000, 15_000];
 
-let output = '';
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
 
-for (const stream of [audit.stdout, audit.stderr]) {
-  stream.setEncoding('utf8');
-  stream.on('data', (chunk) => {
-    output += chunk;
-    process.stderr.write(chunk);
+function runAudit() {
+  return new Promise((resolve) => {
+    const audit = spawn('pnpm', ['audit', '--audit-level=moderate'], {
+      env: process.env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+    let output = '';
+
+    for (const stream of [audit.stdout, audit.stderr]) {
+      stream.setEncoding('utf8');
+      stream.on('data', (chunk) => {
+        output += chunk;
+        process.stderr.write(chunk);
+      });
+    }
+
+    audit.on('error', (error) => {
+      resolve({ code: 1, output, startError: error });
+    });
+
+    audit.on('close', (code) => {
+      resolve({ code: code ?? 1, output });
+    });
   });
 }
 
-audit.on('error', (error) => {
-  console.error(`Unable to start the dependency audit: ${error.message}`);
-  process.exitCode = 1;
-});
-
-audit.on('close', (code) => {
-  if (code === 0) return;
-
-  const serviceUnavailable =
+function isTemporaryServiceFailure(output) {
+  return (
     /ERR_PNPM_AUDIT_BAD_RESPONSE/.test(output) ||
-    /audit endpoint[\s\S]*responded with 5\d{2}/i.test(output);
+    /audit endpoint[\s\S]*responded with 5\d{2}/i.test(output) ||
+    /\b(?:EAI_AGAIN|ECONNRESET|ETIMEDOUT|ECONNREFUSED)\b/.test(output)
+  );
+}
 
-  if (serviceUnavailable) {
+for (let attempt = 0; attempt < retryDelays.length; attempt += 1) {
+  if (retryDelays[attempt] > 0) {
     console.warn(
-      '::warning::The npm security-audit service is temporarily unavailable. Dependabot alerts remain active; no audit result was suppressed.',
+      `::notice::Retrying the npm security audit in ${retryDelays[attempt] / 1_000} seconds (attempt ${attempt + 1} of ${retryDelays.length}).`,
     );
-    return;
+    await wait(retryDelays[attempt]);
   }
 
-  process.exitCode = code || 1;
-});
+  const result = await runAudit();
+
+  if (result.startError) {
+    console.error(`Unable to start the dependency audit: ${result.startError.message}`);
+    process.exitCode = 1;
+    break;
+  }
+
+  if (result.code === 0) break;
+
+  if (!isTemporaryServiceFailure(result.output)) {
+    process.exitCode = result.code;
+    break;
+  }
+
+  if (attempt === retryDelays.length - 1) {
+    console.warn(
+      '::warning::The npm security-audit service remained unavailable after three attempts. Dependabot alerts remain active; no vulnerability result was suppressed.',
+    );
+  }
+}
