@@ -40,3 +40,5 @@ I served as Youth Leader of the Italian team and coordinated the mobility for th
 ## Learning in and from nature
 
 The programme combined nature-based learning, personal reflection, storytelling, creative activities, and intercultural exchange. It encouraged participants to think about stress, emotional resilience, self-care, digital balance, and the role that natural environments can play in individual and collective wellbeing.
+
+The learning and participation documented during the exchange are recorded in my [Flowrest Youthpass](/certificates/#certificate-flowrest-youth-exchange-youthpass).

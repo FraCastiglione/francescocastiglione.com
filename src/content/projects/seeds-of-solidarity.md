@@ -49,3 +49,9 @@ I supported public information about the European Union through school presentat
 The placement included communications and activities around the European Day of Languages, Europe Day, and Time to Move, as well as regular work with children at the local Family Centre.
 
 The wider learning journey included on-arrival and mid-term training, activity in Stockholm, and a volunteer meet-up in Örebro. It also included work as a European Citizens’ Initiative ambassador, Swedish-language learning, contact-list development, and building a network around European information and mobility.
+
+## Community activities and public visibility
+
+During the autumn school break, I joined other European volunteers in organising crafts, games, chess, and a treasure hunt for children and young people at Åmål Library. The activity was documented by *Provinstidningen Dalsland*; I have written more about the [library programme and its local media coverage](/news/volunteering-in-amal-autumn-break-at-the-library/).
+
+After returning to Italy, I shared the experience with a national audience in an [International Volunteer Day interview on Rai Radio 1](/news/rai-radio-1-interview-international-volunteer-day-2023/). Together, these two moments connect the local, everyday work of a solidarity placement with the wider task of explaining why European volunteering matters.

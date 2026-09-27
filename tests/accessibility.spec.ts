@@ -10,6 +10,8 @@ const representativePages = [
   '/certificates/',
   '/news/',
   '/news/a-first-step-into-slovene-and-life-in-slovenia/',
+  '/news/volunteering-in-amal-autumn-break-at-the-library/',
+  '/news/rai-radio-1-interview-international-volunteer-day-2023/',
   '/contact/',
 ];
 
@@ -79,6 +81,8 @@ test('key page types avoid horizontal overflow across mobile breakpoints', async
     '/certificates/',
     '/news/',
     '/news/a-first-step-into-slovene-and-life-in-slovenia/',
+    '/news/volunteering-in-amal-autumn-break-at-the-library/',
+    '/news/rai-radio-1-interview-international-volunteer-day-2023/',
   ];
 
   for (const width of [320, 390, 768]) {

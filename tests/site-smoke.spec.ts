@@ -61,6 +61,38 @@ test('certificate and article remain reachable', async ({ page, request }) => {
   await expect(page.getByRole('heading', { level: 2, name: 'Learning Slovene together in Ljubljana', exact: true })).toBeVisible();
 });
 
+test('Flowrest Youthpass and volunteering media stories stay connected', async ({ page, request }) => {
+  await page.goto('/certificates/');
+  const flowrestCertificate = page.locator('#certificate-flowrest-youth-exchange-youthpass');
+  await expect(flowrestCertificate.getByRole('heading', { name: 'Flowrest Youth Exchange Youthpass' })).toBeVisible();
+  const flowrestPdf = flowrestCertificate.getByRole('link', { name: /View PDF/ });
+  const pdfResponse = await request.get(await flowrestPdf.getAttribute('href') ?? '');
+  expect(pdfResponse.ok()).toBeTruthy();
+  expect(pdfResponse.headers()['content-type']).toContain('application/pdf');
+
+  await page.goto('/projects/flowrest/');
+  await expect(page.getByRole('heading', { name: 'Documentation connected to this project.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Flowrest Youth Exchange Youthpass' })).toBeVisible();
+
+  await page.goto('/projects/seeds-of-solidarity/');
+  await expect(page.getByRole('link', { name: 'library programme and its local media coverage' })).toHaveAttribute(
+    'href',
+    '/news/volunteering-in-amal-autumn-break-at-the-library/',
+  );
+  await expect(page.getByRole('link', { name: 'International Volunteer Day interview on Rai Radio 1' })).toHaveAttribute(
+    'href',
+    '/news/rai-radio-1-interview-international-volunteer-day-2023/',
+  );
+
+  await page.goto('/news/volunteering-in-amal-autumn-break-at-the-library/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Volunteering in Åmål: autumn-break activities at the library' })).toBeVisible();
+  await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/amal-library-eu-volunteering-2022.avif');
+
+  await page.goto('/news/rai-radio-1-interview-international-volunteer-day-2023/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Sharing my European volunteering experience on Rai Radio 1' })).toBeVisible();
+  await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/rai-radio-1-interview-2023.jpg');
+});
+
 test('mobile navigation opens and reaches the CV', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

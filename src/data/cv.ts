@@ -28,6 +28,7 @@ export const experience = [
       { label: 'Affiliation', href: '/about/#affiliations' },
       { label: 'One Tour for Europe', href: '/projects/one-tour-for-europe/' },
       { label: 'Flowrest', href: '/projects/flowrest/' },
+      { label: 'Flowrest Youthpass', href: '/certificates/#certificate-flowrest-youth-exchange-youthpass' },
       { label: 'EUniversity Genoa', href: '/projects/euniversity-genoa/' },
     ],
   },
@@ -71,6 +72,8 @@ export const experience = [
     links: [
       { label: 'Seeds of Solidarity', href: '/projects/seeds-of-solidarity/' },
       { label: 'Related certificate', href: '/certificates/' },
+      { label: 'Åmål library story', href: '/news/volunteering-in-amal-autumn-break-at-the-library/' },
+      { label: 'Rai Radio 1 interview', href: '/news/rai-radio-1-interview-international-volunteer-day-2023/' },
     ],
   },
   {

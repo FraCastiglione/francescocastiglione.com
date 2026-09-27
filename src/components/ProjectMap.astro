@@ -46,9 +46,9 @@ const safeGeojson = JSON.stringify(geojson).replace(/</g, '\\u003c');
 ---
 
 <div class:list={['project-map-wrap', { 'project-map-wrap--compact': compact }]}>
-  <div id={mapId} class="project-map" data-project-map data-json-id={dataId} aria-label="Interactive map of project locations"></div>
+  <div id={mapId} class="project-map" data-project-map data-json-id={dataId} role="region" aria-label="Interactive map of project locations"></div>
   <button class="project-map__reset" type="button" data-map-reset aria-label="Reset map to Europe">Europe</button>
-  <div class="project-map__legend" aria-label="Project categories">
+  <div class="project-map__legend" role="group" aria-label="Project categories">
     <span><i class="project-map__dot project-map__dot--erasmus"></i>Erasmus+</span>
     <span><i class="project-map__dot project-map__dot--esc"></i>ESC</span>
     <span><i class="project-map__dot project-map__dot--eu"></i>EU Grants</span>
