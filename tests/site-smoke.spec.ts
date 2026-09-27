@@ -117,6 +117,36 @@ test('European Year of Youth sources, media coverage, and affiliations stay conn
   await expect(academicAffiliations.nth(5)).toHaveText('University of Ljubljana School of Economics and Business');
 });
 
+test('student-mobility leadership projects appear in the portfolio, map, and CV', async ({ page }) => {
+  await page.goto('/projects/ial-toscana-student-mobility-tutoring/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Student Mobility Tutoring with IAL Toscana' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'AMT Spain' })).toHaveAttribute('href', 'https://www.amt-spain.com/en/');
+  await expect(page.getByRole('link', { name: 'MD-Hellas' })).toHaveAttribute('href', 'https://www.md-hellas.gr/it/home-it/');
+  await expect(page.getByRole('link', { name: 'Eppas' })).toHaveAttribute('href', 'https://www.eppas.cz/');
+
+  await page.goto('/projects/erasmus-vet-mobility-maribor-2024/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Erasmus+ VET Mobility in Maribor' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Zavod za Novodobno Izobraževanje — Institute for New Age Education' })).toHaveAttribute('href', 'https://www.zni.si/');
+
+  await page.goto('/projects/seville-language-study-program-tudor-language-house/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Seville Language Study Programme — Tudor Language House' })).toBeVisible();
+  await expect(page.getByText('This was a professional language-study assignment rather than an Erasmus+ project.')).toBeVisible();
+
+  await page.goto('/projects/');
+  const mapData = (await page.locator('script[type="application/json"]').allTextContents()).join(' ');
+  expect(mapData).toContain('Student Mobility Tutoring with IAL Toscana');
+  expect(mapData).toContain('Erasmus+ VET Mobility in Maribor');
+  expect(mapData).toContain('Seville Language Study Programme — Tudor Language House');
+  expect(mapData).toContain('Prague, Czechia');
+  expect(mapData).toContain('Heraklion, Greece');
+  expect(mapData).toContain('Maribor, Slovenia');
+
+  await page.goto('/cv/');
+  await expect(page.getByRole('link', { name: 'Mobility assignments' })).toHaveAttribute('href', '/projects/ial-toscana-student-mobility-tutoring/');
+  await expect(page.getByRole('link', { name: 'Maribor mobility' })).toHaveAttribute('href', '/projects/erasmus-vet-mobility-maribor-2024/');
+  await expect(page.getByRole('link', { name: 'Seville programme' })).toHaveAttribute('href', '/projects/seville-language-study-program-tudor-language-house/');
+});
+
 test('mobile navigation opens and reaches the CV', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

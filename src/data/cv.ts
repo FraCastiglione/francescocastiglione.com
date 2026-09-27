@@ -54,12 +54,46 @@ export const experience = [
   {
     period: '2022 — Present',
     status: 'Current',
-    role: 'Group Leader',
+    role: 'School Tutor · International Student Mobility',
     organisation: 'IAL Toscana S.r.l. · Spain, Czechia and Greece',
     summary:
-      'Prepares and accompanies student groups on Erasmus+ and regional mobility projects, coordinating documentation, logistics, participant support, safety, and emergency response.',
+      'Accompanies vocational students during Erasmus+ and Tuscany Region-funded international internships, coordinating participant support, host-partner liaison, placement monitoring, logistics, documentation, safety, and emergency response.',
+    highlights: [
+      'Completed at least three assignments in Seville, two in Heraklion, and one in Prague.',
+      'Worked with AMT Spain, MD-Hellas, and Eppas as local hosting partners.',
+    ],
+    links: [
+      { label: 'Mobility assignments', href: '/projects/ial-toscana-student-mobility-tutoring/' },
+      { label: 'IAL Toscana international activities', href: 'https://ialtoscana.it/international-activities/' },
+    ],
+  },
+  {
+    period: 'March 2024',
+    status: 'Completed',
+    role: 'Group Leader · Accompanying Tutor',
+    organisation: 'Uniser · Maribor, Slovenia',
+    summary:
+      'Supported approximately 15 high-school students during a month-long Erasmus+ VET mobility, monitoring local internships, wellbeing, participation, and coordination with the host organisation.',
+    highlights: [
+      'Worked with Zavod za Novodobno Izobraževanje, the Institute for New Age Education, as the local host.',
+    ],
+    links: [
+      { label: 'Maribor mobility', href: '/projects/erasmus-vet-mobility-maribor-2024/' },
+      { label: 'Uniser', href: 'https://www.uniser.net/' },
+      { label: 'Host organisation', href: 'https://www.zni.si/' },
+    ],
+  },
+  {
+    period: 'July 2023',
+    status: 'Completed',
+    role: 'Group Leader',
+    organisation: 'Tudor Language House · San Marino Tourservice · Seville, Spain',
+    summary:
+      'Supported approximately 100 students during a two-week language-study programme, contributing to supervision, daily coordination, logistics, student welfare, and emergency response.',
     highlights: [],
-    links: [{ label: 'Project archive', href: '/projects/' }],
+    links: [
+      { label: 'Seville programme', href: '/projects/seville-language-study-program-tudor-language-house/' },
+    ],
   },
   {
     period: '2022 — 2023',
