@@ -149,11 +149,17 @@ export const experience = [
     period: 'March 2021',
     status: 'Completed',
     role: 'Delegation Member · Italy–Türkiye Youth Partnership',
-    organisation: 'Konya, Türkiye',
+    organisation: 'ScambiEuropei · Konya, Türkiye',
     summary:
-      'Contributed to an Italian delegation presenting youth and rural-development cooperation outcomes to government representatives.',
-    highlights: [],
-    links: [{ label: 'Related project', href: '/projects/youth-and-rural-development-training-model/' }],
+      'Joined the Italian delegation sent by ScambiEuropei for a bilateral Erasmus+ KA205 training on youth participation, rural regeneration, and sustainable production.',
+    highlights: [
+      'Contributed to workshops, presentations, and exchanges of practices between participants and organisations from Italy and Türkiye.',
+    ],
+    links: [
+      { label: 'Related project', href: '/projects/youth-and-rural-development-training-model/' },
+      { label: 'Story and media coverage', href: '/news/representing-italy-in-konya-youth-and-rural-development-2021/' },
+      { label: 'ScambiEuropei project call', href: 'https://www.scambieuropei.info/training-course-in-turchia-sulla-formazione-dei-giovani-e-lo-sviluppo-rurale-dall8-al-15-marzo-2021/' },
+    ],
   },
   {
     period: '2018 — 2020',

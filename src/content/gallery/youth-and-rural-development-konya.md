@@ -8,7 +8,8 @@ dateLabel: "7–13 March 2021"
 location: "Konya, Türkiye"
 relatedProjects:
   - "youth-and-rural-development-training-model"
-relatedNews: []
+relatedNews:
+  - "representing-italy-in-konya-youth-and-rural-development-2021"
 relatedAffiliations: []
 featuresFrancesco: true
 featured: false

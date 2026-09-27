@@ -184,6 +184,35 @@ test('news offers an Interview filter and labels interview stories', async ({ pa
   await expect(visibleCards.locator('.news-card__meta span')).toHaveText('interview');
 });
 
+test('Konya project connects the Italian delegation, media coverage, photos, and CV', async ({ page }) => {
+  const articlePath = '/news/representing-italy-in-konya-youth-and-rural-development-2021/';
+
+  await page.goto('/projects/youth-and-rural-development-training-model/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Youth and Rural Development Education Model' })).toBeVisible();
+  await expect(page.getByText('Participant · Italian delegation')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'ScambiEuropei' })).toHaveAttribute('href', /scambieuropei\.info/);
+  await expect(page.getByRole('link', { name: 'dedicated article about the Italian delegation and the Konya experience' })).toHaveAttribute('href', articlePath);
+  await expect(page.getByRole('link', { name: 'Representing the Italian delegation in Konya: youth and rural development' })).toHaveAttribute('href', articlePath);
+
+  await page.goto(articlePath);
+  await expect(page.getByRole('heading', { level: 1, name: 'Representing the Italian delegation in Konya: youth and rural development' })).toBeVisible();
+  await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/projects/youth-and-rural-development-training-model.jpg');
+  await expect(page.locator('.story-photo img')).toHaveCount(3);
+  await expect(page.locator('.story-photo img').nth(0)).toHaveAttribute('src', '/assets/gallery/youth-rural-development-podium-konya-2021.jpg');
+  await expect(page.locator('.story-photo img').nth(1)).toHaveAttribute('src', '/assets/gallery/youth-rural-development-italian-delegation-konya-2021.jpg');
+  await expect(page.locator('.story-photo img').nth(2)).toHaveAttribute('src', '/assets/gallery/youth-rural-development-certificates-konya-2021.jpg');
+  await expect(page.getByRole('link', { name: /Turkish National Agency.*official 2020 approval list/ })).toHaveAttribute('href', /ua\.gov\.tr/);
+  await expect(page.getByRole('link', { name: /Gazete Anadolu.*report/ })).toHaveAttribute('href', 'https://www.gazeteanadolu.com/kop-tan-kirsal-kalkinma-modeli-egitimi/33296');
+
+  await page.goto('/gallery/');
+  await expect(page.getByRole('heading', { level: 2, name: 'At the lectern in Konya' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'The Italian delegation in Konya' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Completing the Konya training' })).toBeVisible();
+
+  await page.goto('/cv/');
+  await expect(page.getByRole('link', { name: 'Story and media coverage' })).toHaveAttribute('href', articlePath);
+});
+
 test('mobile navigation opens and reaches the CV', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
