@@ -118,11 +118,19 @@ test('European Year of Youth sources, media coverage, and affiliations stay conn
 });
 
 test('student-mobility leadership projects appear in the portfolio, map, and CV', async ({ page }) => {
-  await page.goto('/projects/ial-toscana-student-mobility-tutoring/');
-  await expect(page.getByRole('heading', { level: 1, name: 'Student Mobility Tutoring with IAL Toscana' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'AMT Spain' })).toHaveAttribute('href', 'https://www.amt-spain.com/en/');
-  await expect(page.getByRole('link', { name: 'MD-Hellas' })).toHaveAttribute('href', 'https://www.md-hellas.gr/it/home-it/');
-  await expect(page.getByRole('link', { name: 'Eppas' })).toHaveAttribute('href', 'https://www.eppas.cz/');
+  const ialProjects = [
+    ['/projects/ial-toscana-erasmus-seville-may-2023/', 'Erasmus+ VET Mobility in Seville — IAL Toscana'],
+    ['/projects/ial-toscana-erasmus-prague-may-2023/', 'Erasmus+ VET Mobility in Prague — IAL Toscana'],
+    ['/projects/ial-toscana-take-off-seville-february-2024/', 'Take Off Mobility in Seville — IAL Toscana'],
+    ['/projects/ial-toscana-erasmus-heraklion-october-2024/', 'Erasmus+ VET Mobility in Heraklion — IAL Toscana'],
+    ['/projects/ial-toscana-take-off-heraklion-april-2025/', 'Take Off 2 Mobility in Heraklion — IAL Toscana'],
+    ['/projects/ial-toscana-additional-seville-mobility/', 'Additional Student Mobility in Seville — IAL Toscana'],
+  ] as const;
+
+  for (const [path, title] of ialProjects) {
+    await page.goto(path);
+    await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+  }
 
   await page.goto('/projects/erasmus-vet-mobility-maribor-2024/');
   await expect(page.getByRole('heading', { level: 1, name: 'Erasmus+ VET Mobility in Maribor' })).toBeVisible();
@@ -133,18 +141,47 @@ test('student-mobility leadership projects appear in the portfolio, map, and CV'
   await expect(page.getByText('This was a professional language-study assignment rather than an Erasmus+ project.')).toBeVisible();
 
   await page.goto('/projects/');
-  const mapData = (await page.locator('script[type="application/json"]').allTextContents()).join(' ');
-  expect(mapData).toContain('Student Mobility Tutoring with IAL Toscana');
-  expect(mapData).toContain('Erasmus+ VET Mobility in Maribor');
-  expect(mapData).toContain('Seville Language Study Programme — Tudor Language House');
-  expect(mapData).toContain('Prague, Czechia');
-  expect(mapData).toContain('Heraklion, Greece');
-  expect(mapData).toContain('Maribor, Slovenia');
+  await expect(page.getByRole('heading', { level: 2, name: 'Explore the work by location.' })).toBeVisible();
+  const mapBox = await page.locator('[data-project-map]').boundingBox();
+  const cardsBox = await page.locator('.project-grid').boundingBox();
+  expect(mapBox?.y).toBeLessThan(cardsBox?.y ?? 0);
+
+  const mapData = JSON.parse(await page.locator('script[type="application/json"]').textContent() ?? '{"features":[]}');
+  const projectsAt = (location: string) => mapData.features
+    .filter((feature: { properties: { locationLabel: string } }) => feature.properties.locationLabel === location)
+    .map((feature: { properties: { projectTitle: string } }) => feature.properties.projectTitle);
+
+  expect(projectsAt('Seville, Spain')).toEqual(expect.arrayContaining([
+    'Erasmus+ VET Mobility in Seville — IAL Toscana',
+    'Take Off Mobility in Seville — IAL Toscana',
+    'Additional Student Mobility in Seville — IAL Toscana',
+    'Seville Language Study Programme — Tudor Language House',
+  ]));
+  expect(projectsAt('Prague, Czechia')).toContain('Erasmus+ VET Mobility in Prague — IAL Toscana');
+  expect(projectsAt('Heraklion, Greece')).toEqual(expect.arrayContaining([
+    'Erasmus+ VET Mobility in Heraklion — IAL Toscana',
+    'Take Off 2 Mobility in Heraklion — IAL Toscana',
+  ]));
+  expect(projectsAt('Maribor, Slovenia')).toContain('Erasmus+ VET Mobility in Maribor');
 
   await page.goto('/cv/');
-  await expect(page.getByRole('link', { name: 'Mobility assignments' })).toHaveAttribute('href', '/projects/ial-toscana-student-mobility-tutoring/');
+  await expect(page.getByRole('link', { name: 'Seville · Erasmus+' })).toHaveAttribute('href', '/projects/ial-toscana-erasmus-seville-may-2023/');
+  await expect(page.getByRole('link', { name: 'Prague · Erasmus+' })).toHaveAttribute('href', '/projects/ial-toscana-erasmus-prague-may-2023/');
+  await expect(page.getByRole('link', { name: 'Heraklion · Take Off 2' })).toHaveAttribute('href', '/projects/ial-toscana-take-off-heraklion-april-2025/');
   await expect(page.getByRole('link', { name: 'Maribor mobility' })).toHaveAttribute('href', '/projects/erasmus-vet-mobility-maribor-2024/');
   await expect(page.getByRole('link', { name: 'Seville programme' })).toHaveAttribute('href', '/projects/seville-language-study-program-tudor-language-house/');
+});
+
+test('news offers an Interview filter and labels interview stories', async ({ page }) => {
+  await page.goto('/news/');
+  const typeFilter = page.getByLabel('Type');
+  await expect(typeFilter.locator('option[value="interview"]')).toHaveText('Interview');
+  await typeFilter.selectOption('interview');
+
+  const visibleCards = page.locator('[data-news-panel="cards"] [data-news-item]:visible');
+  await expect(visibleCards).toHaveCount(1);
+  await expect(visibleCards.getByRole('heading', { name: 'Sharing my European volunteering experience on Rai Radio 1' })).toBeVisible();
+  await expect(visibleCards.locator('.news-card__meta span')).toHaveText('interview');
 });
 
 test('mobile navigation opens and reaches the CV', async ({ page }) => {

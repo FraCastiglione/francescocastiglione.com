@@ -90,7 +90,7 @@ const news = defineCollection({
     summary: z.string(),
     publishedAt: z.coerce.date(),
     dateLabel: z.string().optional(),
-    category: z.enum(['project', 'article', 'event', 'update']),
+    category: z.enum(['project', 'article', 'event', 'interview', 'update']),
     relatedProjects: z.array(z.string()).default([]),
     relatedAffiliations: z.array(z.string()).default([]),
     image: z.string().optional(),

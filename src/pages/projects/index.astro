@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectExplorer from '../../components/ProjectExplorer.astro';
+import ProjectMap from '../../components/ProjectMap.astro';
 
 const projects = (await getCollection('projects')).sort((a, b) => {
   const aDate = a.data.sortDate?.valueOf() ?? 0;
@@ -17,11 +18,31 @@ const projects = (await getCollection('projects')).sort((a, b) => {
       <p>Explore the project record by card, list, or map, and filter it by programme, role, or year.</p>
     </div>
   </header>
+  <section class="projects-map" aria-labelledby="projects-map-title">
+    <div class="shell">
+      <div class="projects-map__heading">
+        <div>
+          <span class="eyebrow">Project geography</span>
+          <h2 id="projects-map-title">Explore the work by location.</h2>
+        </div>
+        <p>Each marker represents a project location. Shared destinations expand into their separate assignments, keeping repeated mobilities visible rather than merging them into one record.</p>
+      </div>
+      <ProjectMap projects={projects} />
+    </div>
+  </section>
   <section class="projects-index">
     <div class="shell"><ProjectExplorer projects={projects} /></div>
   </section>
 </BaseLayout>
 
 <style>
+  .projects-map { padding: 0 0 clamp(2.5rem, 5vw, 4.5rem); }
+  .projects-map__heading { display: grid; grid-template-columns: minmax(0, .8fr) minmax(18rem, .55fr); gap: 2rem; align-items: end; margin-bottom: 1.2rem; }
+  .projects-map__heading h2 { max-width: 16ch; margin: .45rem 0 0; font-size: clamp(1.8rem, 4vw, 3.4rem); line-height: .98; letter-spacing: -.055em; }
+  .projects-map__heading p { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.65; }
   .projects-index { padding: 0 0 clamp(6rem, 12vw, 10rem); }
+
+  @media (max-width: 760px) {
+    .projects-map__heading { grid-template-columns: 1fr; gap: 1rem; }
+  }
 </style>

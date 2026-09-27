@@ -3,7 +3,7 @@ title: "Sharing my European volunteering experience on Rai Radio 1"
 summary: "On International Volunteer Day, I joined Rai Radio 1's “Wannabe. Il futuro che vorrei” to discuss how young volunteers contribute their time and energy to the common good."
 publishedAt: "2023-12-05"
 dateLabel: "5 December 2023"
-category: "article"
+category: "interview"
 relatedProjects:
   - "seeds-of-solidarity"
 relatedAffiliations: []

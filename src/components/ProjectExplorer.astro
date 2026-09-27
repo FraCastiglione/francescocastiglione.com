@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import ProjectCard from './ProjectCard.astro';
-import ProjectMap from './ProjectMap.astro';
 
 interface Props { projects: CollectionEntry<'projects'>[]; }
 const { projects } = Astro.props;
@@ -61,10 +60,6 @@ const roleFilters = [
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 4h16M2 10h16M2 16h16"/></svg>
         <span>List</span>
       </button>
-      <button type="button" data-project-view="map" aria-pressed="false" title="Map view">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m2 4 5-2 6 2 5-2v14l-5 2-6-2-5 2Z"/><path d="M7 2v14M13 4v14"/></svg>
-        <span>Map</span>
-      </button>
     </div>
   </div>
 
@@ -120,10 +115,6 @@ const roleFilters = [
         </article>
       );
     })}
-  </div>
-
-  <div data-view-panel="map" hidden>
-    <ProjectMap projects={projects} />
   </div>
 
   <div class="empty-state" data-project-empty hidden>

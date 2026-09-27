@@ -63,7 +63,12 @@ export const experience = [
       'Worked with AMT Spain, MD-Hellas, and Eppas as local hosting partners.',
     ],
     links: [
-      { label: 'Mobility assignments', href: '/projects/ial-toscana-student-mobility-tutoring/' },
+      { label: 'Seville · Erasmus+', href: '/projects/ial-toscana-erasmus-seville-may-2023/' },
+      { label: 'Prague · Erasmus+', href: '/projects/ial-toscana-erasmus-prague-may-2023/' },
+      { label: 'Seville · Take Off', href: '/projects/ial-toscana-take-off-seville-february-2024/' },
+      { label: 'Heraklion · Erasmus+', href: '/projects/ial-toscana-erasmus-heraklion-october-2024/' },
+      { label: 'Heraklion · Take Off 2', href: '/projects/ial-toscana-take-off-heraklion-april-2025/' },
+      { label: 'Additional Seville assignment', href: '/projects/ial-toscana-additional-seville-mobility/' },
       { label: 'IAL Toscana international activities', href: 'https://ialtoscana.it/international-activities/' },
     ],
   },
