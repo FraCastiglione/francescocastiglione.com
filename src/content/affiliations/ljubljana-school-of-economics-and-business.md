@@ -10,6 +10,6 @@ image: "/assets/gallery/university-of-ljubljana-seb-logo.png"
 imageAlt: "University of Ljubljana School of Economics and Business logo"
 imageFit: "contain"
 relatedProjects: []
-sortOrder: 5
+sortOrder: 6
 active: true
 ---

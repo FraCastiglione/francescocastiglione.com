@@ -44,9 +44,9 @@ Seeds of Solidarity was an individual European Solidarity Corps placement in Åm
 
 ## My contribution
 
-I supported public information about the European Union through school presentations, social media, web content, events, games, quizzes, role-play, and podcasts. I also guided young people toward Erasmus+ and European Solidarity Corps opportunities and contributed to partner research, applications, and activity preparation.
+I supported public information about the European Union through school presentations, social media, web content, events, games, quizzes, role-play, and podcasts. A central part of the host role was finding creative ways to reach young people: visiting upper-secondary schools, explaining European opportunities through lived experience, and turning institutional information into activities people could join. I also guided young people toward Erasmus+ and European Solidarity Corps opportunities and contributed to partner research, applications, and activity preparation.
 
-The placement included communications and activities around the European Day of Languages, Europe Day, and Time to Move, as well as regular work with children at the local Family Centre.
+The placement included communications and activities around the European Day of Languages, Europe Day, and Time to Move, as well as regular work with children at the local Family Centre. The role also gave me room to propose my own EU-related initiatives and experiment with digital communication, games, and informal learning formats.
 
 The wider learning journey included on-arrival and mid-term training, activity in Stockholm, and a volunteer meet-up in Örebro. It also included work as a European Citizens’ Initiative ambassador, Swedish-language learning, contact-list development, and building a network around European information and mobility.
 

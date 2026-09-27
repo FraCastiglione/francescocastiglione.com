@@ -9,6 +9,6 @@ externalUrl: "https://portale.units.it/en/outreach/icl"
 image: "/assets/gallery/innovators-community-lab-opening-2026.webp"
 imageAlt: "The 2026 Innovators Community Lab cohort and guests at the University of Trieste"
 relatedProjects: []
-sortOrder: 6
+sortOrder: 4
 active: true
 ---

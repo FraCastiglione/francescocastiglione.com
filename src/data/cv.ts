@@ -82,11 +82,17 @@ export const experience = [
     role: 'European Year of Youth Ambassador',
     organisation: 'Italy · European Commission and Italian youth-policy institutions',
     summary:
-      'Promoted European opportunities, active citizenship, youth participation, Erasmus+, and the European Solidarity Corps through institutional events, dialogue, and public engagement.',
-    highlights: [],
+      'Promoted European opportunities and active citizenship through policy training, peer exchange, institutional events, school and university outreach, communication, and dialogue with young people.',
+    highlights: [
+      'Selected as one of 40 ambassadors representing different parts of Italy.',
+      'Contributed to a network focused on Erasmus+, the European Solidarity Corps, DiscoverEU, inclusion, participation, and sustainable development.',
+    ],
     links: [
       { label: 'Affiliation', href: '/about/#affiliations' },
       { label: 'Ambassador story', href: '/news/becoming-a-european-year-of-youth-ambassador/' },
+      { label: 'La Sicilia coverage', href: '/news/featured-in-la-sicilia-at-the-european-year-of-youth-launch/' },
+      { label: 'Europe Direct Genova webinar', href: '/news/sharing-my-solidarity-corps-experience-with-europe-direct-genova/' },
+      { label: 'Fanpage.it video', href: 'https://youmedia.fanpage.it/video/al/YkHQX-Swk_CfzUC4' },
       { label: 'Brussels visit', href: '/news/open-doors-brussels-european-year-of-youth-2022/' },
     ],
   },

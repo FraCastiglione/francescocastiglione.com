@@ -93,6 +93,30 @@ test('Flowrest Youthpass and volunteering media stories stay connected', async (
   await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/rai-radio-1-interview-2023.jpg');
 });
 
+test('European Year of Youth sources, media coverage, and affiliations stay connected', async ({ page }) => {
+  await page.goto('/news/sharing-my-solidarity-corps-experience-with-europe-direct-genova/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Sharing my European Solidarity Corps experience with Europe Direct Genova' })).toBeVisible();
+  await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/europe-direct-genova-european-year-of-youth-2022.jpg');
+  await expect(page.getByRole('link', { name: 'official event programme' })).toHaveAttribute('href', /Evento%209%20Febbraio\.pdf$/);
+
+  await page.goto('/news/featured-in-la-sicilia-at-the-european-year-of-youth-launch/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Featured in La Sicilia at the European Year of Youth launch' })).toBeVisible();
+  await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/la-sicilia-youth-card-ambassador-network-2022.png');
+  await expect(page.getByRole('link', { name: /Fanpage\.it in a video interview/ })).toHaveAttribute('href', 'https://youmedia.fanpage.it/video/al/YkHQX-Swk_CfzUC4');
+
+  await page.goto('/news/becoming-a-european-year-of-youth-ambassador/');
+  await expect(page.getByRole('link', { name: 'dedicated article and newspaper scan' })).toHaveAttribute(
+    'href',
+    '/news/featured-in-la-sicilia-at-the-european-year-of-youth-launch/',
+  );
+
+  await page.goto('/about/#affiliations');
+  const academicAffiliations = page.locator('.affiliation-card h3');
+  await expect(academicAffiliations.nth(3)).toHaveText('Innovators Community Lab');
+  await expect(academicAffiliations.nth(4)).toHaveText('University of Trieste');
+  await expect(academicAffiliations.nth(5)).toHaveText('University of Ljubljana School of Economics and Business');
+});
+
 test('mobile navigation opens and reaches the CV', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

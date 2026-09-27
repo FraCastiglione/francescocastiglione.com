@@ -10,6 +10,6 @@ image: "/assets/gallery/university-of-trieste-logo.png"
 imageAlt: "University of Trieste logo"
 imageFit: "contain"
 relatedProjects: []
-sortOrder: 4
+sortOrder: 5
 active: true
 ---
