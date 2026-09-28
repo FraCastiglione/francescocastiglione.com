@@ -37,7 +37,25 @@ test('CV keeps its portrait, profile cards, and language certificate link', asyn
   await expect.poll(() => portrait.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
   await expect(page.locator('.cv-snapshot article')).toHaveCount(3);
   await expect(page.locator('#languages').getByRole('heading', { name: 'Slovene' })).toBeVisible();
-  await expect(page.locator('#languages').getByRole('link', { name: /Slovene course transcript/ })).toHaveAttribute('href', /\/certificates\/#certificate-/);
+  await expect(page.locator('#languages').getByRole('link', { name: /Slovene course certificate/ })).toHaveAttribute('href', /\/certificates\/#certificate-/);
+  await expect(page.locator('#languages').getByRole('link', { name: 'Learning Swedish in Åmål' })).toHaveAttribute('href', '/news/learning-swedish-through-everyday-life-in-amal/');
+});
+
+test('Swedish learning story stays connected to the CV, project, and gallery', async ({ page }) => {
+  const articlePath = '/news/learning-swedish-through-everyday-life-in-amal/';
+
+  await page.goto(articlePath);
+  await expect(page.getByRole('heading', { level: 1, name: 'Learning Swedish through everyday life in Åmål' })).toBeVisible();
+  await expect(page.locator('.article-page__cover img')).toHaveAttribute('src', '/assets/gallery/learning-swedish-amal-2023.jpg');
+  await expect(page.getByRole('link', { name: 'Seeds of Solidarity', exact: true })).toHaveAttribute('href', '/projects/seeds-of-solidarity/');
+  await expect(page.getByRole('link', { name: 'Seeds of Solidarity Youthpass' })).toHaveAttribute('href', '/certificates/#certificate-seeds-of-solidarity-youthpass');
+
+  await page.goto('/projects/seeds-of-solidarity/');
+  await expect(page.getByRole('link', { name: 'learning Swedish through study and everyday life in Åmål' })).toHaveAttribute('href', articlePath);
+  await expect(page.getByRole('link', { name: 'Learning Swedish through everyday life in Åmål' })).toHaveAttribute('href', articlePath);
+
+  await page.goto('/gallery/');
+  await expect(page.getByRole('heading', { level: 2, name: 'Learning Swedish while living in Åmål' })).toBeVisible();
 });
 
 test('certificate and article remain reachable', async ({ page, request }) => {

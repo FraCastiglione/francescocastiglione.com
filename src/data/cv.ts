@@ -259,7 +259,9 @@ export const languages = [
     language: 'Swedish',
     level: 'A2',
     note: 'Learned while living in Sweden',
-    certificates: [],
+    certificates: [
+      { label: 'Learning Swedish in Åmål', href: '/news/learning-swedish-through-everyday-life-in-amal/' },
+    ],
   },
   {
     flag: '🇸🇮',
@@ -267,7 +269,7 @@ export const languages = [
     level: 'Level I',
     note: 'Completed a 60-hour introductory course; continuing to study',
     certificates: [
-      { label: 'Slovene course transcript', href: '/certificates/#certificate-intensive-slovene-erasmus-students-2026' },
+      { label: 'Slovene course certificate', href: '/certificates/#certificate-intensive-slovene-erasmus-students-2026' },
     ],
   },
 ];

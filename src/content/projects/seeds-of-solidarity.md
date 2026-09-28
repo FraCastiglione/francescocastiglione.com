@@ -48,7 +48,7 @@ I supported public information about the European Union through school presentat
 
 The placement included communications and activities around the European Day of Languages, Europe Day, and Time to Move, as well as regular work with children at the local Family Centre. The role also gave me room to propose my own EU-related initiatives and experiment with digital communication, games, and informal learning formats.
 
-The wider learning journey included on-arrival and mid-term training, activity in Stockholm, and a volunteer meet-up in Örebro. It also included work as a European Citizens’ Initiative ambassador, Swedish-language learning, contact-list development, and building a network around European information and mobility.
+The wider learning journey included on-arrival and mid-term training, activity in Stockholm, and a volunteer meet-up in Örebro. It also included work as a European Citizens’ Initiative ambassador, [learning Swedish through study and everyday life in Åmål](/news/learning-swedish-through-everyday-life-in-amal/), contact-list development, and building a network around European information and mobility.
 
 ## Community activities and public visibility
 
